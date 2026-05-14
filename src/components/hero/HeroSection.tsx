@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { CountdownTimer } from './CountdownTimer';
 import { PumpFunBadge } from '@/components/shared/PumpFunBadge';
 
@@ -25,17 +25,39 @@ export function HeroSection() {
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
+
+    // Must start muted — browsers block autoplay with sound
     v.muted = true;
-    v.play().catch(() => {});
-    v.addEventListener('canplay', () => setVideoReady(true));
+    v.volume = 0.4;
+
+    const onCanPlay = () => {
+      setVideoReady(true);
+      v.play().catch(() => {
+        // Autoplay blocked — video will play on first user interaction
+      });
+    };
+
+    v.addEventListener('canplay', onCanPlay, { once: true });
+
+    // Fallback: if canplay already fired
+    if (v.readyState >= 3) {
+      setVideoReady(true);
+      v.play().catch(() => {});
+    }
+
+    return () => v.removeEventListener('canplay', onCanPlay);
   }, []);
 
   const toggleMute = () => {
     const v = videoRef.current;
     if (!v) return;
+
+    if (v.paused) {
+      v.play().catch(() => {});
+    }
+
     v.muted = !v.muted;
     setMuted(v.muted);
-    if (v.paused) v.play().catch(() => {});
   };
 
   return (
@@ -50,7 +72,6 @@ export function HeroSection() {
         src="/fifa.mp4"
         loop
         playsInline
-        muted
         preload="auto"
         aria-hidden="true"
         style={{
@@ -60,7 +81,7 @@ export function HeroSection() {
           height: '100%',
           objectFit: 'cover',
           opacity: videoReady ? 1 : 0,
-          transition: 'opacity 1s ease',
+          transition: 'opacity 1.2s ease',
           zIndex: 0,
         }}
       />
@@ -97,41 +118,38 @@ export function HeroSection() {
         <rect width="100%" height="100%" fill="url(#pitch)" />
       </svg>
 
-      {/* ── Mute / unmute button ── */}
-      <AnimatePresence>
-        {videoReady && (
-          <motion.button
-            key="mute-btn"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={toggleMute}
-            aria-label={muted ? 'Unmute FIFA anthem' : 'Mute FIFA anthem'}
-            title={muted ? 'Unmute FIFA anthem' : 'Mute FIFA anthem'}
-            style={{
-              position: 'fixed',
-              bottom: '1.5rem',
-              right: '1.5rem',
-              zIndex: 40,
-              width: 48,
-              height: 48,
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,0.15)',
-              backdropFilter: 'blur(12px)',
-              border: '1.5px solid rgba(255,255,255,0.25)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              fontSize: '1.25rem',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-              transition: 'background 0.2s',
-            }}
-          >
-            {muted ? '🔇' : '🔊'}
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* ── Mute / unmute button — always visible ── */}
+      <motion.button
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1.5, duration: 0.3 }}
+        onClick={toggleMute}
+        aria-label={muted ? 'Unmute FIFA anthem' : 'Mute FIFA anthem'}
+        title={muted ? 'Click to hear the FIFA anthem 🎵' : 'Mute'}
+        style={{
+          position: 'fixed',
+          bottom: '1.5rem',
+          right: '1.5rem',
+          zIndex: 40,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          padding: '0.5rem 0.875rem',
+          borderRadius: 9999,
+          background: muted ? 'rgba(0,0,0,0.5)' : 'rgba(21,128,61,0.85)',
+          backdropFilter: 'blur(12px)',
+          border: `1.5px solid ${muted ? 'rgba(255,255,255,0.2)' : 'rgba(34,197,94,0.5)'}`,
+          cursor: 'pointer',
+          fontSize: '0.8rem',
+          fontWeight: 700,
+          color: '#ffffff',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+          transition: 'background 0.2s, border-color 0.2s',
+        }}
+      >
+        <span style={{ fontSize: '1rem' }}>{muted ? '🔇' : '🔊'}</span>
+        <span>{muted ? 'FIFA Anthem' : 'Playing...'}</span>
+      </motion.button>
 
       {/* ── Main content ── */}
       <div
