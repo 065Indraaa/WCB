@@ -13,8 +13,10 @@ import { calculateCredits } from '@/lib/lock';
 
 const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
 const HELIUS_KEY = process.env.HELIUS_API_KEY ?? '';
-const RPC_URL = process.env.HELIUS_RPC_URL
-  ?? (HELIUS_KEY ? `https://mainnet.helius-rpc.com/?api-key=${HELIUS_KEY}` : 'https://api.mainnet-beta.solana.com');
+// Fallback chain: Helius (if key set) → public mainnet RPC
+const RPC_URL = HELIUS_KEY
+  ? `https://mainnet.helius-rpc.com/?api-key=${HELIUS_KEY}`
+  : 'https://api.mainnet-beta.solana.com';
 
 const STREAMFLOW_PROGRAM = 'strmRqUCoQUgGUan5YhzUZa6KqdzwX5L6FpUxfmKg5m';
 

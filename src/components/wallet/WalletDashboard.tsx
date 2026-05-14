@@ -1,12 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWalletLocks } from '@/lib/hooks/useWalletLocks';
 import { formatCredits, formatTokenAmount, getTierForDays } from '@/lib/lock';
 import { truncateAddress } from '@/lib/wallet';
+import { WalletMultiButtonDynamic } from './WalletButtonDynamic';
 
 function StatCard({ label, value, sub, color }: { label: string; value: string; sub?: string; color?: string }) {
   return (
@@ -132,7 +131,7 @@ export function WalletDashboard() {
         <p style={{ fontSize: '0.9rem', color: '#64748B', marginBottom: '1.5rem', maxWidth: 320, margin: '0 auto 1.5rem' }}>
           Connect your Solana wallet to see your $WCB locks, credits, and lock history.
         </p>
-        <WalletMultiButton
+        <WalletMultiButtonDynamic
           style={{
             background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
             border: 'none',
@@ -143,9 +142,7 @@ export function WalletDashboard() {
             padding: '0 2rem',
             boxShadow: '0 4px 14px -2px rgba(21,128,61,0.3)',
           }}
-        >
-          Connect Wallet
-        </WalletMultiButton>
+        />
       </div>
     );
   }

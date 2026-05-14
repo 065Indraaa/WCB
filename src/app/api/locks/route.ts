@@ -18,8 +18,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { calculateCredits } from '@/lib/lock';
 
 const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
-const HELIUS_KEY = process.env.HELIUS_API_KEY ?? process.env.NEXT_PUBLIC_HELIUS_API_KEY ?? 'demo';
-const RPC_URL = process.env.HELIUS_RPC_URL ?? `https://mainnet.helius-rpc.com/?api-key=${HELIUS_KEY}`;
+const HELIUS_KEY = process.env.HELIUS_API_KEY ?? '';
+const RPC_URL = HELIUS_KEY
+  ? `https://mainnet.helius-rpc.com/?api-key=${HELIUS_KEY}`
+  : 'https://api.mainnet-beta.solana.com';
 
 // Streamflow program ID on Solana mainnet
 const STREAMFLOW_PROGRAM = 'strmRqUCoQUgGUan5YhzUZa6KqdzwX5L6FpUxfmKg5m';

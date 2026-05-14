@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { LockCalculator } from '@/components/lock/LockCalculator';
 import { LockConfirmModal } from '@/components/lock/LockConfirmModal';
 import { CreditRedemptionInfo } from '@/components/lock/CreditRedemptionInfo';
-import { WalletDashboard } from '@/components/wallet/WalletDashboard';
-import { WalletButton } from '@/components/wallet/WalletButton';
+import { WalletDashboardDynamic, WalletButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 import { MOCK_ACTIVE_LOCKS, formatCredits, formatTokenAmount } from '@/lib/lock';
 
 export default function LockPage() {
@@ -54,7 +53,7 @@ export default function LockPage() {
               Lock your tokens via Streamflow Finance and earn betting credits. The longer you lock, the more credits you earn. Credits are your capital when predictions go live on June 11, 2026.
             </p>
           </div>
-          <WalletButton />
+          <WalletButtonDynamic />
         </div>
       </div>
 
@@ -104,7 +103,7 @@ export default function LockPage() {
           <h2 style={{ fontSize: '1.1rem', fontWeight: 900, color: '#0F172A', marginBottom: '1.25rem' }}>
             My Locks & Credits
           </h2>
-          <WalletDashboard />
+          <WalletDashboardDynamic />
         </div>
 
         {/* Col 3: Info */}

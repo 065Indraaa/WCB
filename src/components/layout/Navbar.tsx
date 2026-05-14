@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { BrandLogo } from '@/components/shared/BrandLogo';
-import { WalletButton } from '@/components/wallet/WalletButton';
+import { WalletButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 
 const NAV_LINKS = [
   { label: 'Home',        href: '/' },
@@ -92,7 +92,7 @@ export function Navbar() {
 
           {/* Right side */}
           <div className="flex items-center gap-2">
-            <WalletButton className="hidden sm:inline-flex" />
+            <WalletButtonDynamic className="hidden sm:inline-flex" />
 
             {/* Hamburger */}
             <button

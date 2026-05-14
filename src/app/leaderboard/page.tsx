@@ -1,12 +1,11 @@
 'use client';
 
 import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useWalletLocks } from '@/lib/hooks/useWalletLocks';
 import { useCommunityLocks } from '@/lib/hooks/useCommunityLocks';
 import { formatWallet } from '@/lib/utils/formatters';
 import { formatCredits, formatTokenAmount } from '@/lib/lock';
-import { WalletButton } from '@/components/wallet/WalletButton';
+import { WalletButtonDynamic, WalletMultiButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 
 const TIERS = [
   { tier: 'Bronze',   color: '#CD7F32', tint: '#FCE7C8', min: '1' },
@@ -43,7 +42,7 @@ function MyPositionBanner() {
             Lock $WCB to earn credits and climb the leaderboard
           </p>
         </div>
-        <WalletMultiButton
+        <WalletMultiButtonDynamic
           style={{
             background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
             border: 'none',
@@ -53,9 +52,7 @@ function MyPositionBanner() {
             height: 36,
             padding: '0 1.25rem',
           }}
-        >
-          Connect Wallet
-        </WalletMultiButton>
+        />
       </div>
     );
   }
@@ -133,7 +130,7 @@ export default function LeaderboardPage() {
           >
             ↻ Refresh
           </button>
-          <WalletButton />
+          <WalletButtonDynamic />
         </div>
       </div>
 
