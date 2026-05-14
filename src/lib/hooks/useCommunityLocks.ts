@@ -48,7 +48,6 @@ export function useCommunityLocks() {
     setError(null);
     try {
       const res = await window.fetch('/api/locks/community');
-      if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json() as {
         leaderboard: Array<{
           rank: number;
@@ -59,7 +58,21 @@ export function useCommunityLocks() {
           locks: LeaderboardEntry['locks'];
         }>;
         totals: CommunityTotals;
+        error?: string;
+        _debug?: Record<string, unknown>;
       };
+
+      // Log debug info in dev
+      if (data._debug) console.info('[Leaderboard debug]', data._debug);
+
+      if (!res.ok || data.error) {
+        // Return empty leaderboard with error message — don't crash the page
+        console.error('[Leaderboard]', data.error);
+        setError(data.error ?? 'Failed to load leaderboard');
+        setLeaderboard([]);
+        setTotals({ totalLocked: 0, totalCredits: 0, totalLockers: 0 });
+        return;
+      }
 
       const entries: LeaderboardEntry[] = data.leaderboard.map((e) => {
         const { tier, color } = getTierFromAmount(e.totalLocked);
