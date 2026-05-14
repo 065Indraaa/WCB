@@ -61,6 +61,7 @@ export function Footer() {
               <li><Link href="/matches" style={linkStyle}>Matches</Link></li>
               <li><Link href="/groups" style={linkStyle}>Groups</Link></li>
               <li><Link href="/bracket" style={linkStyle}>Bracket</Link></li>
+              <li><Link href="/lock" style={linkStyle}>Lock &amp; Earn</Link></li>
               <li><Link href="/leaderboard" style={linkStyle}>Leaderboard</Link></li>
             </ul>
           </div>

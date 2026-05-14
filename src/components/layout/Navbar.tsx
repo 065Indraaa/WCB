@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { BrandLogo } from '@/components/shared/BrandLogo';
+import { WalletButton } from '@/components/wallet/WalletButton';
 
 const NAV_LINKS = [
   { label: 'Home',        href: '/' },
@@ -12,6 +13,7 @@ const NAV_LINKS = [
   { label: 'Groups',      href: '/groups' },
   { label: 'Bracket',     href: '/bracket' },
   { label: 'Token',       href: '/token' },
+  { label: 'Lock & Earn', href: '/lock' },
   { label: 'Leaderboard', href: '/leaderboard' },
 ];
 
@@ -90,15 +92,7 @@ export function Navbar() {
 
           {/* Right side */}
           <div className="flex items-center gap-2">
-            <a
-              href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex btn-primary"
-              style={{ fontSize: '0.85rem', padding: '0.5rem 1rem' }}
-            >
-              Buy $WCB
-            </a>
+            <WalletButton className="hidden sm:inline-flex" />
 
             {/* Hamburger */}
             <button

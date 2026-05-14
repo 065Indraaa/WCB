@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WalletContextProvider } from './wallet-provider';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  // Create QueryClient per component instance — avoids SSR singleton issues
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -12,7 +12,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           queries: {
             staleTime: 30_000,
             gcTime: 5 * 60_000,
-            retry: 0, // no retries in mockup mode
+            retry: 0,
             refetchOnWindowFocus: false,
           },
         },
@@ -20,6 +20,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <WalletContextProvider>{children}</WalletContextProvider>
+    </QueryClientProvider>
   );
 }
