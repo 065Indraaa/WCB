@@ -100,7 +100,7 @@ export default function Home() {
               Hold $WCB. Unlock everything.
             </h2>
             <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.88)', marginBottom: '2rem', maxWidth: '36rem', margin: '0 auto 2rem' }}>
-              Early holders get priority access when real betting goes live, exclusive NFT whitelist, and leaderboard tier badges.
+              Early holders get priority access when real betting goes live and exclusive leaderboard tier badges.
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <a

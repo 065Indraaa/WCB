@@ -84,7 +84,7 @@ export default function TokenPage() {
             style={{ color: '#334155' }}
           >
             $WCB is the official community token for the 2026 FIFA World Cup prediction platform.
-            Hold to unlock priority access to predictions, NFT whitelist, leaderboard tiers, and
+            Hold to unlock priority access to predictions, leaderboard tiers, and
             exclusive rewards when betting goes live.
           </p>
 
@@ -186,8 +186,8 @@ export default function TokenPage() {
             },
             {
               icon: '🏆',
-              title: 'NFT Whitelist',
-              desc: 'World Cup Prediction Pass NFT drops June 1, 2026. Holders get the whitelist.',
+              title: 'Exclusive Rewards',
+              desc: 'Tournament prize pools, community giveaways, and special holder perks.',
             },
             {
               icon: '🥇',
@@ -202,7 +202,7 @@ export default function TokenPage() {
             {
               icon: '🎁',
               title: 'Exclusive Rewards',
-              desc: 'Tournament prize pools, NFT airdrops, and community giveaways.',
+              desc: 'Tournament prize pools, community giveaways, and special holder perks.',
             },
             {
               icon: '🔥',
@@ -235,18 +235,6 @@ export default function TokenPage() {
               title: 'Pre-launch',
               desc: 'Website live, predictions open as community polls, $WCB available on Pump.fun.',
               status: 'active',
-            },
-            {
-              date: 'May 20, 2026',
-              title: 'Whitelist Phase',
-              desc: 'NFT whitelist opens, early adopter leaderboard activates.',
-              status: 'upcoming',
-            },
-            {
-              date: 'June 1, 2026',
-              title: 'NFT & Beta',
-              desc: 'World Cup Prediction Pass drops, beta access for top holders.',
-              status: 'upcoming',
             },
             {
               date: 'June 11, 2026',
