@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wcblive.io/sitemap.xml
