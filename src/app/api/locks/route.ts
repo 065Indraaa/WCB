@@ -17,7 +17,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { calculateCredits } from '@/lib/lock';
 
-const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
+const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? '';
 const HELIUS_KEY = process.env.HELIUS_API_KEY ?? '';
 const RPC_URL = HELIUS_KEY
   ? `https://mainnet.helius-rpc.com/?api-key=${HELIUS_KEY}`

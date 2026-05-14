@@ -5,7 +5,9 @@
 
 export const SOLANA_RPC =
   process.env.NEXT_PUBLIC_HELIUS_RPC_URL ??
-  `https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY ?? 'demo'}`;
+  (process.env.NEXT_PUBLIC_HELIUS_API_KEY
+    ? `https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`
+    : 'https://api.mainnet-beta.solana.com');
 
 /** $WCB token mint address on Solana */
 export const WCB_MINT =
