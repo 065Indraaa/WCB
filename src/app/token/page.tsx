@@ -72,7 +72,7 @@ export default function TokenPage() {
                   className="text-3xl sm:text-4xl font-black tracking-tight"
                   style={{ color: '#0F172A' }}
                 >
-                  WORLDCUPBET
+                  A memecoin with a purpose.
                 </h1>
               </div>
             </div>
@@ -83,9 +83,7 @@ export default function TokenPage() {
             className="text-lg max-w-2xl mb-8 leading-relaxed"
             style={{ color: '#334155' }}
           >
-            $WCB is the official community token for the 2026 FIFA World Cup prediction platform.
-            Hold to unlock priority access to predictions, leaderboard tiers, and
-            exclusive rewards when betting goes live.
+            Honest take: $WCB is a memecoin. But it&apos;s also the key to the platform. Hold it to unlock predictions, leaderboard tiers, and exclusive rewards when real betting opens June 11, 2026. The earlier you&apos;re in, the better your position.
           </p>
 
           {/* Live metrics */}
@@ -175,7 +173,7 @@ export default function TokenPage() {
       {/* Utility cards */}
       <section className="mb-10">
         <h2 className="text-2xl font-black mb-6" style={{ color: '#0F172A' }}>
-          What $WCB unlocks
+          What you actually get
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {[
@@ -200,9 +198,9 @@ export default function TokenPage() {
               desc: 'Hold continuously for 30+ days to earn an exclusive badge.',
             },
             {
-              icon: '🎁',
-              title: 'Exclusive Rewards',
-              desc: 'Tournament prize pools, community giveaways, and special holder perks.',
+              icon: '📈',
+              title: 'Early Mover Advantage',
+              desc: 'Lock now for 2× credit multiplier. That bonus disappears at launch — no way to earn it retroactively.',
             },
             {
               icon: '🔥',
@@ -225,21 +223,24 @@ export default function TokenPage() {
 
       {/* Roadmap */}
       <section>
-        <h2 className="text-2xl font-black mb-6" style={{ color: '#0F172A' }}>
-          Roadmap
+        <h2 className="text-2xl font-black mb-2" style={{ color: '#0F172A' }}>
+          Where we&apos;re at
         </h2>
+        <p className="text-sm mb-6" style={{ color: '#64748B' }}>
+          Two chapters. The first is already happening.
+        </p>
         <div className="space-y-3">
           {[
             {
-              date: 'Now',
-              title: 'Pre-launch',
-              desc: 'Website live, predictions open as community polls, $WCB available on Pump.fun.',
+              date: 'Right now',
+              title: 'Building the community',
+              desc: 'The platform is live. Predictions work as community polls. $WCB is trading on Pump.fun. Early lockers are stacking credits. This is the ground floor.',
               status: 'active',
             },
             {
               date: 'June 11, 2026',
-              title: 'Live Launch',
-              desc: 'World Cup kickoff. Real predictions open. Full platform live.',
+              title: 'The World Cup starts — and so does real betting',
+              desc: 'Opening match kicks off. Real predictions go live. Credits become real stakes. Leaderboard goes competitive. Everything we\'ve been building for.',
               status: 'upcoming',
             },
           ].map((r, i) => (

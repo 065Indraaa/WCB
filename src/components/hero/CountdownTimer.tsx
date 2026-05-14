@@ -26,8 +26,8 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
         style={{
           width: compact ? 40 : 64,
           height: compact ? 48 : 72,
-          background: '#DCFCE7',
-          border: '1px solid rgba(21,128,61,0.2)',
+          background: 'rgba(255,255,255,0.1)',
+          border: '1px solid rgba(255,255,255,0.15)',
           borderRadius: 12,
           display: 'flex',
           alignItems: 'center',
@@ -38,8 +38,7 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
       >
         {reducedMotion ? (
           <span
-            className="text-pitch-gradient font-black tabular-nums"
-            style={{ fontSize: compact ? '1.4rem' : '2.25rem' }}
+            style={{ fontSize: compact ? '1.4rem' : '2.25rem', fontWeight: 900, color: '#86EFAC', fontVariantNumeric: 'tabular-nums' }}
           >
             {value}
           </span>
@@ -47,8 +46,7 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
           <AnimatePresence mode="popLayout">
             <motion.span
               key={value}
-              className="text-pitch-gradient font-black tabular-nums"
-              style={{ fontSize: compact ? '1.4rem' : '2.25rem', position: 'absolute' }}
+              style={{ fontSize: compact ? '1.4rem' : '2.25rem', fontWeight: 900, color: '#86EFAC', fontVariantNumeric: 'tabular-nums', position: 'absolute' }}
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 20, opacity: 0 }}
@@ -65,7 +63,7 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
           fontWeight: 700,
           textTransform: 'uppercase',
           letterSpacing: '0.12em',
-          color: '#64748B',
+          color: 'rgba(255,255,255,0.5)',
         }}
       >
         {label}
@@ -118,8 +116,8 @@ export function CountdownTimer({ targetDate = DEFAULT_TARGET, compact = false }:
   if (!c) {
     return (
       <p
-        className="text-pitch-gradient font-black text-center"
-        style={{ fontSize: compact ? '1.1rem' : '1.75rem' }}
+        className="font-black text-center"
+        style={{ fontSize: compact ? '1.1rem' : '1.75rem', color: '#86EFAC' }}
       >
         Predictions are live! 🎉
       </p>
@@ -150,7 +148,7 @@ export function CountdownTimer({ targetDate = DEFAULT_TARGET, compact = false }:
           {i < 3 && (
             <span
               style={{
-                color: '#15803D',
+                color: 'rgba(255,255,255,0.4)',
                 fontWeight: 900,
                 fontSize: compact ? '1.1rem' : '1.75rem',
                 marginBottom: compact ? '1rem' : '1.5rem',

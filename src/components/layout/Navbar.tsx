@@ -13,7 +13,7 @@ const NAV_LINKS = [
   { label: 'Groups',      href: '/groups' },
   { label: 'Bracket',     href: '/bracket' },
   { label: 'Token',       href: '/token' },
-  { label: 'Lock & Earn', href: '/lock' },
+  { label: 'Lock & Earn 🔒', href: '/lock', dot: true },
   { label: 'Leaderboard', href: '/leaderboard' },
 ];
 
@@ -79,10 +79,23 @@ export function Navbar() {
                     className="px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
                     style={
                       active
-                        ? { color: '#15803D', background: '#DCFCE7', textDecoration: 'none' }
-                        : { color: '#334155', textDecoration: 'none' }
+                        ? { color: '#15803D', background: '#DCFCE7', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }
+                        : { color: '#334155', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }
                     }
                   >
+                    {link.dot && (
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          display: 'inline-block',
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          background: '#22C55E',
+                          flexShrink: 0,
+                        }}
+                      />
+                    )}
                     {link.label}
                   </Link>
                 </li>
@@ -159,10 +172,23 @@ export function Navbar() {
                   className="block px-4 py-4 rounded-xl text-lg font-semibold transition-colors"
                   style={
                     active
-                      ? { background: '#DCFCE7', color: '#15803D', textDecoration: 'none' }
-                      : { color: '#0F172A', textDecoration: 'none' }
+                      ? { background: '#DCFCE7', color: '#15803D', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }
+                      : { color: '#0F172A', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }
                   }
                 >
+                  {link.dot && (
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        display: 'inline-block',
+                        width: 7,
+                        height: 7,
+                        borderRadius: '50%',
+                        background: '#22C55E',
+                        flexShrink: 0,
+                      }}
+                    />
+                  )}
                   {link.label}
                 </Link>
               </motion.div>

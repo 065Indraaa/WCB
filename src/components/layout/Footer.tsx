@@ -45,7 +45,7 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1">
             <BrandLogo size="md" />
             <p className="text-sm mt-3 leading-relaxed max-w-xs" style={{ color: '#64748B' }}>
-              The community prediction platform for World Cup 2026. Built on Solana, launched on Pump.fun.
+              Community prediction platform for World Cup 2026. Solana-native, launched on Pump.fun. Betting opens June 11, 2026.
             </p>
           </div>
 
@@ -156,7 +156,7 @@ export function Footer() {
             className="text-xs text-center sm:text-right max-w-md"
             style={{ color: '#94A3B8' }}
           >
-            © 2026 WORLDCUPBET. Community memecoin · Not financial advice · Real betting opens after launch.
+            © 2026 WORLDCUPBET — This is a community memecoin on Solana. Not financial advice. Betting features open June 11, 2026.
           </p>
         </div>
       </div>

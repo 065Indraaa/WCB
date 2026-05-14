@@ -6,17 +6,6 @@ import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 import { CountdownTimer } from './CountdownTimer';
 import { PumpFunBadge } from '@/components/shared/PumpFunBadge';
 
-const FLOATS = [
-  { emoji: '⚽', x: 6,  y: 14, size: 36, delay: 0,   dur: 7 },
-  { emoji: '🏆', x: 87, y: 18, size: 32, delay: 1.2, dur: 8 },
-  { emoji: '⚽', x: 82, y: 66, size: 26, delay: 0.6, dur: 9 },
-  { emoji: '🥇', x: 9,  y: 70, size: 30, delay: 2,   dur: 7 },
-  { emoji: '⚽', x: 48, y: 7,  size: 22, delay: 1.8, dur: 8 },
-  { emoji: '🌍', x: 3,  y: 46, size: 24, delay: 2.5, dur: 7 },
-  { emoji: '🎯', x: 92, y: 55, size: 20, delay: 0.9, dur: 9 },
-  { emoji: '⚽', x: 55, y: 88, size: 18, delay: 3.1, dur: 8 },
-];
-
 const TRUST_ITEMS = [
   { icon: '🏟️', text: '3 Host Nations' },
   { icon: '⚽', text: '48 Teams' },
@@ -29,124 +18,126 @@ const TRUST_ITEMS = [
 export function HeroSection() {
   const rm = useReducedMotion();
   const pumpfun = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [audioPlaying, setAudioPlaying] = useState(false);
-  const [audioMuted, setAudioMuted] = useState(false);
-  const [audioReady, setAudioReady] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+  const [videoReady, setVideoReady] = useState(false);
 
-  // Auto-play FIFA anthem on mount (muted by default, user can unmute)
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.volume = 0.18;
-    audio.loop = true;
-    const tryPlay = () => {
-      audio.play().then(() => setAudioPlaying(true)).catch(() => {
-        // Autoplay blocked — wait for user interaction
-      });
-    };
-    audio.addEventListener('canplaythrough', () => {
-      setAudioReady(true);
-      tryPlay();
-    });
-    // Also try on first user interaction
-    const onInteract = () => {
-      if (!audioPlaying) tryPlay();
-      document.removeEventListener('click', onInteract);
-    };
-    document.addEventListener('click', onInteract);
-    return () => document.removeEventListener('click', onInteract);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.play().catch(() => {});
+    v.addEventListener('canplay', () => setVideoReady(true));
   }, []);
 
   const toggleMute = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (!audioPlaying) {
-      audio.play().then(() => setAudioPlaying(true)).catch(() => {});
-      setAudioMuted(false);
-    } else {
-      audio.muted = !audio.muted;
-      setAudioMuted(audio.muted);
-    }
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+    if (v.paused) v.play().catch(() => {});
   };
 
   return (
     <section
       className="relative overflow-hidden"
-      style={{
-        minHeight: '92vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'linear-gradient(160deg, #FAFBF8 0%, #F0FDF4 50%, #DCFCE7 100%)',
-      }}
+      style={{ minHeight: '92vh', display: 'flex', flexDirection: 'column' }}
       aria-label="Hero"
     >
-      {/* FIFA Anthem audio */}
-      <audio ref={audioRef} src="/fifa.mp4" preload="auto" aria-hidden="true" />
+      {/* ── Background video ── */}
+      <video
+        ref={videoRef}
+        src="/fifa.mp4"
+        loop
+        playsInline
+        muted
+        preload="auto"
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          opacity: videoReady ? 1 : 0,
+          transition: 'opacity 1s ease',
+          zIndex: 0,
+        }}
+      />
 
-      {/* Ambient radial glows */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div style={{ position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)', width: '80vw', height: '60vh', background: 'radial-gradient(ellipse, rgba(34,197,94,0.12) 0%, transparent 70%)', borderRadius: '50%' }} />
-        <div style={{ position: 'absolute', bottom: '0', right: '-10%', width: '50vw', height: '50vh', background: 'radial-gradient(ellipse, rgba(217,119,6,0.07) 0%, transparent 70%)', borderRadius: '50%' }} />
-      </div>
+      {/* ── Dark + green gradient overlay ── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          background: [
+            'linear-gradient(to bottom,',
+            '  rgba(10,20,10,0.72) 0%,',
+            '  rgba(10,20,10,0.55) 40%,',
+            '  rgba(10,20,10,0.75) 80%,',
+            '  rgba(10,20,10,0.92) 100%)',
+          ].join(''),
+        }}
+      />
 
-      {/* Football pitch lines — decorative */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.04 }} aria-hidden="true">
+      {/* ── Subtle pitch-line SVG ── */}
+      <svg
+        aria-hidden="true"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.06, zIndex: 2, pointerEvents: 'none' }}
+      >
         <defs>
-          <pattern id="pitch-lines" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-            <line x1="60" y1="0" x2="60" y2="120" stroke="#15803D" strokeWidth="1" />
-            <line x1="0" y1="60" x2="120" y2="60" stroke="#15803D" strokeWidth="1" />
-            <circle cx="60" cy="60" r="30" fill="none" stroke="#15803D" strokeWidth="1" />
+          <pattern id="pitch" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+            <line x1="60" y1="0" x2="60" y2="120" stroke="#22C55E" strokeWidth="0.8" />
+            <line x1="0" y1="60" x2="120" y2="60" stroke="#22C55E" strokeWidth="0.8" />
+            <circle cx="60" cy="60" r="28" fill="none" stroke="#22C55E" strokeWidth="0.8" />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#pitch-lines)" />
+        <rect width="100%" height="100%" fill="url(#pitch)" />
       </svg>
 
-      {/* Floating emojis */}
-      {!rm && FLOATS.map((f, i) => (
-        <motion.div
-          key={i}
-          className="absolute pointer-events-none select-none"
-          style={{ left: `${f.x}%`, top: `${f.y}%`, fontSize: f.size, opacity: 0.22 }}
-          animate={{ y: [0, -20, 0], rotate: [0, i % 2 === 0 ? 5 : -5, 0] }}
-          transition={{ duration: f.dur, delay: f.delay, repeat: Infinity, ease: 'easeInOut' }}
-          aria-hidden="true"
-        >
-          {f.emoji}
-        </motion.div>
-      ))}
-
-      {/* Audio control — bottom right */}
+      {/* ── Mute / unmute button ── */}
       <AnimatePresence>
-        {audioReady && (
+        {videoReady && (
           <motion.button
+            key="mute-btn"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             onClick={toggleMute}
+            aria-label={muted ? 'Unmute FIFA anthem' : 'Mute FIFA anthem'}
+            title={muted ? 'Unmute FIFA anthem' : 'Mute FIFA anthem'}
             style={{
-              position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 30,
-              width: 44, height: 44, borderRadius: '50%',
-              background: 'rgba(255,255,255,0.9)',
-              border: '1.5px solid #E2E8F0',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', fontSize: '1.1rem',
-              backdropFilter: 'blur(8px)',
+              position: 'fixed',
+              bottom: '1.5rem',
+              right: '1.5rem',
+              zIndex: 40,
+              width: 48,
+              height: 48,
+              borderRadius: '50%',
+              background: 'rgba(255,255,255,0.15)',
+              backdropFilter: 'blur(12px)',
+              border: '1.5px solid rgba(255,255,255,0.25)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              fontSize: '1.25rem',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+              transition: 'background 0.2s',
             }}
-            aria-label={audioMuted || !audioPlaying ? 'Play FIFA anthem' : 'Mute FIFA anthem'}
-            title={audioMuted || !audioPlaying ? 'Play FIFA anthem' : 'Mute FIFA anthem'}
           >
-            {audioMuted || !audioPlaying ? '🔇' : '🎵'}
+            {muted ? '🔇' : '🔊'}
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* Main content */}
-      <div className="relative w-full" style={{ zIndex: 10, maxWidth: '72rem', margin: '0 auto', padding: '4rem 1.5rem 3rem' }}>
+      {/* ── Main content ── */}
+      <div
+        className="relative w-full flex-1 flex flex-col items-center justify-center"
+        style={{ zIndex: 10, maxWidth: '72rem', margin: '0 auto', padding: '5rem 1.5rem 3rem', width: '100%' }}
+      >
         <div style={{ maxWidth: '58rem', margin: '0 auto', textAlign: 'center' }}>
 
           {/* Eyebrow badges */}
@@ -157,10 +148,24 @@ export function HeroSection() {
             style={{ marginBottom: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}
           >
             <PumpFunBadge />
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.875rem', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 600, background: '#FEF3C7', color: '#D97706', border: '1px solid rgba(217,119,6,0.25)' }}>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+              padding: '0.375rem 0.875rem', borderRadius: '9999px',
+              fontSize: '0.85rem', fontWeight: 600,
+              background: 'rgba(254,243,199,0.15)', color: '#FDE68A',
+              border: '1px solid rgba(253,230,138,0.3)',
+              backdropFilter: 'blur(8px)',
+            }}>
               🌍 FIFA World Cup 2026
             </span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.875rem', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: 600, background: '#EDE9FE', color: '#7C3AED', border: '1px solid rgba(124,58,237,0.2)' }}>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+              padding: '0.375rem 0.875rem', borderRadius: '9999px',
+              fontSize: '0.85rem', fontWeight: 600,
+              background: 'rgba(237,233,254,0.12)', color: '#C4B5FD',
+              border: '1px solid rgba(196,181,253,0.25)',
+              backdropFilter: 'blur(8px)',
+            }}>
               ◎ Solana
             </span>
           </motion.div>
@@ -170,13 +175,28 @@ export function HeroSection() {
             initial={rm ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.1 }}
-            style={{ fontSize: 'clamp(2.4rem, 6.5vw, 5rem)', fontWeight: 900, color: '#0F172A', lineHeight: 1.03, letterSpacing: '-0.035em', marginBottom: '1.5rem' }}
+            style={{
+              fontSize: 'clamp(2.4rem, 6.5vw, 5.2rem)',
+              fontWeight: 900,
+              color: '#ffffff',
+              lineHeight: 1.03,
+              letterSpacing: '-0.035em',
+              marginBottom: '1.5rem',
+              textShadow: '0 2px 20px rgba(0,0,0,0.4)',
+            }}
           >
             Predict every match.
             <br />
-            <span className="text-pitch-gradient">Hold $WCB.</span>
-            <br />
-            <span style={{ color: '#D97706' }}>Win the cup.</span>
+            <span style={{
+              background: 'linear-gradient(135deg, #22C55E 0%, #86EFAC 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}>
+              Hold $WCB.
+            </span>
+            {' '}
+            <span style={{ color: '#FDE68A' }}>Win the cup.</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -184,7 +204,14 @@ export function HeroSection() {
             initial={rm ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.2 }}
-            style={{ fontSize: '1.15rem', color: '#334155', maxWidth: '40rem', margin: '0 auto 2.25rem', lineHeight: 1.7 }}
+            style={{
+              fontSize: '1.15rem',
+              color: 'rgba(255,255,255,0.82)',
+              maxWidth: '40rem',
+              margin: '0 auto 2.25rem',
+              lineHeight: 1.7,
+              textShadow: '0 1px 8px rgba(0,0,0,0.3)',
+            }}
           >
             The community prediction platform for the 2026 FIFA World Cup.
             Cast your picks, see what the world thinks, and ride the hype on Solana.
@@ -201,18 +228,37 @@ export function HeroSection() {
               href={pumpfun}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary"
-              style={{ fontSize: '1rem', padding: '0.875rem 2rem', borderRadius: 14 }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                fontSize: '1rem', padding: '0.875rem 2rem', borderRadius: 14,
+                background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
+                color: '#ffffff', fontWeight: 700, textDecoration: 'none',
+                boxShadow: '0 4px 20px rgba(21,128,61,0.45)',
+                transition: 'transform 0.15s, box-shadow 0.15s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(21,128,61,0.55)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(21,128,61,0.45)'; }}
             >
               🚀 Buy $WCB on Pump.fun
             </a>
+
             <Link
               href="/matches"
-              className="btn-secondary"
-              style={{ fontSize: '1rem', padding: '0.875rem 2rem', borderRadius: 14 }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                fontSize: '1rem', padding: '0.875rem 2rem', borderRadius: 14,
+                background: 'rgba(255,255,255,0.12)',
+                color: '#ffffff', fontWeight: 700, textDecoration: 'none',
+                border: '1.5px solid rgba(255,255,255,0.3)',
+                backdropFilter: 'blur(8px)',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.2)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; }}
             >
               ⚽ Explore Matches
             </Link>
+
             <Link
               href="/lock"
               style={{
@@ -220,8 +266,11 @@ export function HeroSection() {
                 fontSize: '1rem', padding: '0.875rem 2rem', borderRadius: 14,
                 background: 'linear-gradient(135deg, #D97706 0%, #F59E0B 100%)',
                 color: '#ffffff', fontWeight: 700, textDecoration: 'none',
-                boxShadow: '0 4px 14px -2px rgba(217,119,6,0.3)',
+                boxShadow: '0 4px 20px rgba(217,119,6,0.4)',
+                transition: 'transform 0.15s',
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; }}
             >
               🔒 Lock & Earn Credits
             </Link>
@@ -233,19 +282,23 @@ export function HeroSection() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.55, delay: 0.4 }}
             style={{
-              maxWidth: '34rem', margin: '0 auto 2.5rem',
-              background: '#ffffff',
-              border: '1.5px solid #E2E8F0',
+              maxWidth: '34rem',
+              margin: '0 auto 2.5rem',
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.15)',
               borderRadius: 20,
               padding: '1.75rem 2rem',
-              boxShadow: '0 8px 32px -8px rgba(21,128,61,0.12), 0 2px 8px rgba(0,0,0,0.04)',
+              backdropFilter: 'blur(16px)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '1.1rem' }}>⏱</span>
-              <p className="section-eyebrow">World Cup Kickoff</p>
+              <span style={{ fontSize: '1rem' }}>⏱</span>
+              <p style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: '#86EFAC' }}>
+                World Cup Kickoff
+              </p>
             </div>
-            <p style={{ fontSize: '0.8rem', color: '#64748B', marginBottom: '1.25rem', fontWeight: 600, textAlign: 'center' }}>
+            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', marginBottom: '1.25rem', fontWeight: 600, textAlign: 'center' }}>
               June 11, 2026 · Estadio Azteca, Mexico City
             </p>
             <CountdownTimer />
@@ -268,37 +321,47 @@ export function HeroSection() {
                 style={{
                   padding: '1rem 0.75rem',
                   textAlign: 'center',
-                  background: '#ffffff',
-                  border: '1px solid #E2E8F0',
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(255,255,255,0.12)',
                   borderRadius: 14,
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+                  backdropFilter: 'blur(8px)',
                 }}
               >
                 <div style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>{s.icon}</div>
-                <div className="text-pitch-gradient" style={{ fontSize: '1.75rem', fontWeight: 900, lineHeight: 1 }}>{s.value}</div>
-                <div style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748B', marginTop: '0.25rem' }}>{s.label}</div>
+                <div style={{
+                  fontSize: '1.75rem', fontWeight: 900, lineHeight: 1,
+                  background: 'linear-gradient(135deg, #22C55E 0%, #86EFAC 100%)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                }}>
+                  {s.value}
+                </div>
+                <div style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.5)', marginTop: '0.25rem' }}>
+                  {s.label}
+                </div>
               </div>
             ))}
           </motion.div>
         </div>
       </div>
 
-      {/* Trust bar */}
+      {/* ── Trust bar at bottom ── */}
       <motion.div
         initial={rm ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.7 }}
         style={{
+          position: 'relative',
+          zIndex: 10,
           width: '100%',
-          borderTop: '1px solid rgba(226,232,240,0.8)',
-          background: 'rgba(255,255,255,0.7)',
-          backdropFilter: 'blur(8px)',
+          borderTop: '1px solid rgba(255,255,255,0.1)',
+          background: 'rgba(0,0,0,0.35)',
+          backdropFilter: 'blur(12px)',
           padding: '0.875rem 1.5rem',
         }}
       >
         <div style={{ maxWidth: '72rem', margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '0.5rem 2rem' }}>
           {TRUST_ITEMS.map((item) => (
-            <span key={item.text} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.78rem', fontWeight: 600, color: '#334155', whiteSpace: 'nowrap' }}>
+            <span key={item.text} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.7)', whiteSpace: 'nowrap' }}>
               <span>{item.icon}</span>
               {item.text}
             </span>

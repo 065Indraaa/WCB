@@ -4,6 +4,7 @@ import { MatchCard } from '@/components/matches/MatchCard';
 import { GroupCard } from '@/components/groups/GroupCard';
 import { WC_2026_GROUP_MATCHES } from '@/lib/constants/matches2026';
 import { buildAllGroups } from '@/lib/groupHelpers';
+import { WalletRedirectHandler } from '@/components/shared/WalletRedirectHandler';
 
 export default function Home() {
   const featured = WC_2026_GROUP_MATCHES.slice(0, 6);
@@ -11,20 +12,22 @@ export default function Home() {
 
   return (
     <>
+      <WalletRedirectHandler />
       <HeroSection />
 
       {/* Trust strip */}
       <div style={{ background: '#fff', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0', padding: '1.25rem 1.5rem' }}>
         <div style={{ maxWidth: '80rem', margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '1.5rem 2.5rem' }}>
           {[
-            '⚽ Official 48-team format',
-            '◎ Built on Solana',
-            '🚀 Launched on Pump.fun',
-            '🇺🇸🇨🇦🇲🇽 USA · Canada · Mexico',
-            '📡 Live match data',
+            { text: '⚽ 48 teams, 3 countries', note: 'biggest World Cup ever' },
+            { text: '◎ Solana-native', note: 'fast & cheap' },
+            { text: '🚀 Pump.fun launch', note: 'community-first' },
+            { text: '🇺🇸🇨🇦🇲🇽 USA · Canada · Mexico', note: null },
+            { text: '📡 Live match data', note: 'no delays' },
           ].map((s) => (
-            <span key={s} style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', whiteSpace: 'nowrap' }}>
-              {s}
+            <span key={s.text} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A' }}>{s.text}</span>
+              {s.note && <span style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 500 }}>— {s.note}</span>}
             </span>
           ))}
         </div>
@@ -35,16 +38,26 @@ export default function Home() {
         <div style={{ maxWidth: '80rem', margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
             <div>
-              <p className="section-eyebrow" style={{ marginBottom: '0.5rem' }}>⚽ Featured Matches</p>
               <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.25rem)', fontWeight: 900, color: '#0F172A', margin: 0 }}>
-                Predict the opening fixtures
+                Pick your winners before everyone else does.
               </h2>
-              <p style={{ color: '#64748B', marginTop: '0.375rem', fontSize: '0.95rem' }}>
-                Cast your community vote on the matches everyone&apos;s talking about.
+              <p style={{ color: '#64748B', marginTop: '0.5rem', fontSize: '0.95rem' }}>
+                These are the matches people are already arguing about.
               </p>
             </div>
-            <Link href="/matches" className="btn-secondary" style={{ flexShrink: 0 }}>
-              View all matches →
+            <Link
+              href="/matches"
+              style={{
+                flexShrink: 0,
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                color: '#15803D',
+                textDecoration: 'none',
+                borderBottom: '1px solid #BBF7D0',
+                paddingBottom: '1px',
+              }}
+            >
+              see all matches →
             </Link>
           </div>
 
@@ -61,12 +74,11 @@ export default function Home() {
         <div style={{ maxWidth: '80rem', margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
             <div>
-              <p className="section-eyebrow" style={{ marginBottom: '0.5rem' }}>🌍 Group Stage</p>
               <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.25rem)', fontWeight: 900, color: '#0F172A', margin: 0 }}>
-                12 groups. 48 nations. 1 trophy.
+                12 groups. 48 countries. One winner takes it all.
               </h2>
-              <p style={{ color: '#64748B', marginTop: '0.375rem', fontSize: '0.95rem' }}>
-                Track standings, qualified teams, and every match in your group.
+              <p style={{ color: '#64748B', marginTop: '0.5rem', fontSize: '0.95rem' }}>
+                Track standings and every match in your group.
               </p>
             </div>
             <Link href="/groups" className="btn-secondary" style={{ flexShrink: 0 }}>
@@ -94,13 +106,13 @@ export default function Home() {
         >
           <div style={{ padding: '3.5rem 2.5rem', textAlign: 'center' }}>
             <p style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.75)', marginBottom: '0.75rem' }}>
-              Get In Early
+              You&apos;re early
             </p>
             <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontWeight: 900, color: '#fff', marginBottom: '1rem', lineHeight: 1.1 }}>
-              Hold $WCB. Unlock everything.
+              You&apos;re early. That matters.
             </h2>
             <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.88)', marginBottom: '2rem', maxWidth: '36rem', margin: '0 auto 2rem' }}>
-              Early holders get priority access when real betting goes live and exclusive leaderboard tier badges.
+              Betting goes live June 11, 2026. The people who hold $WCB now get priority access, lower fees, and leaderboard tier badges that latecomers can&apos;t earn.
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <a
