@@ -5,6 +5,7 @@ import { LockCalculator } from '@/components/lock/LockCalculator';
 import { LockConfirmModal } from '@/components/lock/LockConfirmModal';
 import { CreditRedemptionInfo } from '@/components/lock/CreditRedemptionInfo';
 import { WalletDashboardDynamic, WalletButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
+import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 import { MOCK_ACTIVE_LOCKS, formatCredits, formatTokenAmount } from '@/lib/lock';
 
 export default function LockPage() {
@@ -140,26 +141,38 @@ export default function LockPage() {
               icon: '⏳',
               title: 'The 2× bonus disappears at launch',
               desc: 'Early lockers get double credits. Once June 11 hits, that multiplier is gone. There\'s no way to retroactively earn it.',
+              img: 'Countdown Visual',
             },
             {
               icon: '🎯',
               title: 'Credits = your betting power',
               desc: 'When real predictions open, credits are what you bet with. More credits means more bets, more chances to climb the leaderboard.',
+              img: 'Betting Credits Visual',
             },
             {
               icon: '🔐',
               title: 'Your tokens stay yours',
               desc: 'Locking is non-custodial via Streamflow. You set the unlock date. Nobody else touches your $WCB.',
+              img: 'Security Visual',
             },
           ].map((r) => (
             <div
               key={r.title}
               className="card"
-              style={{ padding: '1.5rem', borderLeft: '3px solid #15803D' }}
+              style={{ padding: 0, overflow: 'hidden', borderLeft: '3px solid #15803D' }}
             >
-              <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{r.icon}</div>
-              <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.5rem' }}>{r.title}</h3>
-              <p style={{ fontSize: '0.85rem', color: '#64748B', lineHeight: 1.6, margin: 0 }}>{r.desc}</p>
+              <ImagePlaceholder
+                width="100%"
+                height={120}
+                label={r.img}
+                rounded={0}
+                style={{ border: 'none', borderRadius: 0 }}
+              />
+              <div style={{ padding: '1rem' }}>
+                <div style={{ fontSize: '1.25rem', marginBottom: '0.375rem' }}>{r.icon}</div>
+                <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.375rem' }}>{r.title}</h3>
+                <p style={{ fontSize: '0.82rem', color: '#64748B', lineHeight: 1.6, margin: 0 }}>{r.desc}</p>
+              </div>
             </div>
           ))}
         </div>

@@ -30,17 +30,19 @@ export function HeroSection() {
     v.muted = true;
     v.volume = 0.4;
 
+    // Use preload=auto and start playing as soon as any data is available
     const onCanPlay = () => {
       setVideoReady(true);
-      v.play().catch(() => {
-        // Autoplay blocked — video will play on first user interaction
-      });
+      v.play().catch(() => {});
     };
 
+    // canplaythrough = enough buffered to play without stopping
+    // canplay = can start playing (may pause to buffer)
+    // We use canplay for faster start
     v.addEventListener('canplay', onCanPlay, { once: true });
 
-    // Fallback: if canplay already fired
-    if (v.readyState >= 3) {
+    // If already buffered enough
+    if (v.readyState >= 2) {
       setVideoReady(true);
       v.play().catch(() => {});
     }
@@ -66,6 +68,37 @@ export function HeroSection() {
       style={{ minHeight: '92vh', display: 'flex', flexDirection: 'column' }}
       aria-label="Hero"
     >
+      {/* ── Background: animated gradient saat video loading ── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+          background: videoReady
+            ? 'transparent'
+            : 'linear-gradient(160deg, #0a1a0a 0%, #0d2010 40%, #0a1a0a 100%)',
+          transition: 'background 1s ease',
+        }}
+      >
+        {/* Animated pitch lines while loading */}
+        {!videoReady && (
+          <svg
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.08 }}
+            aria-hidden="true"
+          >
+            <defs>
+              <pattern id="pitch-bg" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+                <line x1="60" y1="0" x2="60" y2="120" stroke="#22C55E" strokeWidth="1" />
+                <line x1="0" y1="60" x2="120" y2="60" stroke="#22C55E" strokeWidth="1" />
+                <circle cx="60" cy="60" r="28" fill="none" stroke="#22C55E" strokeWidth="1" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#pitch-bg)" />
+          </svg>
+        )}
+      </div>
+
       {/* ── Background video ── */}
       <video
         ref={videoRef}
@@ -73,6 +106,7 @@ export function HeroSection() {
         loop
         playsInline
         preload="auto"
+        poster="/hero-poster.svg"
         aria-hidden="true"
         style={{
           position: 'absolute',
@@ -81,8 +115,8 @@ export function HeroSection() {
           height: '100%',
           objectFit: 'cover',
           opacity: videoReady ? 1 : 0,
-          transition: 'opacity 1.2s ease',
-          zIndex: 0,
+          transition: 'opacity 1.5s ease',
+          zIndex: 1,
         }}
       />
 

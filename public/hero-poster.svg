@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <radialGradient id="g1" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#0d2010"/>
+      <stop offset="100%" stop-color="#0a1a0a"/>
+    </radialGradient>
+    <pattern id="pitch" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+      <line x1="60" y1="0" x2="60" y2="120" stroke="#22C55E" stroke-width="0.8" opacity="0.08"/>
+      <line x1="0" y1="60" x2="120" y2="60" stroke="#22C55E" stroke-width="0.8" opacity="0.08"/>
+      <circle cx="60" cy="60" r="28" fill="none" stroke="#22C55E" stroke-width="0.8" opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#g1)"/>
+  <rect width="1920" height="1080" fill="url(#pitch)"/>
+  <!-- Center circle -->
+  <circle cx="960" cy="540" r="200" fill="none" stroke="#22C55E" stroke-width="2" opacity="0.06"/>
+  <circle cx="960" cy="540" r="8" fill="#22C55E" opacity="0.1"/>
+  <!-- Center line -->
+  <line x1="960" y1="0" x2="960" y2="1080" stroke="#22C55E" stroke-width="2" opacity="0.06"/>
+</svg>

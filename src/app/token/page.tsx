@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { formatPrice, formatMarketCap } from '@/lib/utils/formatters';
 import { PumpFunBadge } from '@/components/shared/PumpFunBadge';
 import { BrandLogo } from '@/components/shared/BrandLogo';
+import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 
 const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
 const JUPITER = process.env.NEXT_PUBLIC_JUPITER_URL ?? 'https://jup.ag';
@@ -168,6 +169,17 @@ export default function TokenPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Token banner image */}
+      <div style={{ marginBottom: '2.5rem' }}>
+        <ImagePlaceholder
+          width="100%"
+          height={200}
+          label="Token Banner — 1200×400 (World Cup + Solana themed)"
+          rounded={16}
+          style={{ border: '1px solid #E2E8F0' }}
+        />
       </div>
 
       {/* Utility cards */}

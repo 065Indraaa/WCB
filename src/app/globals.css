@@ -223,3 +223,21 @@
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+/* ── Sidebar nav link hover ── */
+.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.625rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #334155;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.1s;
+}
+.sidebar-nav-link:hover {
+  background: #F1F5F0;
+  color: #15803D;
+}
