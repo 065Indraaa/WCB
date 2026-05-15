@@ -42,9 +42,9 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
           fontSize,
           fontWeight: 700,
           borderRadius: 10,
-          border: '1.5px solid #E2E8F0',
-          background: '#F1F5F0',
-          color: '#64748B',
+          border: '1px solid #2A2A2A',
+          background: '#171717',
+          color: '#B3B3B3',
           cursor: 'not-allowed',
         }}
         className={className}
@@ -62,21 +62,21 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
           style={{
             padding,
             fontSize,
-            fontWeight: 700,
-            borderRadius: 10,
-            border: '1.5px solid #DCFCE7',
-            background: '#F0FDF4',
-            color: '#15803D',
-            cursor: 'pointer',
+          fontWeight: 700,
+          borderRadius: 10,
+          border: '1px solid rgba(20,241,149,0.35)',
+          background: '#111111',
+          color: '#14F195',
+          cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
           }}
           className={className}
         >
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22C55E', flexShrink: 0 }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#14F195', flexShrink: 0 }} />
           {shortAddress}
-          <span style={{ fontSize: '0.65rem', opacity: 0.7 }}>▼</span>
+          <span style={{ fontSize: '0.65rem', opacity: 0.7 }}>V</span>
         </button>
 
         {showDropdown && (
@@ -85,20 +85,20 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
               position: 'absolute',
               top: 'calc(100% + 8px)',
               right: 0,
-              background: '#ffffff',
-              border: '1px solid #E2E8F0',
+              background: '#111111',
+              border: '1px solid #2A2A2A',
               borderRadius: 12,
-              boxShadow: '0 8px 24px -4px rgba(15,23,42,0.12)',
+              boxShadow: '0 18px 48px rgba(0,0,0,0.42)',
               minWidth: 200,
               zIndex: 100,
               overflow: 'hidden',
             }}
           >
-            <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #E2E8F0', background: '#F8FAFC' }}>
-              <p style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>
+            <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #2A2A2A', background: '#171717' }}>
+              <p style={{ fontSize: '0.7rem', fontWeight: 700, color: '#6E6E6E', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>
                 Connected
               </p>
-              <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0F172A', fontFamily: 'monospace', marginTop: '0.25rem' }}>
+              <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#14F195', fontFamily: 'monospace', marginTop: '0.25rem' }}>
                 {shortAddress}
               </p>
             </div>
@@ -135,10 +135,10 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
           fontWeight: 700,
           borderRadius: 10,
           border: 'none',
-          background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
-          color: '#ffffff',
+          background: '#F2B544',
+          color: '#070707',
           cursor: 'pointer',
-          boxShadow: '0 4px 12px -2px rgba(21,128,61,0.25)',
+          boxShadow: '0 6px 18px rgba(242,181,68,0.26)',
         }}
         className={className}
       >
@@ -151,30 +151,30 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
             position: 'absolute',
             top: 'calc(100% + 8px)',
             right: 0,
-            background: '#ffffff',
-            border: '1px solid #E2E8F0',
+            background: '#111111',
+            border: '1px solid #2A2A2A',
             borderRadius: 12,
-            boxShadow: '0 8px 24px -4px rgba(15,23,42,0.12)',
+            boxShadow: '0 18px 48px rgba(0,0,0,0.42)',
             minWidth: 220,
             zIndex: 100,
             overflow: 'hidden',
           }}
         >
-          <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #E2E8F0', background: '#F8FAFC' }}>
-            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#334155', margin: 0 }}>
+          <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #2A2A2A', background: '#171717' }}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
               Select a wallet
             </p>
           </div>
           {wallets.length === 0 ? (
             <div style={{ padding: '1rem', textAlign: 'center' }}>
-              <p style={{ fontSize: '0.8rem', color: '#64748B' }}>No wallets detected</p>
+              <p style={{ fontSize: '0.8rem', color: '#B3B3B3' }}>No wallets detected</p>
               <a
                 href="https://phantom.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ fontSize: '0.8rem', color: '#15803D', fontWeight: 600 }}
+                style={{ fontSize: '0.8rem', color: '#F2B544', fontWeight: 600 }}
               >
-                Install Phantom →
+                Install Phantom
               </a>
             </div>
           ) : (
@@ -193,12 +193,12 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
                   textAlign: 'left',
                   fontSize: '0.9rem',
                   fontWeight: 600,
-                  color: '#0F172A',
+                  color: '#FFFFFF',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.75rem',
-                  borderBottom: '1px solid #F1F5F0',
+                  borderBottom: '1px solid #2A2A2A',
                 }}
               >
                 {wallet.adapter.icon && (
@@ -207,7 +207,7 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
                 )}
                 {wallet.adapter.name}
                 {wallet.readyState === 'Installed' && (
-                  <span style={{ marginLeft: 'auto', fontSize: '0.65rem', fontWeight: 700, color: '#15803D', background: '#DCFCE7', padding: '1px 6px', borderRadius: 9999 }}>
+                  <span style={{ marginLeft: 'auto', fontSize: '0.65rem', fontWeight: 700, color: '#14F195', background: 'rgba(20,241,149,0.12)', padding: '1px 6px', borderRadius: 9999 }}>
                     Installed
                   </span>
                 )}

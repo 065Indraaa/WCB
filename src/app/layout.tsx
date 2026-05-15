@@ -38,7 +38,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body style={{ background: '#070707', color: '#FFFFFF' }} className="antialiased min-h-screen flex flex-col">
         <Providers>
-          {/* Navbar is fixed — needs a spacer below it */}
+          {/* Navbar is fixed, so the layout needs a spacer below it. */}
           <Navbar />
           {/* Spacer: navbar h-14 (56px) + tickerbar ~h-8 (30px) = 86px */}
           <div style={{ height: 86 }} aria-hidden="true" />

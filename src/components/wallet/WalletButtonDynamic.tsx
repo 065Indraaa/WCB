@@ -2,12 +2,12 @@
 
 /**
  * Dynamic wrapper for WalletButton and WalletMultiButton.
- * Prevents hydration mismatch — wallet state only exists client-side.
+ * Prevents hydration mismatch because wallet state only exists client-side.
  */
 
 import dynamic from 'next/dynamic';
 
-// WalletButton — used in Navbar and Lock page
+// WalletButton used in Navbar and Lock page.
 export const WalletButtonDynamic = dynamic(
   () => import('./WalletButton').then((m) => m.WalletButton),
   {
@@ -28,7 +28,7 @@ export const WalletButtonDynamic = dynamic(
   },
 );
 
-// WalletMultiButton — used in Leaderboard and WalletDashboard
+// WalletMultiButton used in Leaderboard and WalletDashboard.
 export const WalletMultiButtonDynamic = dynamic(
   () =>
     import('@solana/wallet-adapter-react-ui').then((m) => ({
@@ -52,7 +52,7 @@ export const WalletMultiButtonDynamic = dynamic(
   },
 );
 
-// WalletDashboard — uses useWallet hook, must be client-only
+// WalletDashboard uses useWallet hook and must be client-only.
 export const WalletDashboardDynamic = dynamic(
   () => import('./WalletDashboard').then((m) => m.WalletDashboard),
   {

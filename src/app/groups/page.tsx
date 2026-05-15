@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { TeamFlag } from '@/components/shared/TeamFlag';
 import { buildAllGroups } from '@/lib/groupHelpers';
 
-export const metadata = { title: 'Groups · World Cup 2026' };
+export const metadata = { title: 'Groups | World Cup 2026' };
 
 export default function GroupsPage() {
   const groups = buildAllGroups();
@@ -11,15 +11,15 @@ export default function GroupsPage() {
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
       {/* Header */}
       <div className="mb-10">
-        <p className="section-eyebrow mb-2">🌍 Group Stage</p>
+        <p className="section-eyebrow mb-2">Group Stage</p>
         <h1
           className="text-4xl sm:text-5xl font-black mb-3 tracking-tight"
-          style={{ color: '#0F172A' }}
+          style={{ color: '#FFFFFF' }}
         >
-          12 groups · 48 nations
+          12 groups. 48 nations.
         </h1>
-        <p className="text-lg max-w-2xl" style={{ color: '#64748B' }}>
-          The road to the knockout stage. Top 2 teams from each group + 8 best third-placed teams advance to Round of 32.
+        <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
+          The road to the knockout stage. The top two teams from each group and the eight best third-placed teams advance to the Round of 32.
         </p>
       </div>
 
@@ -36,31 +36,31 @@ export default function GroupsPage() {
             <div
               className="flex items-center justify-between px-5 py-4"
               style={{
-                background: 'rgba(220,252,231,0.5)',
-                borderBottom: '1px solid #E2E8F0',
+                background: '#111111',
+                borderBottom: '1px solid #2A2A2A',
               }}
             >
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg"
-                  style={{ background: '#15803D', color: '#ffffff' }}
+                  style={{ background: '#F2B544', color: '#070707' }}
                 >
                   {g.letter}
                 </div>
                 <div>
                   <p
                     className="font-bold uppercase tracking-widest"
-                    style={{ fontSize: '10px', color: '#15803D' }}
+                    style={{ fontSize: '10px', color: '#F2B544' }}
                   >
                     Group
                   </p>
-                  <p className="text-sm font-bold" style={{ color: '#0F172A' }}>
+                  <p className="text-sm font-bold" style={{ color: '#FFFFFF' }}>
                     {g.teams.length} Teams
                   </p>
                 </div>
               </div>
-              <span className="text-xs font-semibold" style={{ color: '#15803D' }}>
-                View →
+              <span className="text-xs font-semibold" style={{ color: '#F2B544' }}>
+                View
               </span>
             </div>
 
@@ -71,11 +71,11 @@ export default function GroupsPage() {
                   <TeamFlag code={row.team.code} name={row.team.name} size="sm" />
                   <span
                     className="text-sm font-semibold truncate flex-1"
-                    style={{ color: '#0F172A' }}
+                    style={{ color: '#FFFFFF' }}
                   >
                     {row.team.name}
                   </span>
-                  <span className="text-xs" style={{ color: '#94A3B8' }}>
+                  <span className="text-xs" style={{ color: '#6E6E6E' }}>
                     #{row.team.fifaRanking}
                   </span>
                 </div>
@@ -85,10 +85,10 @@ export default function GroupsPage() {
             {/* Footer */}
             <div
               className="px-5 py-3"
-              style={{ background: '#F1F5F0', borderTop: '1px solid #E2E8F0' }}
+              style={{ background: '#111111', borderTop: '1px solid #2A2A2A' }}
             >
-              <p className="text-xs text-center" style={{ color: '#64748B' }}>
-                {g.matches.length} matches · {g.matches[0]?.venue?.split(',')[0] ?? 'TBA'}
+              <p className="text-xs text-center" style={{ color: '#B3B3B3' }}>
+                {g.matches.length} matches | {g.matches[0]?.venue?.split(',')[0] ?? 'TBA'}
               </p>
             </div>
           </Link>

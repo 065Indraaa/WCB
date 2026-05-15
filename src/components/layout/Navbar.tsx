@@ -47,7 +47,7 @@ export function Navbar() {
 
   return (
     <>
-      {/* ── Top header ── */}
+      {/* Top header */}
       <header
         style={{
           position: 'fixed',
@@ -149,7 +149,7 @@ export function Navbar() {
 
           {/* Right side */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            {/* Buy button — desktop */}
+            {/* Buy button, desktop */}
             <a
               href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
               target="_blank"
@@ -175,7 +175,7 @@ export function Navbar() {
 
             <WalletButtonDynamic className="hidden sm:inline-flex" />
 
-            {/* Hamburger — mobile only */}
+            {/* Hamburger, mobile only */}
             <button
               style={{
                 display: 'flex',
@@ -205,7 +205,7 @@ export function Navbar() {
         </nav>
       </header>
 
-      {/* ── Mobile full-screen menu ── */}
+      {/* Mobile full-screen menu */}
       {menuOpen && (
         <div
           style={{
@@ -297,7 +297,7 @@ export function Navbar() {
         </div>
       )}
 
-      {/* ── Mobile bottom nav bar ── */}
+      {/* Mobile bottom nav bar */}
       <MobileBottomNav pathname={pathname} />
     </>
   );

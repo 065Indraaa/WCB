@@ -1,16 +1,16 @@
 /**
- * ImagePlaceholder — dark sportsbook style placeholder.
+ * ImagePlaceholder - dark sportsbook style placeholder.
  * Replace with real images when available.
  *
  * Standard sizes:
- *   Hero banner:       1920×600
- *   Match banner:      1200×300
- *   Sidebar ad:        300×250
- *   Leaderboard banner:728×90
- *   Token hero:        1200×400
- *   Lock page banner:  1200×300
- *   Team photo:        200×200
- *   Sponsor logo:      200×80
+ *   Hero banner:       1920 x 600
+ *   Match banner:      1200 x 300
+ *   Sidebar ad:        300 x 250
+ *   Leaderboard banner:728 x 90
+ *   Token hero:        1200 x 400
+ *   Lock page banner:  1200 x 300
+ *   Team photo:        200 x 200
+ *   Sponsor logo:      200 x 80
  */
 
 interface ImagePlaceholderProps {
@@ -40,14 +40,14 @@ export function ImagePlaceholder({
         height: height ?? (aspectRatio ? undefined : 200),
         aspectRatio: aspectRatio,
         borderRadius: rounded,
-        background: '#1C2128',
-        border: '1px dashed #30363D',
+        background: '#111111',
+        border: '1px dashed #2A2A2A',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0.5rem',
-        color: '#484F58',
+        color: '#6E6E6E',
         userSelect: 'none',
         overflow: 'hidden',
         position: 'relative',
@@ -56,23 +56,10 @@ export function ImagePlaceholder({
       aria-label={`Image placeholder: ${label}`}
       role="img"
     >
-      {/* Camera icon */}
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-        style={{ opacity: 0.4 }}
-      >
-        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-        <circle cx="12" cy="13" r="4" />
-      </svg>
-      <span style={{ fontSize: '0.68rem', fontWeight: 600, opacity: 0.5, color: '#8B949E' }}>{label}</span>
+      <span style={{ fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.12em', color: '#F2B544' }}>
+        WCB
+      </span>
+      <span style={{ fontSize: '0.68rem', fontWeight: 600, opacity: 0.72, color: '#B3B3B3' }}>{label}</span>
     </div>
   );
 }

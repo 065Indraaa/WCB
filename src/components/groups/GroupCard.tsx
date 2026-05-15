@@ -38,8 +38,8 @@ export function GroupCard({ group, defaultExpanded = false, hideExpand = false }
           justifyContent: 'space-between',
           gap: '0.75rem',
           padding: '1rem 1.25rem',
-          background: 'rgba(220,252,231,0.4)',
-          borderBottom: '1px solid #E2E8F0',
+          background: '#111111',
+          borderBottom: '1px solid #2A2A2A',
           cursor: !hideExpand ? 'pointer' : 'default',
         }}
       >
@@ -48,19 +48,19 @@ export function GroupCard({ group, defaultExpanded = false, hideExpand = false }
           <div
             style={{
               width: 40, height: 40, borderRadius: 12,
-              background: '#15803D',
+              background: '#F2B544',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontWeight: 900, fontSize: '1.1rem',
+              color: '#070707', fontWeight: 900, fontSize: '1.1rem',
               flexShrink: 0,
             }}
           >
             {group.letter}
           </div>
           <div>
-            <p style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#15803D' }}>
+            <p style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#F2B544' }}>
               Group
             </p>
-            <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0F172A' }}>
+            <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FFFFFF' }}>
               {group.teams.length} Teams
             </p>
           </div>
@@ -78,10 +78,10 @@ export function GroupCard({ group, defaultExpanded = false, hideExpand = false }
           <motion.span
             animate={{ rotate: expanded ? 180 : 0 }}
             transition={{ duration: 0.2 }}
-            style={{ color: '#64748B', fontSize: '0.7rem', marginLeft: 'auto', flexShrink: 0 }}
+            style={{ color: '#F2B544', fontSize: '0.7rem', marginLeft: 'auto', flexShrink: 0 }}
             aria-hidden="true"
           >
-            ▼
+            V
           </motion.span>
         )}
       </div>
@@ -99,15 +99,15 @@ export function GroupCard({ group, defaultExpanded = false, hideExpand = false }
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 280, damping: 30 }}
-              style={{ overflow: 'hidden', borderTop: '1px solid #E2E8F0' }}
+              style={{ overflow: 'hidden', borderTop: '1px solid #2A2A2A' }}
             >
-              <div style={{ padding: '1rem 1.25rem', background: '#F1F5F0' }}>
-                <p style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#64748B', marginBottom: '0.75rem' }}>
+              <div style={{ padding: '1rem 1.25rem', background: '#111111' }}>
+                <p style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#6E6E6E', marginBottom: '0.75rem' }}>
                   Match Schedule
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {group.matches.length === 0 ? (
-                    <p style={{ fontSize: '0.85rem', color: '#64748B', textAlign: 'center', padding: '0.75rem 0' }}>
+                    <p style={{ fontSize: '0.85rem', color: '#B3B3B3', textAlign: 'center', padding: '0.75rem 0' }}>
                       No matches scheduled yet.
                     </p>
                   ) : (
@@ -116,18 +116,18 @@ export function GroupCard({ group, defaultExpanded = false, hideExpand = false }
                         key={m.id}
                         style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                          gap: '0.5rem', background: '#fff', border: '1px solid #E2E8F0',
+                          gap: '0.5rem', background: '#171717', border: '1px solid #2A2A2A',
                           borderRadius: 10, padding: '0.5rem 0.75rem', fontSize: '0.8rem',
                           flexWrap: 'wrap',
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flex: 1, minWidth: 0, justifyContent: 'flex-end' }}>
-                          <span style={{ fontWeight: 600, color: '#0F172A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <span style={{ fontWeight: 600, color: '#FFFFFF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {m.homeTeam.name}
                           </span>
                           <TeamFlag code={m.homeTeam.code} name={m.homeTeam.name} size="xs" />
                         </div>
-                        <span style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 600, flexShrink: 0 }}>
+                        <span style={{ fontSize: '0.7rem', color: '#6E6E6E', fontWeight: 600, flexShrink: 0 }}>
                           {(() => {
                             const d = new Date(m.kickoff);
                             const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -136,7 +136,7 @@ export function GroupCard({ group, defaultExpanded = false, hideExpand = false }
                         </span>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flex: 1, minWidth: 0 }}>
                           <TeamFlag code={m.awayTeam.code} name={m.awayTeam.name} size="xs" />
-                          <span style={{ fontWeight: 600, color: '#0F172A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <span style={{ fontWeight: 600, color: '#FFFFFF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {m.awayTeam.name}
                           </span>
                         </div>
@@ -146,9 +146,9 @@ export function GroupCard({ group, defaultExpanded = false, hideExpand = false }
                 </div>
                 <Link
                   href={`/groups/${group.letter.toLowerCase()}`}
-                  style={{ display: 'block', marginTop: '1rem', textAlign: 'center', fontSize: '0.85rem', fontWeight: 700, color: '#15803D', textDecoration: 'none' }}
+                  style={{ display: 'block', marginTop: '1rem', textAlign: 'center', fontSize: '0.85rem', fontWeight: 700, color: '#F2B544', textDecoration: 'none' }}
                 >
-                  View full Group {group.letter} →
+                  View full Group {group.letter}
                 </Link>
               </div>
             </motion.div>

@@ -8,7 +8,7 @@ import { WC_2026_GROUP_MATCHES } from '@/lib/constants/matches2026';
 import { buildAllGroups } from '@/lib/groupHelpers';
 import { WalletRedirectHandler } from '@/components/shared/WalletRedirectHandler';
 
-// ── Promo Banner ──────────────────────────────────────────────────────────────
+// Promo banner
 function PromoBanner() {
   return (
     <div
@@ -34,7 +34,7 @@ function PromoBanner() {
   );
 }
 
-// ── Quick Stats Bar ───────────────────────────────────────────────────────────
+// Quick stats bar
 function QuickStats() {
   const stats = [
     { label: 'Teams',       value: '48' },
@@ -86,7 +86,7 @@ function QuickStats() {
   );
 }
 
-// ── Sidebar Ad Slot ───────────────────────────────────────────────────────────
+// Sidebar ad slot
 function SidebarAdSlot({ label }: { label: string }) {
   return (
     <div style={{ borderRadius: 6, overflow: 'hidden', border: '1px solid #30363D' }}>
@@ -175,7 +175,7 @@ export default function Home() {
       {/* Main content with sidebar */}
       <div className="page-layout">
 
-        {/* ── Main column ── */}
+        {/* Main column */}
         <div>
 
           {/* Featured matches */}
@@ -201,7 +201,7 @@ export default function Home() {
             <ImagePlaceholder
               width="100%"
               height={90}
-              label="Leaderboard Banner 728×90"
+              label="Leaderboard Banner 728 x 90"
               rounded={6}
             />
           </div>
@@ -210,7 +210,7 @@ export default function Home() {
           <section style={{ marginBottom: '24px' }}>
             <div className="section-header gold" style={{ marginBottom: '12px' }}>
               <h2 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#F0FDF4', margin: 0, flex: 1 }}>
-                12 groups · 48 nations · One champion
+                12 groups. 48 nations. One champion.
               </h2>
               <Link href="/groups" style={{ fontSize: '0.75rem', fontWeight: 600, color: '#F59E0B', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                 All groups
@@ -270,7 +270,7 @@ export default function Home() {
 
         </div>
 
-        {/* ── Sidebar ── */}
+        {/* Sidebar */}
         <aside className="page-sidebar">
 
           {/* Token price widget */}
@@ -286,9 +286,9 @@ export default function Home() {
                 { label: 'Holders', value: '1,250' },
                 { label: 'Mkt Cap', value: '$420K' },
               ].map((s) => (
-                <div key={s.label} style={{ padding: '8px', background: '#080E08', borderRadius: 6, border: '1px solid #1E2D1F' }}>
-                  <div style={{ fontSize: '0.56rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#374151' }}>{s.label}</div>
-                  <div style={{ fontSize: '0.88rem', fontWeight: 900, color: s.green ? '#22C55E' : '#F0FDF4', marginTop: '2px', fontVariantNumeric: 'tabular-nums' }}>{s.value}</div>
+                <div key={s.label} style={{ padding: '8px', background: '#111111', borderRadius: 6, border: '1px solid #2A2A2A' }}>
+                  <div style={{ fontSize: '0.56rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#6E6E6E' }}>{s.label}</div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: 900, color: s.green ? '#14F195' : '#FFFFFF', marginTop: '2px', fontVariantNumeric: 'tabular-nums' }}>{s.value}</div>
                 </div>
               ))}
             </div>
@@ -304,7 +304,7 @@ export default function Home() {
           </div>
 
           {/* Ad slot 1 */}
-          <SidebarAdSlot label="Sponsor Ad 300×250" />
+          <SidebarAdSlot label="Sponsor Ad 300 x 250" />
 
           {/* Quick links */}
           <div className="bet-card" style={{ padding: '10px' }}>
@@ -325,9 +325,9 @@ export default function Home() {
                       fontWeight: 800,
                       padding: '1px 6px',
                       borderRadius: 4,
-                      background: l.badge === 'NEW' ? 'rgba(34,197,94,0.12)' : 'rgba(255,255,255,0.04)',
-                      color: l.badge === 'NEW' ? '#22C55E' : '#4B5563',
-                      border: l.badge === 'NEW' ? '1px solid rgba(34,197,94,0.2)' : '1px solid rgba(255,255,255,0.06)',
+                      background: l.badge === 'NEW' ? 'rgba(20,241,149,0.12)' : 'rgba(255,255,255,0.04)',
+                      color: l.badge === 'NEW' ? '#14F195' : '#6E6E6E',
+                      border: l.badge === 'NEW' ? '1px solid rgba(20,241,149,0.24)' : '1px solid rgba(255,255,255,0.06)',
                     }}>
                       {l.badge}
                     </span>
@@ -338,7 +338,7 @@ export default function Home() {
           </div>
 
           {/* Ad slot 2 */}
-          <SidebarAdSlot label="Sponsor Ad 300×250" />
+          <SidebarAdSlot label="Sponsor Ad 300 x 250" />
 
         </aside>
       </div>

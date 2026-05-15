@@ -140,7 +140,7 @@ export function HeroSection() {
               Hold $WCB.
             </span>
             {' '}
-            <span style={{ color: '#FFD36B' }}>Win the cup.</span>
+            <span style={{ color: '#FFD36B' }}>Own the board.</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -242,7 +242,7 @@ export function HeroSection() {
               </p>
             </div>
             <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.55)', marginBottom: '1.25rem', fontWeight: 600, textAlign: 'center' }}>
-              June 11, 2026 · Estadio Azteca, Mexico City
+              June 11, 2026 | Estadio Azteca, Mexico City
             </p>
             <CountdownTimer />
           </motion.div>
@@ -286,7 +286,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* ── Trust bar at bottom ── */}
+      {/* Trust bar at bottom */}
       <motion.div
         initial={rm ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}

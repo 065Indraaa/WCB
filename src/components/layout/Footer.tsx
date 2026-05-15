@@ -213,7 +213,7 @@ export function Footer() {
           }}
         >
           <p style={{ fontSize: '0.72rem', color: '#B3B3B3', margin: 0, lineHeight: 1.6 }}>
-            <span style={{ fontWeight: 800, color: '#EF4444' }}>⚠ DISCLAIMER:</span>{' '}
+            <span style={{ fontWeight: 800, color: '#EF4444' }}>DISCLAIMER:</span>{' '}
             $WCB is a community token on Solana. This is not financial advice. Betting features open on June 11, 2026. Crypto assets are highly volatile. Only risk what you can afford to lose.
           </p>
         </div>
@@ -260,7 +260,7 @@ export function Footer() {
                 }}
                 aria-label={copied ? 'Copied' : 'Copy contract address'}
               >
-                {copied ? '✓' : '⎘'}
+                {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
             {copied && (
@@ -269,7 +269,7 @@ export function Footer() {
           </div>
 
           <p style={{ fontSize: '0.68rem', color: '#374151', margin: 0 }}>
-            © 2026 WORLDCUPBET - All rights reserved
+            (c) 2026 WORLDCUPBET - All rights reserved
           </p>
         </div>
       </div>

@@ -17,19 +17,19 @@ function ProgressBar({ startDate, endDate }: { startDate: string; endDate: strin
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
-        <span style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 600 }}>
+        <span style={{ fontSize: '0.7rem', color: '#B3B3B3', fontWeight: 600 }}>
           {daysLeft > 0 ? `${daysLeft} days left` : 'Unlocked'}
         </span>
-        <span style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 600 }}>
+        <span style={{ fontSize: '0.7rem', color: '#B3B3B3', fontWeight: 600 }}>
           Unlocks {unlockStr}
         </span>
       </div>
-      <div style={{ height: 6, borderRadius: 9999, background: '#E2E8F0', overflow: 'hidden' }}>
+      <div style={{ height: 6, borderRadius: 9999, background: '#2A2A2A', overflow: 'hidden' }}>
         <div
           style={{
             height: '100%',
             width: `${pct}%`,
-            background: 'linear-gradient(90deg, #15803D 0%, #22C55E 100%)',
+            background: 'linear-gradient(90deg, #F2B544 0%, #14F195 100%)',
             borderRadius: 9999,
             transition: 'width 0.5s ease',
           }}
@@ -44,7 +44,7 @@ function LockRow({ lock }: { lock: ActiveLock }) {
     <div
       style={{
         padding: '1rem 1.25rem',
-        borderBottom: '1px solid #E2E8F0',
+        borderBottom: '1px solid #2A2A2A',
         display: 'grid',
         gridTemplateColumns: '1fr 1fr 1fr 1.5fr',
         gap: '1rem',
@@ -53,24 +53,24 @@ function LockRow({ lock }: { lock: ActiveLock }) {
     >
       {/* Wallet */}
       <div>
-        <p style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 600, marginBottom: '0.125rem' }}>Wallet</p>
-        <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0F172A', fontFamily: 'monospace' }}>
+        <p style={{ fontSize: '0.7rem', color: '#6E6E6E', fontWeight: 600, marginBottom: '0.125rem' }}>Wallet</p>
+        <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FFFFFF', fontFamily: 'monospace' }}>
           {lock.wallet}
         </p>
       </div>
 
       {/* Amount */}
       <div>
-        <p style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 600, marginBottom: '0.125rem' }}>Locked</p>
-        <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0F172A' }}>
+        <p style={{ fontSize: '0.7rem', color: '#6E6E6E', fontWeight: 600, marginBottom: '0.125rem' }}>Locked</p>
+        <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FFFFFF' }}>
           {formatTokenAmount(lock.amount)} $WCB
         </p>
       </div>
 
       {/* Credits */}
       <div>
-        <p style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 600, marginBottom: '0.125rem' }}>Credits</p>
-        <p style={{ fontSize: '0.85rem', fontWeight: 800, color: '#15803D' }}>
+        <p style={{ fontSize: '0.7rem', color: '#6E6E6E', fontWeight: 600, marginBottom: '0.125rem' }}>Credits</p>
+        <p style={{ fontSize: '0.85rem', fontWeight: 800, color: '#F2B544' }}>
           {formatCredits(lock.credits)}
         </p>
       </div>
@@ -89,18 +89,18 @@ export function ActiveLocksTable() {
   return (
     <div className="card overflow-hidden">
       {/* Header */}
-      <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #E2E8F0', background: '#F8FAFC', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #2A2A2A', background: '#111111', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+          <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
             Active Locks
           </h3>
-          <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '0.125rem' }}>
-            {locks.length} active lock{locks.length !== 1 ? 's' : ''} · Community overview
+          <p style={{ fontSize: '0.75rem', color: '#B3B3B3', marginTop: '0.125rem' }}>
+            {locks.length} active lock{locks.length !== 1 ? 's' : ''} | Community overview
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22C55E', display: 'inline-block', animation: 'live-pulse 1.4s ease-in-out infinite' }} aria-hidden="true" />
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#15803D' }}>Live</span>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#14F195', display: 'inline-block', animation: 'live-pulse 1.4s ease-in-out infinite' }} aria-hidden="true" />
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#14F195' }}>Live</span>
         </div>
       </div>
 
@@ -111,12 +111,12 @@ export function ActiveLocksTable() {
           display: 'grid',
           gridTemplateColumns: '1fr 1fr 1fr 1.5fr',
           gap: '1rem',
-          background: '#F1F5F0',
-          borderBottom: '1px solid #E2E8F0',
+          background: '#111111',
+          borderBottom: '1px solid #2A2A2A',
         }}
       >
         {['Wallet', 'Locked', 'Credits', 'Progress'].map((h) => (
-          <span key={h} style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B' }}>
+          <span key={h} style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E' }}>
             {h}
           </span>
         ))}
@@ -128,9 +128,9 @@ export function ActiveLocksTable() {
       ))}
 
       {/* Footer */}
-      <div style={{ padding: '0.875rem 1.25rem', background: '#F8FAFC', borderTop: '1px solid #E2E8F0' }}>
-        <p style={{ fontSize: '0.72rem', color: '#94A3B8', textAlign: 'center' }}>
-          Showing community locks · Connect wallet to see your own locks
+      <div style={{ padding: '0.875rem 1.25rem', background: '#111111', borderTop: '1px solid #2A2A2A' }}>
+        <p style={{ fontSize: '0.72rem', color: '#6E6E6E', textAlign: 'center' }}>
+          Showing community locks. Connect wallet to see your own locks.
         </p>
       </div>
     </div>

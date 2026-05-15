@@ -119,7 +119,7 @@ export function CountdownTimer({ targetDate = DEFAULT_TARGET, compact = false }:
         className="font-black text-center"
         style={{ fontSize: compact ? '1.1rem' : '1.75rem', color: '#FFD36B' }}
       >
-        Predictions are live! 🎉
+        Predictions are live.
       </p>
     );
   }

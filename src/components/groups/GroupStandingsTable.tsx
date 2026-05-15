@@ -14,7 +14,7 @@ export function GroupStandingsTable({ rows, showQualified = true, compact = fals
     <div style={{ overflowX: 'auto' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }} aria-label="Group standings">
         <thead>
-          <tr style={{ borderBottom: '1px solid #E2E8F0', background: '#F1F5F0' }}>
+          <tr style={{ borderBottom: '1px solid #2A2A2A', background: '#111111' }}>
             <th style={thStyle}>#</th>
             <th style={{ ...thStyle, textAlign: 'left', paddingLeft: '0.5rem' }}>Team</th>
             <th style={thStyle} title="Played">P</th>
@@ -24,7 +24,7 @@ export function GroupStandingsTable({ rows, showQualified = true, compact = fals
             {!compact && <th style={thStyle} title="Goals For">GF</th>}
             {!compact && <th style={thStyle} title="Goals Against">GA</th>}
             <th style={thStyle} title="Goal Difference">GD</th>
-            <th style={{ ...thStyle, fontWeight: 900, color: '#0F172A' }} title="Points">Pts</th>
+            <th style={{ ...thStyle, fontWeight: 900, color: '#FFFFFF' }} title="Points">Pts</th>
           </tr>
         </thead>
         <tbody>
@@ -35,17 +35,17 @@ export function GroupStandingsTable({ rows, showQualified = true, compact = fals
                 key={row.team.id}
                 style={{
                   borderBottom: '1px solid rgba(226,232,240,0.5)',
-                  background: qualified ? 'rgba(220,252,231,0.35)' : undefined,
+                  background: qualified ? 'rgba(242,181,68,0.07)' : undefined,
                   transition: 'background 0.15s',
                 }}
               >
-                <td style={{ ...tdStyle, fontWeight: 700, color: qualified ? '#15803D' : '#64748B' }}>
+                <td style={{ ...tdStyle, fontWeight: 700, color: qualified ? '#F2B544' : '#6E6E6E' }}>
                   {row.position}
                 </td>
                 <td style={{ ...tdStyle, textAlign: 'left', paddingLeft: '0.5rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
                     <TeamFlag code={row.team.code} name={row.team.name} size="sm" />
-                    <span style={{ fontWeight: 600, color: '#0F172A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <span style={{ fontWeight: 600, color: '#FFFFFF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {row.team.name}
                     </span>
                     {qualified && (
@@ -53,7 +53,7 @@ export function GroupStandingsTable({ rows, showQualified = true, compact = fals
                         style={{
                           flexShrink: 0, padding: '1px 5px', borderRadius: 4,
                           fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase',
-                          background: '#15803D', color: '#fff', letterSpacing: '0.05em',
+                          background: '#F2B544', color: '#070707', letterSpacing: '0.05em',
                         }}
                       >
                         Q
@@ -70,11 +70,11 @@ export function GroupStandingsTable({ rows, showQualified = true, compact = fals
                 <td style={{
                   ...tdStyle,
                   fontWeight: 600,
-                  color: row.goalDifference > 0 ? '#15803D' : row.goalDifference < 0 ? '#DC2626' : '#64748B',
+                  color: row.goalDifference > 0 ? '#14F195' : row.goalDifference < 0 ? '#EF4444' : '#6E6E6E',
                 }}>
                   {row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference}
                 </td>
-                <td style={{ ...tdStyle, fontWeight: 900, color: '#0F172A' }}>
+                <td style={{ ...tdStyle, fontWeight: 900, color: '#FFFFFF' }}>
                   {row.points}
                 </td>
               </tr>
@@ -93,13 +93,13 @@ const thStyle: React.CSSProperties = {
   fontWeight: 700,
   textTransform: 'uppercase',
   letterSpacing: '0.08em',
-  color: '#64748B',
+  color: '#6E6E6E',
   whiteSpace: 'nowrap',
 };
 
 const tdStyle: React.CSSProperties = {
   padding: '0.625rem 0.375rem',
   textAlign: 'center',
-  color: '#334155',
+  color: '#B3B3B3',
   fontVariantNumeric: 'tabular-nums',
 };
