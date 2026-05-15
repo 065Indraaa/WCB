@@ -67,7 +67,7 @@ export function GroupCard({ group, defaultExpanded = false, hideExpand = false }
         </div>
 
         {/* Flags */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flexWrap: 'wrap' }}>
           {group.teams.map((row) => (
             <TeamFlag key={row.team.id} code={row.team.code} name={row.team.name} size="sm" />
           ))}
@@ -118,6 +118,7 @@ export function GroupCard({ group, defaultExpanded = false, hideExpand = false }
                           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                           gap: '0.5rem', background: '#fff', border: '1px solid #E2E8F0',
                           borderRadius: 10, padding: '0.5rem 0.75rem', fontSize: '0.8rem',
+                          flexWrap: 'wrap',
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flex: 1, minWidth: 0, justifyContent: 'flex-end' }}>

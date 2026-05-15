@@ -29,20 +29,19 @@ function statusLabel(status: MatchDisplayStatus, elapsed?: number) {
   }
 }
 
-/** UTC kickoff string — identical on server and client, no hydration mismatch */
+/** UTC kickoff — no hydration mismatch */
 function utcKickoff(iso: string): { date: string; time: string } {
   const d = new Date(iso);
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const date = `${months[d.getUTCMonth()]} ${d.getUTCDate()}`;
   const hh = String(d.getUTCHours()).padStart(2, '0');
   const mm = String(d.getUTCMinutes()).padStart(2, '0');
-  return { date, time: `${hh}:${mm} UTC` };
+  return { date, time: `${hh}:${mm}` };
 }
 
 export function MatchCard({ match }: MatchCardProps) {
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Live prediction data — updates instantly when any vote is cast
   const { pct, myChoice, total, loaded } = usePrediction(
     match.id,
     match.homeTeam.fifaRanking,
@@ -55,90 +54,113 @@ export function MatchCard({ match }: MatchCardProps) {
     match.displayStatus === 'FINISHED';
 
   const { date, time } = utcKickoff(match.kickoff);
+  const isLive = match.displayStatus === 'LIVE';
 
   return (
     <>
+      {/* ── Compact horizontal bet row ── */}
       <article
-        className="card card-hover overflow-hidden flex flex-col"
+        className="bet-card"
         aria-label={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
+        style={{ cursor: 'pointer' }}
+        onClick={() => setModalOpen(true)}
       >
-        {/* Status strip */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 1rem', background: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#334155', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '60%' }}>
+        {/* Top strip: group + status */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '5px 10px',
+            background: '#161B22',
+            borderBottom: '1px solid #21262D',
+          }}
+        >
+          <span style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#484F58', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '65%' }}>
             {match.group}
           </span>
           <span className={statusBadgeClass(match.displayStatus)}>
-            {match.displayStatus === 'LIVE' && <span className="live-dot" aria-hidden="true" />}
+            {isLive && <span className="live-dot" aria-hidden="true" />}
             {statusLabel(match.displayStatus, match.elapsed)}
           </span>
         </div>
 
-        {/* Teams + score/time */}
-        <div style={{ padding: '1.25rem 1rem 0.75rem', flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-            {/* Home */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: 0 }}>
-              <TeamFlag code={match.homeTeam.code} name={match.homeTeam.name} size="lg" />
-              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%' }}>
-                {match.homeTeam.name}
-              </span>
-            </div>
-
-            {/* Score / kickoff */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, minWidth: 72 }}>
-              {showScore ? (
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.375rem' }}>
-                  <span style={{ fontSize: '2rem', fontWeight: 900, color: '#0F172A', fontVariantNumeric: 'tabular-nums' }}>
-                    {match.score.home ?? 0}
-                  </span>
-                  <span style={{ color: '#CBD5E1', fontWeight: 700, fontSize: '1.25rem' }}>–</span>
-                  <span style={{ fontSize: '2rem', fontWeight: 900, color: '#0F172A', fontVariantNumeric: 'tabular-nums' }}>
-                    {match.score.away ?? 0}
-                  </span>
-                </div>
-              ) : (
-                <>
-                  <span style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#64748B' }}>
-                    {date}
-                  </span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 900, color: '#0F172A', marginTop: '0.125rem' }}>
-                    {time}
-                  </span>
-                </>
-              )}
-            </div>
-
-            {/* Away */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: 0 }}>
-              <TeamFlag code={match.awayTeam.code} name={match.awayTeam.name} size="lg" />
-              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%' }}>
-                {match.awayTeam.name}
-              </span>
-            </div>
+        {/* Main row: teams + score/time + predict button */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '10px 10px',
+            gap: 8,
+            minHeight: 64,
+          }}
+        >
+          {/* Home team */}
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
+            <TeamFlag code={match.homeTeam.code} name={match.homeTeam.name} size="sm" />
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#E6EDF3', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {match.homeTeam.name}
+            </span>
           </div>
+
+          {/* Score / time */}
+          <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 56, gap: 2 }}>
+            {showScore ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#E6EDF3', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+                  {match.score.home ?? 0}
+                </span>
+                <span style={{ color: '#484F58', fontWeight: 700, fontSize: '0.9rem' }}>–</span>
+                <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#E6EDF3', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+                  {match.score.away ?? 0}
+                </span>
+              </div>
+            ) : (
+              <>
+                <span style={{ fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#484F58' }}>
+                  {date}
+                </span>
+                <span style={{ fontSize: '0.88rem', fontWeight: 900, color: '#8B949E', fontVariantNumeric: 'tabular-nums' }}>
+                  {time}
+                </span>
+                <span style={{ fontSize: '0.55rem', color: '#484F58', fontWeight: 600 }}>UTC</span>
+              </>
+            )}
+          </div>
+
+          {/* Away team */}
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 7, minWidth: 0, justifyContent: 'flex-end' }}>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#E6EDF3', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'right' }}>
+              {match.awayTeam.name}
+            </span>
+            <TeamFlag code={match.awayTeam.code} name={match.awayTeam.name} size="sm" />
+          </div>
+
+          {/* Predict button */}
+          <button
+            onClick={(e) => { e.stopPropagation(); setModalOpen(true); }}
+            className={`odds-btn${myChoice ? ' active' : ''}`}
+            style={{ flexShrink: 0, marginLeft: 4 }}
+            aria-label={`Predict ${match.homeTeam.name} vs ${match.awayTeam.name}`}
+          >
+            <span className="odds-label">{myChoice ? 'Voted' : 'Predict'}</span>
+            <span style={{ fontSize: '0.82rem', fontVariantNumeric: 'tabular-nums' }}>
+              {myChoice ? '✓' : `${pct.home}%`}
+            </span>
+          </button>
         </div>
 
         {/* Community prediction bar */}
-        <div style={{ padding: '0 1rem 0.75rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
-            <span style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94A3B8' }}>
-              Community
-            </span>
-            <span style={{ fontSize: '0.65rem', fontWeight: 600, color: '#CBD5E1' }}>
-              {loaded ? `${total.toLocaleString()} votes` : '…'}
-            </span>
-          </div>
-
-          {/* 3-segment animated bar */}
-          <div style={{ display: 'flex', height: 8, borderRadius: 9999, overflow: 'hidden', background: '#E2E8F0' }}>
+        <div style={{ padding: '0 10px 8px' }}>
+          <div style={{ display: 'flex', height: 4, borderRadius: 9999, overflow: 'hidden', background: '#21262D' }}>
             <motion.div
-              style={{ background: '#22C55E', height: '100%' }}
+              style={{ background: '#238636', height: '100%' }}
               initial={false}
               animate={{ width: `${pct.home}%` }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
             />
             <motion.div
-              style={{ background: '#F59E0B', height: '100%' }}
+              style={{ background: '#D29922', height: '100%' }}
               initial={false}
               animate={{ width: `${pct.draw}%` }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -150,35 +172,23 @@ export function MatchCard({ match }: MatchCardProps) {
               transition={{ duration: 0.5, ease: 'easeOut' }}
             />
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.375rem' }}>
-            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#15803D' }}>{pct.home}%</span>
-            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#94A3B8' }}>{pct.draw}% draw</span>
-            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#7C3AED' }}>{pct.away}%</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
+            <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#238636', fontVariantNumeric: 'tabular-nums' }}>{pct.home}%</span>
+            <span style={{ fontSize: '0.6rem', fontWeight: 600, color: '#484F58', fontVariantNumeric: 'tabular-nums' }}>
+              {loaded ? `${total.toLocaleString()} votes` : '…'} · {pct.draw}% draw
+            </span>
+            <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#7C3AED', fontVariantNumeric: 'tabular-nums' }}>{pct.away}%</span>
           </div>
         </div>
 
-        {/* Venue */}
-        <div style={{ padding: '0 1rem 0.5rem' }}>
-          <p style={{ fontSize: '0.7rem', color: '#94A3B8', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={match.venue}>
+        {/* Venue — desktop only via CSS */}
+        <div
+          style={{ padding: '0 10px 7px', display: 'none' }}
+          className="md:block"
+        >
+          <p style={{ fontSize: '0.62rem', color: '#484F58', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={match.venue}>
             📍 {match.venue}
           </p>
-        </div>
-
-        {/* CTA */}
-        <div style={{ padding: '0 1rem 1rem' }}>
-          <button
-            onClick={() => setModalOpen(true)}
-            className="btn-primary w-full"
-            style={{ fontSize: '0.85rem', padding: '0.625rem 1rem', justifyContent: 'center' }}
-            aria-label={`Predict ${match.homeTeam.name} vs ${match.awayTeam.name}`}
-          >
-            {myChoice ? (
-              <>✅ Voted · Change Pick</>
-            ) : (
-              <>🎯 Predict this match</>
-            )}
-          </button>
         </div>
       </article>
 

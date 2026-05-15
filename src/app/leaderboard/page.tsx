@@ -36,7 +36,7 @@ function MyPositionBanner() {
         {/* Blurred preview */}
         <div style={{ position: 'relative', padding: '1.5rem', background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)' }}>
           {/* Fake blurred stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', filter: 'blur(6px)', userSelect: 'none', pointerEvents: 'none' }} aria-hidden="true">
+          <div className="stats-grid-4" style={{ filter: 'blur(6px)', userSelect: 'none', pointerEvents: 'none' }} aria-hidden="true">
             {['My Locked', 'My Credits', 'Active Locks', 'Longest Lock'].map((l) => (
               <div key={l} style={{ textAlign: 'center' }}>
                 <p style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B', marginBottom: '0.25rem' }}>{l}</p>
@@ -99,7 +99,7 @@ function MyPositionBanner() {
       </div>
 
       {/* Stats */}
-      <div style={{ padding: '1rem 1.25rem', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+      <div className="stats-grid-4" style={{ padding: '1rem 1.25rem' }}>
         {[
           { label: 'My Locked', value: formatTokenAmount(stats.totalLocked) + ' $WCB', highlight: stats.totalLocked > 0 },
           { label: 'My Credits', value: formatCredits(stats.totalCredits), highlight: stats.totalCredits > 0 },
@@ -158,7 +158,7 @@ export default function LeaderboardPage() {
       </div>
 
       {/* Community stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div className="stats-grid-3" style={{ marginBottom: '1.5rem' }}>
         {[
           { label: 'Total Holdings', value: formatTokenAmount(totals.totalLocked) + ' $WCB', icon: '🔒', color: '#15803D' },
           { label: 'Credits Issued', value: formatCredits(totals.totalCredits), icon: '💳', color: '#7C3AED' },

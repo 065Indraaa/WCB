@@ -49,12 +49,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body className="bg-page text-ink antialiased min-h-screen flex flex-col">
+      <body style={{ background: '#0D1117', color: '#E6EDF3' }} className="antialiased min-h-screen flex flex-col">
         <Providers>
           {/* Navbar is fixed — needs a spacer below it */}
           <Navbar />
-          {/* Spacer: navbar h-16 + tickerbar ~h-8 = 64+32 = 96px */}
-          <div className="h-24" aria-hidden="true" />
+          {/* Spacer: navbar h-14 (56px) + tickerbar ~h-8 (32px) = 88px */}
+          <div style={{ height: 88 }} aria-hidden="true" />
           <TickerBar />
           <main id="main-content" className="flex-1">{children}</main>
           <Footer />

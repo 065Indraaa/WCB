@@ -78,12 +78,8 @@ export default function LockPage() {
 
       {/* Community stats strip */}
       <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '1rem',
-          marginBottom: '2.5rem',
-        }}
+        className="stats-grid-3"
+        style={{ marginBottom: '2.5rem' }}
       >
         {[
           { label: 'Total Locked', value: formatTokenAmount(totalLocked) + ' $WCB', icon: '🔒', sub: 'by the community so far' },
@@ -107,13 +103,8 @@ export default function LockPage() {
 
       {/* Main 3-column layout */}
       <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr',
-          gap: '1.5rem',
-          alignItems: 'start',
-          marginBottom: '2.5rem',
-        }}
+        className="lock-main-grid"
+        style={{ marginBottom: '2.5rem' }}
       >
         {/* Col 1: Calculator */}
         <LockCalculator onLockIntent={handleLockIntent} />

@@ -9,8 +9,8 @@ interface MatchFilterProps {
 }
 
 const FILTERS: { id: MatchFilterValue; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'live', label: 'Live' },
+  { id: 'all',      label: 'All' },
+  { id: 'live',     label: 'Live' },
   { id: 'upcoming', label: 'Upcoming' },
   { id: 'finished', label: 'Finished' },
 ];
@@ -18,8 +18,14 @@ const FILTERS: { id: MatchFilterValue; label: string }[] = [
 export function MatchFilter({ value, onChange, liveCount = 0 }: MatchFilterProps) {
   return (
     <div
-      className="inline-flex p-1 rounded-xl"
-      style={{ background: '#F1F5F0', border: '1px solid #E2E8F0' }}
+      style={{
+        display: 'inline-flex',
+        padding: '3px',
+        borderRadius: 6,
+        background: '#161B22',
+        border: '1px solid #30363D',
+        gap: 2,
+      }}
       role="tablist"
     >
       {FILTERS.map((f) => {
@@ -30,23 +36,48 @@ export function MatchFilter({ value, onChange, liveCount = 0 }: MatchFilterProps
             role="tab"
             aria-selected={active}
             onClick={() => onChange(f.id)}
-            className="relative inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all"
-            style={
-              active
-                ? { background: '#ffffff', color: '#0F172A', boxShadow: '0 1px 3px rgba(15,23,42,0.08)' }
-                : { background: 'transparent', color: '#64748B' }
-            }
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+              padding: '5px 12px',
+              borderRadius: 4,
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              border: 'none',
+              transition: 'all 0.1s ease',
+              background: active ? '#238636' : 'transparent',
+              color: active ? '#ffffff' : '#8B949E',
+              whiteSpace: 'nowrap',
+            }}
           >
-            {f.id === 'live' && <span className="live-dot" aria-hidden="true" />}
+            {f.id === 'live' && (
+              <span
+                style={{
+                  display: 'inline-block',
+                  width: 5,
+                  height: 5,
+                  borderRadius: '50%',
+                  background: active ? '#ffffff' : '#DA3633',
+                  animation: 'live-pulse 1.4s ease-in-out infinite',
+                  flexShrink: 0,
+                }}
+                aria-hidden="true"
+              />
+            )}
             {f.label}
             {f.id === 'live' && liveCount > 0 && (
               <span
-                className="ml-0.5 text-white font-black leading-none"
                 style={{
-                  background: '#DC2626',
-                  fontSize: '10px',
-                  padding: '2px 6px',
-                  borderRadius: '9999px',
+                  background: active ? 'rgba(255,255,255,0.25)' : '#DA3633',
+                  color: '#ffffff',
+                  fontSize: '0.6rem',
+                  fontWeight: 800,
+                  padding: '1px 5px',
+                  borderRadius: 3,
+                  lineHeight: 1.4,
+                  fontVariantNumeric: 'tabular-nums',
                 }}
               >
                 {liveCount}

@@ -114,9 +114,13 @@ export function HeroSection() {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
+          objectPosition: 'center center',
           opacity: videoReady ? 1 : 0,
           transition: 'opacity 1.5s ease',
           zIndex: 1,
+          /* Slight blur hides compression artifacts on low-res video */
+          filter: 'blur(0.5px) brightness(0.9)',
+          transform: 'scale(1.02)', /* compensate for blur edge */
         }}
       />
 
@@ -188,7 +192,7 @@ export function HeroSection() {
       {/* ── Main content ── */}
       <div
         className="relative w-full flex-1 flex flex-col items-center justify-center"
-        style={{ zIndex: 10, maxWidth: '72rem', margin: '0 auto', padding: '5rem 1.5rem 3rem', width: '100%' }}
+        style={{ zIndex: 10, maxWidth: '72rem', margin: '0 auto', padding: 'clamp(3rem, 6vw, 5rem) 1.5rem clamp(1.5rem, 3vw, 3rem)', width: '100%' }}
       >
         <div style={{ maxWidth: '58rem', margin: '0 auto', textAlign: 'center' }}>
 
@@ -339,7 +343,7 @@ export function HeroSection() {
               background: 'rgba(255,255,255,0.08)',
               border: '1px solid rgba(255,255,255,0.15)',
               borderRadius: 20,
-              padding: '1.75rem 2rem',
+              padding: 'clamp(1rem, 3vw, 1.75rem) clamp(1rem, 3vw, 2rem)',
               backdropFilter: 'blur(16px)',
               boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
             }}
@@ -371,7 +375,7 @@ export function HeroSection() {
               <div
                 key={s.label}
                 style={{
-                  padding: '1rem 0.75rem',
+                  padding: 'clamp(0.625rem, 2vw, 1rem) clamp(0.375rem, 1.5vw, 0.75rem)',
                   textAlign: 'center',
                   background: 'rgba(255,255,255,0.08)',
                   border: '1px solid rgba(255,255,255,0.12)',
@@ -379,15 +383,15 @@ export function HeroSection() {
                   backdropFilter: 'blur(8px)',
                 }}
               >
-                <div style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>{s.icon}</div>
+                <div style={{ fontSize: 'clamp(0.8rem, 2vw, 1.1rem)', marginBottom: '0.25rem' }}>{s.icon}</div>
                 <div style={{
-                  fontSize: '1.75rem', fontWeight: 900, lineHeight: 1,
+                  fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 900, lineHeight: 1,
                   background: 'linear-gradient(135deg, #22C55E 0%, #86EFAC 100%)',
                   WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
                 }}>
                   {s.value}
                 </div>
-                <div style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.5)', marginTop: '0.25rem' }}>
+                <div style={{ fontSize: 'clamp(0.55rem, 1.5vw, 0.65rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.5)', marginTop: '0.25rem' }}>
                   {s.label}
                 </div>
               </div>
@@ -411,7 +415,7 @@ export function HeroSection() {
           padding: '0.875rem 1.5rem',
         }}
       >
-        <div style={{ maxWidth: '72rem', margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '0.5rem 2rem' }}>
+        <div className="hero-trust-bar" style={{ maxWidth: '72rem', margin: '0 auto' }}>
           {TRUST_ITEMS.map((item) => (
             <span key={item.text} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.7)', whiteSpace: 'nowrap' }}>
               <span>{item.icon}</span>

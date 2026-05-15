@@ -3,31 +3,68 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
 import { BrandLogo } from '@/components/shared/BrandLogo';
 import { WalletButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 
 const NAV_LINKS = [
-  { label: 'Home',        href: '/' },
-  { label: 'Matches',     href: '/matches' },
-  { label: 'Groups',      href: '/groups' },
-  { label: 'Bracket',     href: '/bracket' },
-  { label: 'Token',       href: '/token' },
-  { label: 'Lock & Earn 🔒', href: '/lock', dot: true },
-  { label: 'Leaderboard', href: '/leaderboard' },
+  { label: 'Home',        href: '/',            icon: '🏠' },
+  { label: 'Matches',     href: '/matches',     icon: '⚽' },
+  { label: 'Groups',      href: '/groups',      icon: '🌍' },
+  { label: 'Bracket',     href: '/bracket',     icon: '🏆' },
+  { label: 'Token',       href: '/token',       icon: '💎' },
+  { label: 'Lock & Earn', href: '/lock',        icon: '🔒', dot: true },
+  { label: 'Leaderboard', href: '/leaderboard', icon: '📊' },
 ];
 
-export function Navbar() {
-  const [scrolled, setScrolled]   = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
-  const pathname = usePathname();
+// Mobile bottom nav — 5 most important links
+const MOBILE_NAV = [
+  { label: 'Home',    href: '/',            icon: HomeIcon },
+  { label: 'Matches', href: '/matches',     icon: MatchIcon },
+  { label: 'Groups',  href: '/groups',      icon: GroupIcon },
+  { label: 'Lock',    href: '/lock',        icon: LockIcon },
+  { label: 'Board',   href: '/leaderboard', icon: BoardIcon },
+];
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+function HomeIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h4a1 1 0 001-1v-3h2v3a1 1 0 001 1h4a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+    </svg>
+  );
+}
+function MatchIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" fill="none" />
+      <path d="M10 6l1.5 3h3l-2.5 2 1 3L10 12.5 7 14l1-3-2.5-2h3z" fill="currentColor" />
+    </svg>
+  );
+}
+function GroupIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+    </svg>
+  );
+}
+function LockIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+    </svg>
+  );
+}
+function BoardIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+    </svg>
+  );
+}
+
+export function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   // Close menu on route change
   useEffect(() => { setMenuOpen(false); }, [pathname]);
@@ -40,34 +77,53 @@ export function Navbar() {
 
   return (
     <>
-      <motion.header
-        className="fixed top-0 left-0 right-0 z-40"
-        animate={{
-          backgroundColor: scrolled ? 'rgba(255,255,255,0.88)' : 'rgba(250,251,248,0.5)',
-          backdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'blur(8px)',
-          WebkitBackdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'blur(8px)',
-          borderBottomColor: scrolled ? 'rgba(226,232,240,1)' : 'rgba(226,232,240,0)',
-          borderBottomWidth: '1px',
-          borderBottomStyle: 'solid',
+      {/* ── Top header ── */}
+      <header
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 40,
+          background: '#0D1117',
+          borderBottom: '1px solid #21262D',
+          height: 56,
         }}
-        transition={{ duration: 0.2 }}
       >
         <nav
-          className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6"
+          style={{
+            maxWidth: '80rem',
+            margin: '0 auto',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 16px',
+            gap: 12,
+          }}
           aria-label="Main navigation"
         >
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2 transition-opacity hover:opacity-80"
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}
             aria-label="WORLDCUPBET home"
-            style={{ textDecoration: 'none' }}
           >
             <BrandLogo size="md" />
           </Link>
 
-          {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-1" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+          {/* Desktop nav links */}
+          <ul
+            style={{
+              display: 'none',
+              listStyle: 'none',
+              margin: 0,
+              padding: 0,
+              gap: 2,
+              alignItems: 'center',
+            }}
+            className="lg:flex"
+          >
             {NAV_LINKS.map((link) => {
               const active =
                 pathname === link.href ||
@@ -76,22 +132,31 @@ export function Navbar() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-                    style={
-                      active
-                        ? { color: '#15803D', background: '#DCFCE7', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }
-                        : { color: '#334155', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }
-                    }
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 5,
+                      padding: '6px 12px',
+                      borderRadius: 6,
+                      fontSize: '0.82rem',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      whiteSpace: 'nowrap',
+                      color: active ? '#E6EDF3' : '#8B949E',
+                      background: active ? '#21262D' : 'transparent',
+                      borderBottom: active ? '2px solid #238636' : '2px solid transparent',
+                      transition: 'color 0.1s, background 0.1s',
+                    }}
                   >
                     {link.dot && (
                       <span
                         aria-hidden="true"
                         style={{
                           display: 'inline-block',
-                          width: 6,
-                          height: 6,
+                          width: 5,
+                          height: 5,
                           borderRadius: '50%',
-                          background: '#22C55E',
+                          background: '#238636',
                           flexShrink: 0,
                         }}
                       />
@@ -104,114 +169,142 @@ export function Navbar() {
           </ul>
 
           {/* Right side */}
-          <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
             <WalletButtonDynamic className="hidden sm:inline-flex" />
 
-            {/* Hamburger */}
+            {/* Hamburger — mobile only */}
             <button
-              className="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 rounded-lg transition-colors"
-              style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 36,
+                height: 36,
+                gap: 5,
+                borderRadius: 6,
+                background: menuOpen ? '#21262D' : 'transparent',
+                border: '1px solid',
+                borderColor: menuOpen ? '#30363D' : 'transparent',
+                cursor: 'pointer',
+              }}
+              className="lg:hidden"
               onClick={() => setMenuOpen((p) => !p)}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
             >
-              <motion.span
-                className="block rounded-full"
-                style={{ height: 2, width: 20, background: '#0F172A' }}
-                animate={menuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.2 }}
-              />
-              <motion.span
-                className="block rounded-full"
-                style={{ height: 2, width: 20, background: '#0F172A' }}
-                animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
-                transition={{ duration: 0.15 }}
-              />
-              <motion.span
-                className="block rounded-full"
-                style={{ height: 2, width: 20, background: '#0F172A' }}
-                animate={menuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.2 }}
-              />
+              <span style={{ display: 'block', height: 2, width: 18, background: '#E6EDF3', borderRadius: 1, transition: 'transform 0.2s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
+              <span style={{ display: 'block', height: 2, width: 18, background: '#E6EDF3', borderRadius: 1, transition: 'opacity 0.15s', opacity: menuOpen ? 0 : 1 }} />
+              <span style={{ display: 'block', height: 2, width: 18, background: '#E6EDF3', borderRadius: 1, transition: 'transform 0.2s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
             </button>
           </div>
         </nav>
-      </motion.header>
+      </header>
 
-      {/* Mobile menu overlay */}
-      <motion.div
-        className="fixed inset-0 z-30 lg:hidden"
-        style={{ background: '#FAFBF8' }}
-        initial={false}
-        animate={{
-          opacity: menuOpen ? 1 : 0,
-          pointerEvents: menuOpen ? 'auto' : 'none',
-        }}
-        transition={{ duration: 0.2 }}
-      >
-        {/* Spacer for fixed header */}
-        <div style={{ height: 64 }} aria-hidden="true" />
-
-        <nav
-          className="flex flex-col items-stretch gap-1 px-6 pt-6"
-          aria-label="Mobile navigation"
+      {/* ── Mobile full-screen menu ── */}
+      {menuOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 35,
+            background: '#0D1117',
+            paddingTop: 56,
+            overflowY: 'auto',
+          }}
+          className="lg:hidden"
         >
-          {NAV_LINKS.map((link, i) => {
-            const active =
-              pathname === link.href ||
-              (link.href !== '/' && pathname.startsWith(link.href));
-            return (
-              <motion.div
-                key={link.href}
-                initial={{ opacity: 0, x: -20 }}
-                animate={menuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                transition={{ delay: menuOpen ? i * 0.04 : 0, duration: 0.2 }}
-              >
+          <nav
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '16px',
+              gap: 4,
+            }}
+            aria-label="Mobile navigation"
+          >
+            {NAV_LINKS.map((link) => {
+              const active =
+                pathname === link.href ||
+                (link.href !== '/' && pathname.startsWith(link.href));
+              return (
                 <Link
+                  key={link.href}
                   href={link.href}
-                  className="block px-4 py-4 rounded-xl text-lg font-semibold transition-colors"
-                  style={
-                    active
-                      ? { background: '#DCFCE7', color: '#15803D', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }
-                      : { color: '#0F172A', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }
-                  }
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    padding: '14px 16px',
+                    borderRadius: 8,
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    color: active ? '#E6EDF3' : '#8B949E',
+                    background: active ? '#21262D' : 'transparent',
+                    borderLeft: active ? '3px solid #238636' : '3px solid transparent',
+                  }}
                 >
+                  <span style={{ fontSize: '1.1rem' }}>{link.icon}</span>
+                  {link.label}
                   {link.dot && (
                     <span
                       aria-hidden="true"
                       style={{
+                        marginLeft: 'auto',
                         display: 'inline-block',
-                        width: 7,
-                        height: 7,
+                        width: 6,
+                        height: 6,
                         borderRadius: '50%',
-                        background: '#22C55E',
-                        flexShrink: 0,
+                        background: '#238636',
                       }}
                     />
                   )}
-                  {link.label}
                 </Link>
-              </motion.div>
-            );
-          })}
+              );
+            })}
 
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={menuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-            transition={{ delay: menuOpen ? NAV_LINKS.length * 0.04 : 0, duration: 0.2 }}
-            className="mt-4"
-          >
-            <a
-              href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary w-full"
-            >
-              🚀 Buy $WCB on Pump.fun
-            </a>
-          </motion.div>
-        </nav>
-      </motion.div>
+            <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #21262D' }}>
+              <a
+                href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+                style={{ display: 'flex', justifyContent: 'center', width: '100%' }}
+              >
+                🚀 Buy $WCB on Pump.fun
+              </a>
+            </div>
+          </nav>
+        </div>
+      )}
+
+      {/* ── Mobile bottom nav bar ── */}
+      <MobileBottomNav pathname={pathname} />
     </>
+  );
+}
+
+function MobileBottomNav({ pathname }: { pathname: string }) {
+  return (
+    <nav className="mobile-nav" aria-label="Mobile bottom navigation">
+      {MOBILE_NAV.map((item) => {
+        const active =
+          pathname === item.href ||
+          (item.href !== '/' && pathname.startsWith(item.href));
+        const IconComp = item.icon;
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`mobile-nav-item${active ? ' active' : ''}`}
+            aria-label={item.label}
+          >
+            <IconComp />
+            {item.label}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

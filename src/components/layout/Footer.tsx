@@ -10,6 +10,13 @@ const TWITTER  = process.env.NEXT_PUBLIC_TWITTER_URL  ?? 'https://twitter.com/WC
 const TELEGRAM = process.env.NEXT_PUBLIC_TELEGRAM_URL ?? 'https://t.me/wcblive';
 const DISCORD  = process.env.NEXT_PUBLIC_DISCORD_URL  ?? 'https://discord.gg/wcblive';
 
+const linkStyle: React.CSSProperties = {
+  color: '#8B949E',
+  textDecoration: 'none',
+  fontSize: '0.82rem',
+  transition: 'color 0.1s',
+};
+
 export function Footer() {
   const [copied, setCopied] = useState(false);
 
@@ -27,37 +34,41 @@ export function Footer() {
   const display =
     CONTRACT.length > 16 ? `${CONTRACT.slice(0, 6)}...${CONTRACT.slice(-6)}` : CONTRACT;
 
-  const linkStyle: React.CSSProperties = {
-    color: '#334155',
-    textDecoration: 'none',
-    transition: 'color 0.15s',
-  };
-
   return (
     <footer
       role="contentinfo"
-      style={{ background: '#F1F5F0', borderTop: '1px solid #E2E8F0', marginTop: '6rem' }}
+      style={{
+        background: '#161B22',
+        borderTop: '1px solid #21262D',
+        marginTop: '4rem',
+      }}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
-        {/* Top: brand + nav columns */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+      <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '40px 16px 24px' }}>
+
+        {/* Top grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '24px 16px',
+            marginBottom: '32px',
+          }}
+          className="md:grid-cols-4"
+        >
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
+          <div style={{ gridColumn: 'span 2' }} className="md:col-span-1">
             <BrandLogo size="md" />
-            <p className="text-sm mt-3 leading-relaxed max-w-xs" style={{ color: '#64748B' }}>
+            <p style={{ fontSize: '0.8rem', marginTop: '10px', lineHeight: 1.6, color: '#8B949E', maxWidth: 260 }}>
               Community prediction platform for World Cup 2026. Solana-native, launched on Pump.fun. Betting opens June 11, 2026.
             </p>
           </div>
 
           {/* Explore */}
           <div>
-            <h3
-              className="font-bold uppercase tracking-widest mb-3"
-              style={{ fontSize: '0.7rem', color: '#0F172A' }}
-            >
+            <h3 style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#E6EDF3', marginBottom: '12px' }}>
               Explore
             </h3>
-            <ul className="space-y-2 text-sm">
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <li><Link href="/matches" style={linkStyle}>Matches</Link></li>
               <li><Link href="/groups" style={linkStyle}>Groups</Link></li>
               <li><Link href="/bracket" style={linkStyle}>Bracket</Link></li>
@@ -68,13 +79,10 @@ export function Footer() {
 
           {/* Token */}
           <div>
-            <h3
-              className="font-bold uppercase tracking-widest mb-3"
-              style={{ fontSize: '0.7rem', color: '#0F172A' }}
-            >
+            <h3 style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#E6EDF3', marginBottom: '12px' }}>
               Token
             </h3>
-            <ul className="space-y-2 text-sm">
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <li><Link href="/token" style={linkStyle}>$WCB Token</Link></li>
               <li>
                 <a href={PUMPFUN} target="_blank" rel="noopener noreferrer" style={linkStyle}>
@@ -96,13 +104,10 @@ export function Footer() {
 
           {/* Community */}
           <div>
-            <h3
-              className="font-bold uppercase tracking-widest mb-3"
-              style={{ fontSize: '0.7rem', color: '#0F172A' }}
-            >
+            <h3 style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#E6EDF3', marginBottom: '12px' }}>
               Community
             </h3>
-            <ul className="space-y-2 text-sm">
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <li>
                 <a href={TWITTER} target="_blank" rel="noopener noreferrer" style={linkStyle}>
                   Twitter / X
@@ -122,41 +127,73 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom: contract + disclaimer */}
+        {/* Disclaimer bar */}
         <div
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6"
-          style={{ borderTop: '1px solid #E2E8F0' }}
+          style={{
+            background: 'rgba(218,54,51,0.08)',
+            border: '1px solid rgba(218,54,51,0.2)',
+            borderRadius: 6,
+            padding: '10px 14px',
+            marginBottom: '20px',
+          }}
         >
-          <div className="flex items-center gap-2 text-xs">
-            <span className="font-medium" style={{ color: '#64748B' }}>Contract:</span>
+          <p style={{ fontSize: '0.72rem', color: '#8B949E', margin: 0, lineHeight: 1.5 }}>
+            <span style={{ fontWeight: 800, color: '#DA3633' }}>⚠ DISCLAIMER:</span>{' '}
+            This is a community memecoin on Solana. Not financial advice. Betting features open June 11, 2026. Crypto assets are highly volatile. Only invest what you can afford to lose.
+          </p>
+        </div>
+
+        {/* Bottom bar */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            paddingTop: '16px',
+            borderTop: '1px solid #21262D',
+          }}
+          className="sm:flex-row sm:items-center sm:justify-between"
+        >
+          {/* Contract address */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#484F58' }}>Contract:</span>
             <div
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg"
-              style={{ background: '#ffffff', border: '1px solid #E2E8F0' }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 10px',
+                borderRadius: 4,
+                background: '#1C2128',
+                border: '1px solid #30363D',
+              }}
             >
-              <code className="font-mono" style={{ color: '#0F172A' }} title={CONTRACT}>
+              <code style={{ fontFamily: 'monospace', fontSize: '0.72rem', color: '#8B949E' }} title={CONTRACT}>
                 {display}
               </code>
               <button
                 onClick={handleCopy}
-                className="p-0.5 rounded transition-colors"
-                style={{ color: '#64748B' }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: '#484F58',
+                  padding: '0 2px',
+                  fontSize: '0.8rem',
+                  lineHeight: 1,
+                }}
                 aria-label={copied ? 'Copied' : 'Copy contract address'}
               >
                 {copied ? '✓' : '⎘'}
               </button>
             </div>
             {copied && (
-              <span className="font-semibold" style={{ color: '#15803D' }}>
-                Copied!
-              </span>
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#238636' }}>Copied!</span>
             )}
           </div>
 
-          <p
-            className="text-xs text-center sm:text-right max-w-md"
-            style={{ color: '#94A3B8' }}
-          >
-            © 2026 WORLDCUPBET — This is a community memecoin on Solana. Not financial advice. Betting features open June 11, 2026.
+          <p style={{ fontSize: '0.7rem', color: '#484F58', margin: 0 }}>
+            © 2026 WORLDCUPBET — All rights reserved
           </p>
         </div>
       </div>

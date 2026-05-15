@@ -5,13 +5,13 @@ interface BrandLogoProps {
 }
 
 const sizeMap = {
-  sm: { svg: 28, titleSize: '1rem', subtitleSize: '9px' },
-  md: { svg: 36, titleSize: '1.25rem', subtitleSize: '10px' },
-  lg: { svg: 48, titleSize: '1.5rem', subtitleSize: '11px' },
+  sm: { svg: 28, titleSize: '1rem',   subtitleSize: '9px' },
+  md: { svg: 34, titleSize: '1.15rem', subtitleSize: '9px' },
+  lg: { svg: 44, titleSize: '1.4rem',  subtitleSize: '10px' },
 };
 
 /**
- * $WCB / WORLDCUPBET official logo — football + trophy + Solana accent
+ * $WCB / WORLDCUPBET brand logo — dark sportsbook variant
  */
 export function BrandLogo({ size = 'md', showText = true, className = '' }: BrandLogoProps) {
   const s = sizeMap[size];
@@ -26,34 +26,34 @@ export function BrandLogo({ size = 'md', showText = true, className = '' }: Bran
         role="img"
       >
         <defs>
-          <linearGradient id="wcb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#15803D" />
-            <stop offset="100%" stopColor="#22C55E" />
+          <linearGradient id="wcb-grad-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#238636" />
+            <stop offset="100%" stopColor="#2EA043" />
           </linearGradient>
-          <linearGradient id="wcb-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#D97706" />
-            <stop offset="100%" stopColor="#F59E0B" />
+          <linearGradient id="wcb-grad-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#D29922" />
+            <stop offset="100%" stopColor="#E3B341" />
           </linearGradient>
         </defs>
-        {/* Outer pitch circle */}
-        <circle cx="24" cy="24" r="22" fill="url(#wcb-grad)" />
+        {/* Outer circle */}
+        <circle cx="24" cy="24" r="22" fill="url(#wcb-grad-dark)" />
         {/* Inner field */}
-        <circle cx="24" cy="24" r="18" fill="white" />
+        <circle cx="24" cy="24" r="18" fill="#161B22" />
         {/* Pentagon (football pattern) */}
         <path
           d="M24 12 L33 18.5 L29.5 28 L18.5 28 L15 18.5 Z"
-          fill="#0F172A"
+          fill="#E6EDF3"
         />
-        {/* Trophy shine */}
-        <circle cx="24" cy="20" r="3" fill="url(#wcb-grad-2)" />
+        {/* Trophy accent */}
+        <circle cx="24" cy="20" r="3" fill="url(#wcb-grad-gold)" />
       </svg>
       {showText && (
         <div className="flex flex-col leading-none">
-          <span style={{ fontWeight: 900, color: '#0F172A', fontSize: s.titleSize, letterSpacing: '-0.02em' }}>
+          <span style={{ fontWeight: 900, color: '#E6EDF3', fontSize: s.titleSize, letterSpacing: '-0.02em' }}>
             $WCB
           </span>
-          <span style={{ fontSize: s.subtitleSize, fontWeight: 700, color: '#15803D', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            World Cup Bet
+          <span style={{ fontSize: s.subtitleSize, fontWeight: 700, color: '#238636', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+            WorldCupBet
           </span>
         </div>
       )}

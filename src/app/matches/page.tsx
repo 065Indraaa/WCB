@@ -52,112 +52,135 @@ export default function MatchesPage() {
   }, [grouped]);
 
   return (
-    <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '1.5rem' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '1.5rem', alignItems: 'start' }}>
+    <div className="page-layout">
 
-        {/* Main */}
-        <div>
-          {/* Header */}
-          <div style={{ marginBottom: '1.25rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.375rem' }}>
-              <span style={{ display: 'inline-block', width: 4, height: 22, background: '#15803D', borderRadius: 2 }} aria-hidden="true" />
-              <h1 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0F172A', margin: 0 }}>
-                Match Center
-              </h1>
-            </div>
-            <p style={{ color: '#64748B', fontSize: '0.875rem', marginLeft: '0.875rem' }}>
-              {all.length} matches · Predict any match and see community sentiment
-            </p>
+      {/* ── Main column ── */}
+      <div>
+        {/* Page header */}
+        <div style={{ marginBottom: '16px' }}>
+          <div className="section-header">
+            <h1 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#E6EDF3', margin: 0 }}>
+              Match Center
+            </h1>
           </div>
-
-          {/* Filter + count */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
-            <MatchFilter value={filter} onChange={setFilter} liveCount={liveCount} />
-            <p style={{ fontSize: '0.8rem', color: '#64748B' }}>
-              <span style={{ fontWeight: 700, color: '#0F172A' }}>{filtered.length}</span> of <span style={{ fontWeight: 700, color: '#0F172A' }}>{all.length}</span> matches
-            </p>
-          </div>
-
-          {/* Banner ad */}
-          <div style={{ marginBottom: '1.25rem' }}>
-            <ImagePlaceholder width="100%" height={90} label="Banner Ad 728×90" rounded={8} style={{ border: '1px solid #E2E8F0' }} />
-          </div>
-
-          {/* Matches */}
-          {dateKeys.length === 0 ? (
-            <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
-              <p style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>⚽</p>
-              <p style={{ fontWeight: 700, color: '#0F172A' }}>No matches found</p>
-              <p style={{ color: '#64748B', fontSize: '0.875rem' }}>Try a different filter.</p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {dateKeys.map((date) => {
-                const matches = grouped.get(date)!;
-                return (
-                  <div key={date}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.875rem' }}>
-                      <h2 style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B', margin: 0 }}>
-                        {date}
-                      </h2>
-                      <div style={{ flex: 1, height: 1, background: '#E2E8F0' }} />
-                      <span style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 600 }}>
-                        {matches.length} match{matches.length !== 1 ? 'es' : ''}
-                      </span>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0.875rem' }}>
-                      {matches.map((m) => <MatchCard key={m.id} match={m} />)}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          <p style={{ color: '#8B949E', fontSize: '0.8rem', marginTop: 4 }}>
+            {all.length} matches · Predict any match and see community sentiment
+          </p>
         </div>
 
-        {/* Sidebar */}
-        <aside style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'sticky', top: '5.5rem' }}>
-          {/* Token widget */}
-          <div className="card" style={{ padding: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B' }}>$WCB Token</span>
-              <Link href="/lock" style={{ fontSize: '0.7rem', fontWeight: 700, color: '#15803D', textDecoration: 'none', padding: '0.15rem 0.5rem', borderRadius: 9999, background: '#DCFCE7' }}>
-                Lock & Earn →
-              </Link>
-            </div>
-            <p style={{ fontSize: '0.8rem', color: '#64748B', lineHeight: 1.5, marginBottom: '0.75rem' }}>
-              Lock $WCB to earn betting credits. Early lockers get 2× bonus.
-            </p>
-            <a href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ display: 'flex', justifyContent: 'center', fontSize: '0.82rem', padding: '0.6rem 1rem' }}>
-              Buy $WCB
-            </a>
-          </div>
+        {/* Filter bar + count */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+          <MatchFilter value={filter} onChange={setFilter} liveCount={liveCount} />
+          <p style={{ fontSize: '0.75rem', color: '#484F58', fontVariantNumeric: 'tabular-nums' }}>
+            <span style={{ fontWeight: 700, color: '#E6EDF3' }}>{filtered.length}</span>
+            {' '}of{' '}
+            <span style={{ fontWeight: 700, color: '#E6EDF3' }}>{all.length}</span>
+            {' '}matches
+          </p>
+        </div>
 
-          {/* Ad slots */}
-          {[1, 2].map((i) => (
-            <div key={i} style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid #E2E8F0' }}>
-              <ImagePlaceholder width="100%" aspectRatio="4/3" label={`Sponsor Ad ${i}`} rounded={0} style={{ border: 'none', borderRadius: 0 }} />
-              <div style={{ padding: '0.5rem 0.75rem', background: '#F8FAFC', borderTop: '1px solid #E2E8F0' }}>
-                <p style={{ fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94A3B8', margin: 0 }}>Advertisement</p>
-              </div>
-            </div>
-          ))}
+        {/* Leaderboard banner ad */}
+        <div style={{ marginBottom: '16px' }}>
+          <ImagePlaceholder
+            width="100%"
+            height={90}
+            label="Leaderboard Banner 728×90"
+            rounded={6}
+          />
+        </div>
 
-          {/* Quick nav */}
-          <div className="card" style={{ padding: '1rem' }}>
-            <p style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B', marginBottom: '0.5rem' }}>Navigate</p>
-            {[
-              { href: '/groups', label: '🌍 Group Stage' },
-              { href: '/bracket', label: '🏆 Bracket' },
-              { href: '/leaderboard', label: '📊 Leaderboard' },
-            ].map((l) => (
-              <Link key={l.href} href={l.href} className="sidebar-nav-link">
-                {l.label}
-              </Link>
-            ))}
+        {/* Match list */}
+        {dateKeys.length === 0 ? (
+          <div className="bet-card" style={{ padding: '3rem', textAlign: 'center' }}>
+            <p style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>⚽</p>
+            <p style={{ fontWeight: 700, color: '#E6EDF3' }}>No matches found</p>
+            <p style={{ color: '#8B949E', fontSize: '0.875rem' }}>Try a different filter.</p>
           </div>
-        </aside>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {dateKeys.map((date) => {
+              const matches = grouped.get(date)!;
+              return (
+                <div key={date}>
+                  {/* Date header */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                    <h2 style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#484F58', margin: 0, whiteSpace: 'nowrap' }}>
+                      {date}
+                    </h2>
+                    <div style={{ flex: 1, height: 1, background: '#21262D' }} />
+                    <span style={{ fontSize: '0.65rem', color: '#484F58', fontWeight: 600, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+                      {matches.length} match{matches.length !== 1 ? 'es' : ''}
+                    </span>
+                  </div>
+
+                  {/* Match rows */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    {matches.map((m) => <MatchCard key={m.id} match={m} />)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
+
+      {/* ── Sidebar ── */}
+      <aside className="page-sidebar">
+        {/* Token widget */}
+        <div className="bet-card" style={{ padding: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+            <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8B949E' }}>$WCB Token</span>
+            <Link
+              href="/lock"
+              style={{ fontSize: '0.65rem', fontWeight: 700, color: '#238636', textDecoration: 'none', padding: '2px 8px', borderRadius: 3, background: 'rgba(35,134,54,0.12)', border: '1px solid rgba(35,134,54,0.2)' }}
+            >
+              Lock & Earn →
+            </Link>
+          </div>
+          <p style={{ fontSize: '0.78rem', color: '#8B949E', lineHeight: 1.5, marginBottom: '10px' }}>
+            Lock $WCB to earn betting credits. Early lockers get 2× bonus.
+          </p>
+          <a
+            href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary"
+            style={{ display: 'flex', justifyContent: 'center', fontSize: '0.8rem', padding: '8px 12px' }}
+          >
+            Buy $WCB
+          </a>
+        </div>
+
+        {/* Ad slots */}
+        {[1, 2].map((i) => (
+          <div key={i} style={{ borderRadius: 6, overflow: 'hidden', border: '1px solid #30363D' }}>
+            <ImagePlaceholder
+              width="100%"
+              aspectRatio="6/5"
+              label={`Sponsor Ad ${i} 300×250`}
+              rounded={0}
+              style={{ border: 'none', borderRadius: 0 }}
+            />
+            <div style={{ padding: '5px 8px', background: '#161B22', borderTop: '1px solid #21262D' }}>
+              <p style={{ fontSize: '0.55rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#484F58', margin: 0 }}>Advertisement</p>
+            </div>
+          </div>
+        ))}
+
+        {/* Quick nav */}
+        <div className="bet-card" style={{ padding: '10px' }}>
+          <p style={{ fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#484F58', marginBottom: '6px' }}>Navigate</p>
+          {[
+            { href: '/groups',      label: '🌍 Group Stage' },
+            { href: '/bracket',     label: '🏆 Bracket' },
+            { href: '/leaderboard', label: '📊 Leaderboard' },
+          ].map((l) => (
+            <Link key={l.href} href={l.href} className="sidebar-nav-link">
+              {l.label}
+            </Link>
+          ))}
+        </div>
+      </aside>
     </div>
   );
 }
