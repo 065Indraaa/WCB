@@ -4,25 +4,33 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BrandLogo } from '@/components/shared/BrandLogo';
+import { MenuIcon, type MenuIconName } from '@/components/shared/MenuIcons';
 import { WalletButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 
-const NAV_LINKS = [
-  { label: 'Home',        href: '/',            icon: 'HOME' },
-  { label: 'Matches',     href: '/matches',     icon: 'MATCH' },
-  { label: 'Groups',      href: '/groups',      icon: 'GROUP' },
-  { label: 'Bracket',     href: '/bracket',     icon: 'CUP' },
-  { label: 'Token',       href: '/token',       icon: 'WCB' },
-  { label: 'Lock & Earn', href: '/lock',        icon: 'LOCK', dot: true },
-  { label: 'Docs',        href: '/docs',        icon: 'DOCS' },
-  { label: 'Leaderboard', href: '/leaderboard', icon: 'BOARD' },
-];
+type NavLink = {
+  label: string;
+  href: string;
+  icon: MenuIconName;
+  dot?: boolean;
+};
 
-const MOBILE_NAV = [
-  { label: 'Home',    href: '/',            code: 'H' },
-  { label: 'Matches', href: '/matches',     code: 'M' },
-  { label: 'Groups',  href: '/groups',      code: 'G' },
-  { label: 'Lock',    href: '/lock',        code: 'L' },
-  { label: 'Board',   href: '/leaderboard', code: 'B' },
+const NAV_LINKS: NavLink[] = [
+  { label: 'Home',        href: '/',            icon: 'home' },
+  { label: 'Matches',     href: '/matches',     icon: 'matches' },
+  { label: 'Groups',      href: '/groups',      icon: 'groups' },
+  { label: 'Bracket',     href: '/bracket',     icon: 'bracket' },
+  { label: 'Token',       href: '/token',       icon: 'token' },
+  { label: 'Lock & Earn', href: '/lock',        icon: 'lock', dot: true },
+  { label: 'Docs',        href: '/docs',        icon: 'docs' },
+  { label: 'Leaderboard', href: '/leaderboard', icon: 'leaderboard' },
+] ;
+
+const MOBILE_NAV: NavLink[] = [
+  { label: 'Home',    href: '/',            icon: 'home' },
+  { label: 'Matches', href: '/matches',     icon: 'matches' },
+  { label: 'Groups',  href: '/groups',      icon: 'groups' },
+  { label: 'Lock',    href: '/lock',        icon: 'lock' },
+  { label: 'Board',   href: '/leaderboard', icon: 'leaderboard' },
 ];
 
 export function Navbar() {
@@ -30,16 +38,13 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
-  // Close menu on route change
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
-  // Detect scroll for navbar shadow
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -48,7 +53,6 @@ export function Navbar() {
 
   return (
     <>
-      {/* Top header */}
       <header
         style={{
           position: 'fixed',
@@ -56,14 +60,10 @@ export function Navbar() {
           left: 0,
           right: 0,
           zIndex: 40,
-          background: scrolled
-            ? 'rgba(7,7,7,0.97)'
-            : 'rgba(7,7,7,0.92)',
+          background: scrolled ? 'rgba(7,7,7,0.97)' : 'rgba(7,7,7,0.92)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: scrolled
-            ? '1px solid rgba(242,181,68,0.2)'
-            : '1px solid rgba(242,181,68,0.12)',
+          borderBottom: scrolled ? '1px solid rgba(242,181,68,0.2)' : '1px solid rgba(242,181,68,0.12)',
           height: 56,
           transition: 'background 0.2s, border-color 0.2s, box-shadow 0.2s',
           boxShadow: scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none',
@@ -82,7 +82,6 @@ export function Navbar() {
           }}
           aria-label="Main navigation"
         >
-          {/* Logo */}
           <Link
             href="/"
             style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}
@@ -91,7 +90,6 @@ export function Navbar() {
             <BrandLogo size="md" />
           </Link>
 
-          {/* Desktop nav links */}
           <ul
             style={{
               display: 'none',
@@ -114,9 +112,9 @@ export function Navbar() {
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: 5,
-                      padding: '6px 11px',
-                      borderRadius: 6,
+                      gap: 7,
+                      padding: '7px 11px',
+                      borderRadius: 8,
                       fontSize: '0.82rem',
                       fontWeight: 600,
                       textDecoration: 'none',
@@ -127,6 +125,24 @@ export function Navbar() {
                       transition: 'color 0.15s, background 0.15s',
                     }}
                   >
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 18,
+                        height: 18,
+                        borderRadius: 5,
+                        color: active ? '#F2B544' : '#8A8A8A',
+                        background: active ? 'rgba(242,181,68,0.1)' : 'rgba(255,255,255,0.03)',
+                        border: active ? '1px solid rgba(242,181,68,0.22)' : '1px solid rgba(255,255,255,0.06)',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <MenuIcon name={link.icon as MenuIconName} width={12} height={12} />
+                    </span>
+                    {link.label}
                     {link.dot && (
                       <span
                         aria-hidden="true"
@@ -141,16 +157,13 @@ export function Navbar() {
                         }}
                       />
                     )}
-                    {link.label}
                   </Link>
                 </li>
               );
             })}
           </ul>
 
-          {/* Right side */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            {/* Buy button, desktop */}
             <a
               href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
               target="_blank"
@@ -176,7 +189,6 @@ export function Navbar() {
 
             <WalletButtonDynamic className="hidden sm:inline-flex" />
 
-            {/* Hamburger, mobile only */}
             <button
               style={{
                 display: 'flex',
@@ -206,7 +218,6 @@ export function Navbar() {
         </nav>
       </header>
 
-      {/* Mobile full-screen menu */}
       {menuOpen && (
         <div
           style={{
@@ -252,7 +263,23 @@ export function Navbar() {
                     transition: 'background 0.15s, color 0.15s',
                   }}
                 >
-                  <span style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.08em', color: active ? '#F2B544' : '#6E6E6E', width: 42 }}>{link.icon}</span>
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 30,
+                      height: 30,
+                      borderRadius: 8,
+                      color: active ? '#F2B544' : '#8A8A8A',
+                      background: active ? 'rgba(242,181,68,0.1)' : 'rgba(255,255,255,0.04)',
+                      border: active ? '1px solid rgba(242,181,68,0.22)' : '1px solid rgba(255,255,255,0.06)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <MenuIcon name={link.icon as MenuIconName} width={16} height={16} />
+                  </span>
                   {link.label}
                   {link.dot && (
                     <span
@@ -298,7 +325,6 @@ export function Navbar() {
         </div>
       )}
 
-      {/* Mobile bottom nav bar */}
       <MobileBottomNav pathname={pathname} />
     </>
   );
@@ -321,19 +347,18 @@ function MobileBottomNav({ pathname }: { pathname: string }) {
             <span
               aria-hidden="true"
               style={{
-                width: 20,
-                height: 20,
-                borderRadius: 6,
+                width: 22,
+                height: 22,
+                borderRadius: 7,
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '0.62rem',
-                fontWeight: 900,
                 background: active ? 'rgba(242,181,68,0.16)' : 'transparent',
                 border: active ? '1px solid rgba(242,181,68,0.28)' : '1px solid transparent',
+                color: active ? '#F2B544' : '#6E6E6E',
               }}
             >
-              {item.code}
+              <MenuIcon name={item.icon as MenuIconName} width={13} height={13} />
             </span>
             {item.label}
           </Link>
