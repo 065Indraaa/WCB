@@ -30,6 +30,10 @@ export const queryKeys = {
     all: ['token'] as const,
     metrics: () => ['token', 'metrics'] as const,
   },
+  prizePool: {
+    all: ['prizePool'] as const,
+    metrics: () => ['prizePool', 'metrics'] as const,
+  },
   leaderboard: {
     all: ['leaderboard'] as const,
     page: (page: number, limit: number) => ['leaderboard', 'page', page, limit] as const,

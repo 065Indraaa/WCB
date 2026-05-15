@@ -4,8 +4,12 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWalletLocks } from '@/lib/hooks/useWalletLocks';
 import { useCommunityLocks } from '@/lib/hooks/useCommunityLocks';
+import { useLeaderboard } from '@/lib/hooks/useLeaderboard';
+import { usePrizePoolMetrics } from '@/lib/hooks/usePrizePoolMetrics';
+import type { PrizePoolMetrics } from '@/lib/api/prizepool';
 import { formatCredits, formatTokenAmount } from '@/lib/lock';
 import { WalletButtonDynamic, WalletMultiButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
+import type { WalletEntry } from '@/types/leaderboard';
 
 const TIERS = [
   { tier: 'Bronze',   color: '#CD7F32', tint: 'rgba(205,127,50,0.12)', min: '1' },
@@ -45,6 +49,26 @@ const HOLDER_BENEFITS = [
   'Eligible for holder snapshots',
   'Separate from Streamflow lock rank',
 ];
+
+function getTierVisual(tier: string) {
+  return TIERS.find((item) => item.tier === tier) ?? TIERS[0];
+}
+
+function formatUsd(value: number | undefined) {
+  const safeValue = Number.isFinite(value) ? value ?? 0 : 0;
+  if (safeValue >= 1_000_000) return `$${(safeValue / 1_000_000).toFixed(2)}M`;
+  if (safeValue >= 1_000) return `$${(safeValue / 1_000).toFixed(2)}K`;
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: safeValue >= 10 ? 0 : 2,
+  }).format(safeValue);
+}
+
+function formatRate(value: number | undefined) {
+  const safeValue = Number.isFinite(value) ? value ?? 0 : 0;
+  return `${(safeValue * 100).toFixed(safeValue > 0 && safeValue < 0.001 ? 3 : 2)}%`;
+}
 
 // My position banner
 function MyPositionBanner() {
@@ -159,7 +183,30 @@ function MyPositionBanner() {
   );
 }
 
-function PrizePoolCreditPanel() {
+function PrizePoolCreditPanel({
+  metrics,
+  loading,
+  error,
+  refetch,
+}: {
+  metrics?: PrizePoolMetrics;
+  loading: boolean;
+  error: string | null;
+  refetch: () => void;
+}) {
+  const statusLabel = error
+    ? 'API fallback'
+    : metrics?.available
+      ? 'Live estimate'
+      : metrics?.message ?? 'Awaiting volume';
+
+  const liveMetrics = [
+    { label: 'Prize Pool 24h', value: loading ? 'Syncing' : formatUsd(metrics?.prizePoolCredit24hUsd), color: '#14F195' },
+    { label: 'Creator Fee 24h', value: loading ? 'Syncing' : formatUsd(metrics?.creatorFee24hUsd), color: '#F2B544' },
+    { label: '24h Volume', value: loading ? 'Syncing' : formatUsd(metrics?.volume24hUsd), color: '#FFFFFF' },
+    { label: 'Fee Rate', value: loading ? 'Syncing' : formatRate(metrics?.creatorFeeRate), color: '#FFD36B' },
+  ];
+
   return (
     <section
       style={{
@@ -177,31 +224,43 @@ function PrizePoolCreditPanel() {
             <p className="section-eyebrow" style={{ marginBottom: 8 }}>
               Prize Pool Credit
             </p>
-            <h2 style={{ fontSize: 'clamp(1.35rem, 3vw, 2rem)', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.5rem' }}>
-              Fee-backed rewards for holders and active lockers.
+            <h2 className="text-2xl md:text-3xl" style={{ fontWeight: 900, color: '#FFFFFF', marginBottom: '0.5rem' }}>
+              Live creator-fee estimate for holder and locker rewards.
             </h2>
             <p style={{ fontSize: '0.92rem', color: '#B3B3B3', lineHeight: 1.7, maxWidth: 760 }}>
-              The prize pool credit reserve is designed to be funded from live creator fee once markets are active. It keeps rewards tied to real product usage instead of fixed emissions.
+              The prize pool credit counter estimates reward capacity from Jupiter token volume and Pump.fun creator-fee tiers. It keeps the reserve tied to real trading activity while a direct creator-fee endpoint is not exposed.
             </p>
+            {error && (
+              <p style={{ color: '#EF4444', fontSize: '0.8rem', fontWeight: 700, marginTop: '0.65rem' }}>
+                {error}
+              </p>
+            )}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(120px, 1fr))', gap: '0.6rem', minWidth: 280 }}>
-            {[
-              { label: 'Source', value: 'Live creator fee' },
-              { label: 'Status', value: 'Pre-launch' },
-              { label: 'Eligibility', value: 'Holder + Lock' },
-              { label: 'Cycle', value: 'Matchday windows' },
-            ].map((item) => (
+            {liveMetrics.map((item) => (
               <div key={item.label} style={{ padding: '0.85rem', borderRadius: 12, background: '#111111', border: '1px solid #2A2A2A' }}>
                 <p style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6E6E6E', marginBottom: 4 }}>
                   {item.label}
                 </p>
-                <p style={{ fontSize: '0.88rem', fontWeight: 900, color: item.label === 'Source' ? '#14F195' : '#FFFFFF', margin: 0 }}>
+                <p style={{ fontSize: '0.88rem', fontWeight: 900, color: item.color, margin: 0 }}>
                   {item.value}
                 </p>
               </div>
             ))}
           </div>
         </div>
+      </div>
+
+      <div style={{ padding: '0.8rem 1.15rem', borderBottom: '1px solid #2A2A2A', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap', background: '#0E0E0E' }}>
+        <p style={{ fontSize: '0.74rem', color: '#B3B3B3', margin: 0 }}>
+          Source: {metrics?.source ?? 'jupiter-token-api'} / Allocation: {formatRate(metrics?.allocationRate)} / Status: {statusLabel}
+        </p>
+        <button
+          onClick={refetch}
+          style={{ padding: '0.4rem 0.75rem', borderRadius: 8, border: '1px solid rgba(20,241,149,0.25)', background: 'rgba(20,241,149,0.08)', color: '#14F195', fontSize: '0.74rem', fontWeight: 800, cursor: 'pointer' }}
+        >
+          Refresh Fee Count
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-0">
@@ -231,11 +290,18 @@ function PrizePoolCreditPanel() {
 }
 
 function HolderLeaderboardPanel({
-  leaderboard,
+  entries,
+  total,
   loading,
   error,
   refetch,
-}: ReturnType<typeof useCommunityLocks>) {
+}: {
+  entries: WalletEntry[];
+  total: number;
+  loading: boolean;
+  error: string | null;
+  refetch: () => void;
+}) {
   return (
     <section style={{ marginBottom: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
@@ -246,6 +312,9 @@ function HolderLeaderboardPanel({
           <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#FFFFFF' }}>
             Top $WCB holders by wallet balance
           </h2>
+          <p style={{ fontSize: '0.82rem', color: '#6E6E6E', marginTop: 4 }}>
+            {total > 0 ? `${total.toLocaleString('en-US')} wallets tracked from token accounts` : 'Reads token accounts for the configured mint'}
+          </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           {HOLDER_BENEFITS.map((item) => (
@@ -285,7 +354,7 @@ function HolderLeaderboardPanel({
             Refresh Holder Board
           </button>
         </div>
-      ) : leaderboard.length === 0 ? (
+      ) : entries.length === 0 ? (
         <div className="card p-10 text-center">
           <p style={{ fontSize: '1rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.35rem' }}>
             Holder data is not live yet
@@ -307,40 +376,45 @@ function HolderLeaderboardPanel({
               </tr>
             </thead>
             <tbody>
-              {[...leaderboard]
+              {[...entries]
                 .sort((a, b) => b.holdings - a.holdings)
                 .slice(0, 10)
-                .map((entry, idx) => (
-                  <motion.tr
-                    key={entry.wallet}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.035 }}
-                    style={{ borderBottom: '1px solid #2A2A2A' }}
-                  >
-                    <td className="py-4 px-4 font-bold" style={{ color: '#FFFFFF' }}>#{idx + 1}</td>
-                    <td className="py-4 px-4">
-                      <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 700, color: '#B3B3B3' }}>
-                        {entry.displayWallet}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 text-right">
-                      <span style={{ fontWeight: 900, color: '#FFFFFF', fontSize: '0.9rem' }}>
-                        {formatTokenAmount(entry.holdings)} $WCB
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 text-center hidden sm:table-cell">
-                      <span style={{ padding: '0.2rem 0.625rem', borderRadius: 9999, fontSize: '0.72rem', fontWeight: 800, color: entry.tierColor, background: entry.tierTint, border: `1px solid ${entry.tierColor}35` }}>
-                        {entry.tier}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 text-center hidden md:table-cell">
-                      <span style={{ fontSize: '0.75rem', fontWeight: 800, color: idx < 3 ? '#FFD36B' : '#B3B3B3' }}>
-                        {idx < 3 ? 'Core holder' : 'Holder'}
-                      </span>
-                    </td>
-                  </motion.tr>
-                ))}
+                .map((entry, idx) => {
+                  const tier = getTierVisual(entry.tier);
+                  const snapshotRole = entry.badges[0] ?? (idx < 3 ? 'Core holder' : 'Holder');
+
+                  return (
+                    <motion.tr
+                      key={entry.address}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.035 }}
+                      style={{ borderBottom: '1px solid #2A2A2A' }}
+                    >
+                      <td className="py-4 px-4 font-bold" style={{ color: '#FFFFFF' }}>#{entry.rank}</td>
+                      <td className="py-4 px-4">
+                        <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 700, color: '#B3B3B3' }}>
+                          {entry.displayAddress}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4 text-right">
+                        <span style={{ fontWeight: 900, color: '#FFFFFF', fontSize: '0.9rem' }}>
+                          {formatTokenAmount(entry.holdings)} $WCB
+                        </span>
+                      </td>
+                      <td className="py-4 px-4 text-center hidden sm:table-cell">
+                        <span style={{ padding: '0.2rem 0.625rem', borderRadius: 9999, fontSize: '0.72rem', fontWeight: 800, color: tier.color, background: tier.tint, border: `1px solid ${tier.color}35` }}>
+                          {entry.tier}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4 text-center hidden md:table-cell">
+                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: idx < 3 ? '#FFD36B' : '#B3B3B3' }}>
+                          {snapshotRole}
+                        </span>
+                      </td>
+                    </motion.tr>
+                  );
+                })}
             </tbody>
           </table>
           <div style={{ padding: '0.875rem 1.25rem', background: '#111111', borderTop: '1px solid #2A2A2A', textAlign: 'center' }}>
@@ -357,11 +431,22 @@ function HolderLeaderboardPanel({
 // Main page
 export default function LeaderboardPage() {
   const { leaderboard, totals, loading, error, refetch } = useCommunityLocks();
+  const holderQuery = useLeaderboard(1, 100);
+  const prizePoolQuery = usePrizePoolMetrics();
   const lockLeaderboard = [...leaderboard].sort((a, b) => {
     if (b.totalCredits !== a.totalCredits) return b.totalCredits - a.totalCredits;
     if (b.totalLocked !== a.totalLocked) return b.totalLocked - a.totalLocked;
     return b.holdings - a.holdings;
   });
+  const holderEntries = holderQuery.data?.entries ?? [];
+  const holderTotal = holderQuery.data?.total ?? holderEntries.length;
+  const holderError = holderQuery.error instanceof Error ? holderQuery.error.message : holderQuery.error ? 'Failed to load holder leaderboard' : null;
+  const prizePoolError = prizePoolQuery.error instanceof Error ? prizePoolQuery.error.message : prizePoolQuery.error ? 'Failed to load prize pool metrics' : null;
+  const refreshAll = () => {
+    refetch();
+    void holderQuery.refetch();
+    void prizePoolQuery.refetch();
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-4 md:px-6 py-12">
@@ -379,7 +464,7 @@ export default function LeaderboardPage() {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
           <button
-            onClick={refetch}
+            onClick={refreshAll}
             style={{ padding: '0.5rem 0.875rem', borderRadius: 8, border: '1px solid #2A2A2A', background: '#111111', color: '#B3B3B3', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}
           >
             Refresh
@@ -391,10 +476,10 @@ export default function LeaderboardPage() {
       {/* Community stats */}
       <div className="stats-grid-4" style={{ marginBottom: '1.5rem' }}>
         {[
-          { label: 'Tracked Holdings', value: formatTokenAmount(totals.totalLocked) + ' $WCB', color: '#F2B544' },
-          { label: 'Credits Issued', value: formatCredits(totals.totalCredits), color: '#9945FF' },
-          { label: 'Top Lockers', value: leaderboard.length.toString(), color: '#FFD36B' },
-          { label: 'Prize Pool Credit', value: 'Fee-backed', color: '#14F195' },
+          { label: 'Tracked Holders', value: holderTotal.toLocaleString('en-US'), color: '#F2B544' },
+          { label: 'Locked Credits', value: formatCredits(totals.totalCredits), color: '#9945FF' },
+          { label: 'Active Lockers', value: totals.totalLockers.toLocaleString('en-US'), color: '#FFD36B' },
+          { label: 'Prize Pool 24h', value: prizePoolQuery.isLoading ? 'Syncing' : formatUsd(prizePoolQuery.data?.prizePoolCredit24hUsd), color: '#14F195' },
         ].map((s) => (
           <div key={s.label} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
             <div style={{ fontSize: '1.4rem', fontWeight: 900, color: s.color }}>{s.value}</div>
@@ -403,17 +488,22 @@ export default function LeaderboardPage() {
         ))}
       </div>
 
-      <PrizePoolCreditPanel />
+      <PrizePoolCreditPanel
+        metrics={prizePoolQuery.data}
+        loading={prizePoolQuery.isLoading}
+        error={prizePoolError}
+        refetch={() => { void prizePoolQuery.refetch(); }}
+      />
 
       {/* My position changes based on wallet state */}
       <MyPositionBanner />
 
       <HolderLeaderboardPanel
-        leaderboard={leaderboard}
-        totals={totals}
-        loading={loading}
-        error={error}
-        refetch={refetch}
+        entries={holderEntries}
+        total={holderTotal}
+        loading={holderQuery.isLoading}
+        error={holderError}
+        refetch={() => { void holderQuery.refetch(); }}
       />
 
       {/* Tier legend */}
@@ -461,7 +551,7 @@ export default function LeaderboardPage() {
             <p style={{ color: '#DC2626', fontWeight: 600, marginBottom: '0.75rem' }}>{error}</p>
             <button onClick={refetch} className="btn-secondary" style={{ fontSize: '0.85rem' }}>Try again</button>
           </motion.div>
-        ) : leaderboard.length === 0 ? (
+        ) : lockLeaderboard.length === 0 ? (
           <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="card p-16 text-center">
             <p style={{ fontSize: '1.1rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.5rem' }}>No data yet</p>
             <p style={{ color: '#B3B3B3', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Lock $WCB to establish a leaderboard position.</p>
@@ -474,7 +564,7 @@ export default function LeaderboardPage() {
                 <tr style={{ background: '#111111', borderBottom: '1px solid #2A2A2A', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6E6E6E' }}>
                   <th className="py-3 px-4 text-left w-16" scope="col">Rank</th>
                   <th className="py-3 px-4 text-left" scope="col">Wallet</th>
-                  <th className="py-3 px-4 text-right" scope="col">Holdings</th>
+                  <th className="py-3 px-4 text-right" scope="col">Locked</th>
                   <th className="py-3 px-4 text-right hidden sm:table-cell" scope="col">Credits</th>
                   <th className="py-3 px-4 text-center hidden md:table-cell" scope="col">Tier</th>
                   <th className="py-3 px-4 text-center" scope="col">Streamflow</th>
@@ -494,7 +584,7 @@ export default function LeaderboardPage() {
                     title={`View ${e.displayWallet} on Streamflow`}
                   >
                     <td className="py-4 px-4 font-bold" style={{ color: '#FFFFFF' }}>
-                      #{e.rank}
+                      #{idx + 1}
                     </td>
                     <td className="py-4 px-4">
                       <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600, color: '#B3B3B3' }}>
@@ -503,7 +593,7 @@ export default function LeaderboardPage() {
                     </td>
                     <td className="py-4 px-4 text-right">
                       <span style={{ fontWeight: 800, color: '#FFFFFF', fontSize: '0.9rem' }}>
-                        {formatTokenAmount(e.holdings)} $WCB
+                        {formatTokenAmount(e.totalLocked)} $WCB
                       </span>
                     </td>
                     <td className="py-4 px-4 text-right hidden sm:table-cell">
