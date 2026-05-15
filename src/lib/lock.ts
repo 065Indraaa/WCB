@@ -41,6 +41,19 @@ export const MIN_LOCK_AMOUNT = 100_000;
  */
 export const TOKENS_PER_CREDIT = 100;
 export const CREDIT_TO_TOKEN_RATE = 100; // 1 credit redeems for 100 $WCB
+export const SECONDS_PER_DAY = 86_400;
+
+/**
+ * Convert a Streamflow lock timestamp range to the app's credit duration.
+ * The duration is rounded up to avoid under-counting locks created with
+ * minute/second drift, then capped at the highest configured tier.
+ */
+export function getCreditDurationDays(startTs: number, endTs: number): number {
+  const rawDays = Math.max(0, (endTs - startTs) / SECONDS_PER_DAY);
+  const roundedDays = Math.max(1, Math.ceil(rawDays));
+  const maxTierDays = Math.max(...LOCK_TIERS.map((tier) => tier.days));
+  return Math.min(roundedDays, maxTierDays);
+}
 
 /**
  * Calculate credits earned for a given lock.
