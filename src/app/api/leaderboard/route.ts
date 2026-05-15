@@ -9,7 +9,11 @@ export const dynamic = 'force-dynamic';
 
 const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111';
 const TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
-const MAX_HELIUS_PAGES = Number(process.env.HOLDER_HELIUS_MAX_PAGES ?? 12);
+const DEFAULT_MAX_HELIUS_PAGES = 100;
+const configuredMaxHeliusPages = Number(process.env.HOLDER_HELIUS_MAX_PAGES ?? DEFAULT_MAX_HELIUS_PAGES);
+const MAX_HELIUS_PAGES = Number.isFinite(configuredMaxHeliusPages) && configuredMaxHeliusPages > 0
+  ? configuredMaxHeliusPages
+  : DEFAULT_MAX_HELIUS_PAGES;
 
 type Holder = {
   address: string;
@@ -80,6 +84,8 @@ async function fetchHoldersViaHeliusDas(rpcUrl: string, mint: string, decimals: 
   let cursor: string | undefined;
   let total = 0;
   let lastIndexedSlot: number | undefined;
+  let fetchedTokenAccounts = 0;
+  let pagesFetched = 0;
 
   for (let page = 0; page < MAX_HELIUS_PAGES; page++) {
     const params: Record<string, unknown> = {
@@ -105,6 +111,8 @@ async function fetchHoldersViaHeliusDas(rpcUrl: string, mint: string, decimals: 
     const accounts = result?.token_accounts ?? [];
     total = result?.total ?? total;
     lastIndexedSlot = result?.last_indexed_slot ?? lastIndexedSlot;
+    fetchedTokenAccounts += accounts.length;
+    pagesFetched = page + 1;
 
     for (const account of accounts) {
       addHolderAmount(byOwner, account.owner, account.amount, decimals);
@@ -118,7 +126,10 @@ async function fetchHoldersViaHeliusDas(rpcUrl: string, mint: string, decimals: 
     holders: Array.from(byOwner.entries())
       .map(([address, holdings]) => ({ address, holdings }))
       .sort((a, b) => b.holdings - a.holdings),
-    totalTokenAccounts: total,
+    totalTokenAccounts: total || fetchedTokenAccounts,
+    fetchedTokenAccounts,
+    pagesFetched,
+    fullyIndexed: !cursor,
     lastIndexedSlot,
   };
 }
@@ -239,6 +250,9 @@ export async function GET(request: NextRequest) {
     let holders: Holder[] = [];
     let source = 'helius-das-token-accounts';
     let totalTokenAccounts: number | undefined;
+    let fetchedTokenAccounts: number | undefined;
+    let pagesFetched: number | undefined;
+    let holdersFullyIndexed: boolean | undefined;
     let lastIndexedSlot: number | undefined;
 
     try {
@@ -248,6 +262,9 @@ export async function GET(request: NextRequest) {
       const das = await fetchHoldersViaHeliusDas(resolvedRpcUrl, tokenAddress, decimals);
       holders = das.holders;
       totalTokenAccounts = das.totalTokenAccounts;
+      fetchedTokenAccounts = das.fetchedTokenAccounts;
+      pagesFetched = das.pagesFetched;
+      holdersFullyIndexed = das.fullyIndexed;
       lastIndexedSlot = das.lastIndexedSlot;
     } catch {
       try {
@@ -278,8 +295,12 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       entries,
-      total: holders.length,
+      total: totalTokenAccounts ?? holders.length,
+      uniqueHolderWallets: holders.length,
       totalTokenAccounts,
+      fetchedTokenAccounts,
+      pagesFetched,
+      holdersFullyIndexed,
       page,
       limit,
       decimals,

@@ -90,7 +90,7 @@ export default function LockPage() {
         {[
           { label: 'Total Locked', value: totalsLoading ? 'Syncing' : formatTokenAmount(totals.totalLocked) + ' $WCB', sub: meta.source ?? 'Streamflow locks' },
           { label: 'Credits Issued', value: totalsLoading ? 'Syncing' : formatCredits(totals.totalCredits), sub: 'reserved for launch' },
-          { label: 'People Locking', value: totalsLoading ? 'Syncing' : totals.totalLockers.toString(), sub: 'tracked wallets' },
+          { label: 'Active Locks', value: totalsLoading ? 'Syncing' : (totals.totalLocks ?? totals.totalLockers).toString(), sub: 'tracked Streamflow locks' },
         ].map((s) => (
           <div
             key={s.label}

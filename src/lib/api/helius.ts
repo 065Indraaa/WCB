@@ -3,7 +3,11 @@ import type { WalletEntry } from '@/types/leaderboard';
 export interface TokenHoldersResponse {
   entries: WalletEntry[];
   total: number;
+  uniqueHolderWallets?: number;
   totalTokenAccounts?: number;
+  fetchedTokenAccounts?: number;
+  pagesFetched?: number;
+  holdersFullyIndexed?: boolean;
   page: number;
   limit: number;
   decimals?: number;

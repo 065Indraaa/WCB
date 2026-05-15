@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWalletLocks } from '@/lib/hooks/useWalletLocks';
@@ -11,6 +12,9 @@ import { formatCredits, formatTokenAmount } from '@/lib/lock';
 import { WCB_MINT } from '@/lib/wallet';
 import { WalletButtonDynamic, WalletMultiButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 import type { WalletEntry } from '@/types/leaderboard';
+
+const LEADERBOARD_PAGE_SIZE = 10;
+const LEADERBOARD_MAX_ROWS = 20;
 
 function WcbMark({ children = '$WCB' }: { children?: string }) {
   return (
@@ -411,10 +415,7 @@ function HolderLeaderboardPanel({
               </tr>
             </thead>
             <tbody>
-              {[...entries]
-                .sort((a, b) => b.holdings - a.holdings)
-                .slice(0, 10)
-                .map((entry, idx) => {
+              {entries.map((entry, idx) => {
                   const tier = getTierVisual(entry.tier);
                   const snapshotRole = entry.badges[0] ?? (idx < 3 ? 'Core holder' : 'Holder');
 
@@ -454,7 +455,7 @@ function HolderLeaderboardPanel({
           </table>
           <div style={{ padding: '0.875rem 1.25rem', background: '#111111', borderTop: '1px solid #2A2A2A', textAlign: 'center' }}>
             <p style={{ fontSize: '0.72rem', color: '#6E6E6E' }}>
-              Holder leaderboard is for balance rank. Lock leaderboard below is for credit rank.
+              Holder leaderboard is ranked by balance. Lock leaderboard below is ranked by locked amount.
             </p>
           </div>
         </div>
@@ -465,6 +466,8 @@ function HolderLeaderboardPanel({
 
 // Main page
 export default function LeaderboardPage() {
+  const [holderPage, setHolderPage] = useState(0);
+  const [lockPage, setLockPage] = useState(0);
   const { leaderboard, totals, meta, loading, error, refetch } = useCommunityLocks();
   const holderQuery = useLeaderboard(1, 100);
   const prizePoolQuery = usePrizePoolMetrics();
@@ -474,6 +477,20 @@ export default function LeaderboardPage() {
   });
   const holderEntries = holderQuery.data?.entries ?? [];
   const holderTotal = holderQuery.data?.total ?? holderEntries.length;
+  const topHolderEntries = [...holderEntries]
+    .sort((a, b) => b.holdings - a.holdings)
+    .slice(0, LEADERBOARD_MAX_ROWS);
+  const holderPageCount = Math.max(1, Math.ceil(topHolderEntries.length / LEADERBOARD_PAGE_SIZE));
+  const visibleHolderEntries = topHolderEntries.slice(
+    holderPage * LEADERBOARD_PAGE_SIZE,
+    holderPage * LEADERBOARD_PAGE_SIZE + LEADERBOARD_PAGE_SIZE,
+  );
+  const topLockLeaderboard = lockLeaderboard.slice(0, LEADERBOARD_MAX_ROWS);
+  const lockPageCount = Math.max(1, Math.ceil(topLockLeaderboard.length / LEADERBOARD_PAGE_SIZE));
+  const visibleLockLeaderboard = topLockLeaderboard.slice(
+    lockPage * LEADERBOARD_PAGE_SIZE,
+    lockPage * LEADERBOARD_PAGE_SIZE + LEADERBOARD_PAGE_SIZE,
+  );
   const holderSource = holderQuery.data?.source ?? 'token accounts';
   const holderError = holderQuery.error instanceof Error ? holderQuery.error.message : holderQuery.error ? 'Failed to load holder leaderboard' : null;
   const prizePoolError = prizePoolQuery.error instanceof Error ? prizePoolQuery.error.message : prizePoolQuery.error ? 'Failed to load prize pool metrics' : null;
@@ -494,7 +511,7 @@ export default function LeaderboardPage() {
             <WcbMark /> Leaderboards
           </h1>
           <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
-            Holder rank shows ownership. Lock rank shows credit depth. Prize pool credit is funded from live creator fee once markets are active.
+            Holder rank shows ownership. Lock rank shows locked amount. Prize pool credit is funded from live creator fee once markets are active.
           </p>
           <p style={{ marginTop: 8, fontSize: '0.76rem', fontWeight: 700, color: '#6E6E6E' }}>
             Holder source: {holderSource} / Lock source: {meta.source ?? 'Streamflow'} / Mint: {WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'N/A'}
@@ -516,7 +533,7 @@ export default function LeaderboardPage() {
         {[
           { label: 'Tracked Holders', value: holderTotal.toLocaleString('en-US'), color: '#F2B544' },
           { label: 'Locked Credits', value: formatCredits(totals.totalCredits), color: '#9945FF' },
-          { label: 'Active Lockers', value: totals.totalLockers.toLocaleString('en-US'), color: '#FFD36B' },
+          { label: 'Active Locks', value: (totals.totalLocks ?? totals.totalLockers).toLocaleString('en-US'), color: '#FFD36B' },
           { label: 'Prize Pool 24h', value: prizePoolQuery.isLoading ? 'Syncing' : formatUsd(prizePoolQuery.data?.prizePoolCredit24hUsd), color: '#14F195' },
         ].map((s) => (
           <div key={s.label} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
@@ -537,12 +554,37 @@ export default function LeaderboardPage() {
       <MyPositionBanner />
 
       <HolderLeaderboardPanel
-        entries={holderEntries}
+        entries={visibleHolderEntries}
         total={holderTotal}
         loading={holderQuery.isLoading}
         error={holderError}
         refetch={() => { void holderQuery.refetch(); }}
       />
+      {topHolderEntries.length > LEADERBOARD_PAGE_SIZE && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem', marginTop: '-0.75rem', marginBottom: '1.5rem' }}>
+          <button
+            type="button"
+            onClick={() => setHolderPage((page) => Math.max(0, page - 1))}
+            disabled={holderPage === 0}
+            className="btn-secondary"
+            style={{ opacity: holderPage === 0 ? 0.45 : 1, cursor: holderPage === 0 ? 'not-allowed' : 'pointer' }}
+          >
+            Prev
+          </button>
+          <span style={{ color: '#B3B3B3', fontSize: '0.8rem', fontWeight: 800 }}>
+            Holder Top {holderPage * LEADERBOARD_PAGE_SIZE + 1}-{Math.min((holderPage + 1) * LEADERBOARD_PAGE_SIZE, topHolderEntries.length)}
+          </span>
+          <button
+            type="button"
+            onClick={() => setHolderPage((page) => Math.min(holderPageCount - 1, page + 1))}
+            disabled={holderPage >= holderPageCount - 1}
+            className="btn-secondary"
+            style={{ opacity: holderPage >= holderPageCount - 1 ? 0.45 : 1, cursor: holderPage >= holderPageCount - 1 ? 'not-allowed' : 'pointer' }}
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       {/* Tier legend */}
       <div className="card p-5 mb-6">
@@ -601,7 +643,7 @@ export default function LeaderboardPage() {
             <p style={{ color: '#DC2626', fontWeight: 600, marginBottom: '0.75rem' }}>{error}</p>
             <button onClick={refetch} className="btn-secondary" style={{ fontSize: '0.85rem' }}>Try again</button>
           </motion.div>
-        ) : lockLeaderboard.length === 0 ? (
+        ) : topLockLeaderboard.length === 0 ? (
           <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="card p-16 text-center">
             <p style={{ fontSize: '1.1rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.5rem' }}>No data yet</p>
             <p style={{ color: '#B3B3B3', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Lock <WcbMark /> to establish a leaderboard position.</p>
@@ -621,7 +663,7 @@ export default function LeaderboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {lockLeaderboard.slice(0, 10).map((e, idx) => (
+                {visibleLockLeaderboard.map((e, idx) => (
                   <motion.tr
                     key={e.wallet}
                     initial={{ opacity: 0, x: -8 }}
@@ -634,7 +676,7 @@ export default function LeaderboardPage() {
                     title={`View ${e.displayWallet} on Streamflow`}
                   >
                     <td className="py-4 px-4 font-bold" style={{ color: '#FFFFFF' }}>
-                      #{idx + 1}
+                      #{e.rank}
                     </td>
                     <td className="py-4 px-4">
                       <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600, color: '#B3B3B3' }}>
@@ -668,13 +710,38 @@ export default function LeaderboardPage() {
 
             <div style={{ padding: '0.875rem 1.25rem', background: '#111111', borderTop: '1px solid #2A2A2A', textAlign: 'center' }}>
               <p style={{ fontSize: '0.72rem', color: '#6E6E6E' }}>
-                Top 10 locked positions / Token:{' '}
+                Top 20 locked positions / Token:{' '}
                 <a href={`https://solscan.io/token/${WCB_MINT}`} target="_blank" rel="noopener noreferrer" style={{ color: '#F2B544', textDecoration: 'none' }}>
                   {WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'N/A'}
                 </a>
                 {' '}/ Click any row to view on Streamflow
               </p>
             </div>
+            {topLockLeaderboard.length > LEADERBOARD_PAGE_SIZE && (
+              <div style={{ padding: '0.875rem 1.25rem', background: '#0E0E0E', borderTop: '1px solid #2A2A2A', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={() => setLockPage((page) => Math.max(0, page - 1))}
+                  disabled={lockPage === 0}
+                  className="btn-secondary"
+                  style={{ opacity: lockPage === 0 ? 0.45 : 1, cursor: lockPage === 0 ? 'not-allowed' : 'pointer' }}
+                >
+                  Prev
+                </button>
+                <span style={{ color: '#B3B3B3', fontSize: '0.8rem', fontWeight: 800 }}>
+                  Lock Top {lockPage * LEADERBOARD_PAGE_SIZE + 1}-{Math.min((lockPage + 1) * LEADERBOARD_PAGE_SIZE, topLockLeaderboard.length)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setLockPage((page) => Math.min(lockPageCount - 1, page + 1))}
+                  disabled={lockPage >= lockPageCount - 1}
+                  className="btn-secondary"
+                  style={{ opacity: lockPage >= lockPageCount - 1 ? 0.45 : 1, cursor: lockPage >= lockPageCount - 1 ? 'not-allowed' : 'pointer' }}
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

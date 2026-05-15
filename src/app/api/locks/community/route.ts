@@ -64,6 +64,7 @@ export async function GET() {
     const streams = await client.searchStreams({ mint: WCB_MINT, closed: false });
     const now = Math.floor(Date.now() / 1000);
     const byWallet = new Map<string, WalletLocks>();
+    let totalActiveLocks = 0;
 
     for (const item of streams) {
       const stream = item.account;
@@ -71,6 +72,7 @@ export async function GET() {
 
       const amount = tokenAmount(stream);
       if (!Number.isFinite(amount) || amount <= 0) continue;
+      totalActiveLocks += 1;
 
       const id = item.publicKey.toBase58();
       const wallet = stream.sender;
@@ -128,6 +130,7 @@ export async function GET() {
       totalLocked: leaderboard.reduce((sum, entry) => sum + entry.totalLocked, 0),
       totalCredits: leaderboard.reduce((sum, entry) => sum + entry.totalCredits, 0),
       totalLockers: leaderboard.length,
+      totalLocks: totalActiveLocks,
     };
 
     return NextResponse.json({
@@ -143,7 +146,7 @@ export async function GET() {
     return NextResponse.json(
       {
         leaderboard: [],
-        totals: { totalLocked: 0, totalCredits: 0, totalLockers: 0 },
+        totals: { totalLocked: 0, totalCredits: 0, totalLockers: 0, totalLocks: 0 },
         mint: WCB_MINT,
         source: 'streamflow-sdk-searchStreams',
         error: message,

@@ -30,6 +30,7 @@ export interface CommunityTotals {
   totalLocked: number;
   totalCredits: number;
   totalLockers: number;
+  totalLocks: number;
 }
 
 export interface CommunityLockMeta {
@@ -47,7 +48,7 @@ function getTier(amount: number): { tier: string; color: string; tint: string } 
 
 export function useCommunityLocks() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [totals, setTotals] = useState<CommunityTotals>({ totalLocked: 0, totalCredits: 0, totalLockers: 0 });
+  const [totals, setTotals] = useState<CommunityTotals>({ totalLocked: 0, totalCredits: 0, totalLockers: 0, totalLocks: 0 });
   const [meta, setMeta] = useState<CommunityLockMeta>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
