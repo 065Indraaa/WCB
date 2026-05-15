@@ -34,58 +34,6 @@ function PromoBanner() {
   );
 }
 
-// Quick stats bar
-function QuickStats() {
-  const stats = [
-    { label: 'Teams',       value: '48' },
-    { label: 'Groups',      value: '12' },
-    { label: 'Matches',     value: '104' },
-    { label: 'Host Cities', value: '16' },
-    { label: 'Days Left',   value: '27' },
-    { label: 'Prize Pool',  value: '$TBA' },
-  ];
-
-  return (
-    <div
-      style={{
-        background: '#111111',
-        borderBottom: '1px solid #2A2A2A',
-        padding: '0',
-        overflowX: 'auto',
-      }}
-    >
-      <div
-        style={{
-          maxWidth: '80rem',
-          margin: '0 auto',
-          display: 'flex',
-          alignItems: 'stretch',
-          minWidth: 'fit-content',
-        }}
-      >
-        {stats.map((s, i) => (
-          <div
-            key={s.label}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 20px',
-              borderRight: i < stats.length - 1 ? '1px solid #2A2A2A' : 'none',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            <div>
-              <div style={{ fontSize: '1rem', fontWeight: 900, color: '#F2B544', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{s.value}</div>
-              <div style={{ fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E' }}>{s.label}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // Sidebar ad slot
 function SidebarAdSlot({ label }: { label: string }) {
   return (
@@ -169,7 +117,6 @@ export default function Home() {
       <WalletRedirectHandler />
       <PromoBanner />
       <HeroSection />
-      <QuickStats />
       <SportsbookPreview />
 
       {/* Main content with sidebar */}

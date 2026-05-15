@@ -5,15 +5,6 @@ import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CountdownTimer } from './CountdownTimer';
 
-const TRUST_ITEMS = [
-  { icon: '01', text: '3 Host Nations' },
-  { icon: '02', text: '48 Teams' },
-  { icon: '03', text: '104 Matches' },
-  { icon: 'SOL', text: 'Built on Solana' },
-  { icon: 'LIVE', text: 'Live Match Data' },
-  { icon: 'WCB', text: 'Token Access' },
-];
-
 export function HeroSection() {
   const rm = useReducedMotion();
   const pumpfun = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
@@ -226,7 +217,7 @@ export function HeroSection() {
             transition={{ duration: 0.55, delay: 0.4 }}
             style={{
               maxWidth: '34rem',
-              margin: '0 auto 2.5rem',
+              margin: '0 auto',
               background: 'rgba(17,17,17,0.72)',
               border: '1px solid rgba(242,181,68,0.22)',
               borderRadius: 16,
@@ -245,70 +236,8 @@ export function HeroSection() {
             </p>
             <CountdownTimer />
           </motion.div>
-
-          {/* Stats strip */}
-          <motion.div
-            initial={rm ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.55 }}
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.875rem', maxWidth: '30rem', margin: '0 auto' }}
-          >
-            {[
-              { value: '48',  label: 'Teams' },
-              { value: '12',  label: 'Groups' },
-              { value: '104', label: 'Matches' },
-            ].map((s) => (
-              <div
-                key={s.label}
-                style={{
-                  padding: 'clamp(0.625rem, 2vw, 1rem) clamp(0.375rem, 1.5vw, 0.75rem)',
-                  textAlign: 'center',
-                  background: 'rgba(17,17,17,0.72)',
-                  border: '1px solid rgba(242,181,68,0.16)',
-                  borderRadius: 12,
-                  backdropFilter: 'blur(12px)',
-                }}
-              >
-                <div style={{
-                  fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 900, lineHeight: 1,
-                  background: 'linear-gradient(135deg, #F2B544 0%, #FFD36B 100%)',
-                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                }}>
-                  {s.value}
-                </div>
-                <div style={{ fontSize: 'clamp(0.55rem, 1.5vw, 0.65rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.45)', marginTop: '0.25rem' }}>
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </motion.div>
         </div>
       </div>
-
-      {/* Trust bar at bottom */}
-      <motion.div
-        initial={rm ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.7 }}
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          width: '100%',
-          borderTop: '1px solid rgba(242,181,68,0.14)',
-          background: 'rgba(7,7,7,0.72)',
-          backdropFilter: 'blur(16px)',
-          padding: '0.875rem 1.5rem',
-        }}
-      >
-        <div className="hero-trust-bar" style={{ maxWidth: '72rem', margin: '0 auto' }}>
-          {TRUST_ITEMS.map((item) => (
-            <span key={item.text} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.65)', whiteSpace: 'nowrap' }}>
-              <span style={{ color: '#FFD36B', fontWeight: 800 }}>{item.icon}</span>
-              {item.text}
-            </span>
-          ))}
-        </div>
-      </motion.div>
     </section>
   );
 }
