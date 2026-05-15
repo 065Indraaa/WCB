@@ -5,14 +5,13 @@ import { BrandLogo } from '@/components/shared/BrandLogo';
 export const metadata = {
   title: 'Docs & Whitepaper | WORLDCUPBET Protocol',
   description:
-    'WORLDCUPBET protocol docs and whitepaper for the Solana-native World Cup 2026 app, holder leaderboard, Streamflow lock credits, and creator-fee-backed prize pool credit.',
+    'Clear WORLDCUPBET docs and whitepaper for the Solana World Cup 2026 app, holder ranking, Streamflow lock credits, and prize pool credit.',
 };
 
 const GOLD = '#F2B544';
 const GOLD_SOFT = '#FFD36B';
 const GREEN = '#14F195';
 const PURPLE = '#9945FF';
-const RED = '#EF4444';
 const TEXT = '#FFFFFF';
 const TEXT_SOFT = '#B3B3B3';
 const TEXT_MUTED = '#6E6E6E';
@@ -24,211 +23,266 @@ const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? '';
 const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
 const JUPITER = process.env.NEXT_PUBLIC_JUPITER_URL ?? 'https://jup.ag';
 
-const DOC_NAV = [
-  { href: '#intro', label: 'Introduction' },
-  { href: '#whitepaper', label: 'Whitepaper' },
-  { href: '#architecture', label: 'Architecture' },
-  { href: '#mechanism', label: 'Mechanism' },
+const NAV_ITEMS = [
+  { href: '#start', label: 'Start Here' },
+  { href: '#how-it-works', label: 'How It Works' },
+  { href: '#lock-credits', label: 'Lock & Credits' },
+  { href: '#betting', label: 'Betting Soon' },
+  { href: '#benefits', label: 'Benefits' },
   { href: '#leaderboards', label: 'Leaderboards' },
-  { href: '#prizepool', label: 'Prize Pool' },
+  { href: '#prize-pool', label: 'Prize Pool' },
+  { href: '#whitepaper', label: 'Whitepaper' },
   { href: '#roadmap', label: 'Roadmap' },
   { href: '#faq', label: 'FAQ' },
 ];
 
-const HERO_STATS = [
-  { label: 'Network', value: 'Solana' },
-  { label: 'Identity', value: 'Wallet-native' },
-  { label: 'Utility', value: 'Hold + lock' },
-  { label: 'Launch', value: 'June 11, 2026' },
-];
-
-const WHITEPAPER_BLOCKS = [
+const USER_ACTIONS = [
   {
-    title: 'Problem',
-    body: 'Sports crypto pages often stop at hype: a token, a schedule, and a promise. Users still need a reason to connect a wallet, hold, lock, and return during live match windows.',
-  },
-  {
-    title: 'Solution',
-    body: 'WORLDCUPBET turns the World Cup into a wallet-aware app surface: token ownership creates status, Streamflow locks create credit depth, and match activity creates reward context.',
-  },
-  {
-    title: 'Protocol Loop',
-    body: 'Acquire $WCB, connect wallet, build holder rank, lock for credits, join matchday activity, and qualify for reward windows backed by live creator-fee credit.',
-  },
-  {
-    title: 'Value Flow',
-    body: 'The reward model is designed around measurable activity. Creator-fee estimates feed prize pool credit so campaign rewards can scale with actual market participation.',
-  },
-];
-
-const APP_SURFACES = [
-  {
-    code: 'MATCH',
-    title: 'Match Center',
-    body: 'Fixture discovery, live match status, market preview, and the main path into tournament activity.',
-    href: '/matches',
-  },
-  {
-    code: 'GROUP',
-    title: 'Group Explorer',
-    body: 'Group cards and standings context for users who want football structure before making predictions.',
-    href: '/groups',
-  },
-  {
-    code: 'TOKEN',
-    title: '$WCB Utility',
-    body: 'Token page, trading routes, contract visibility, and the ownership layer behind holder status.',
-    href: '/token',
-  },
-  {
-    code: 'LOCK',
-    title: 'Streamflow Locks',
-    body: 'Non-custodial token locks that turn commitment into wallet-bound credits before launch.',
-    href: '/lock',
-  },
-  {
-    code: 'BOARD',
-    title: 'Leaderboards',
-    body: 'Separate holder and lock rankings so ownership and prepared credit are never mixed.',
+    step: '01',
+    title: 'Hold $WCB',
+    body: 'Your wallet balance gives you a holder rank. This is the simplest status layer in the app.',
+    action: 'View holder board',
     href: '/leaderboard',
   },
   {
-    code: 'DOCS',
-    title: 'Protocol Docs',
-    body: 'The whitepaper layer that explains mechanics, rewards, roadmap, and launch states.',
-    href: '/docs',
+    step: '02',
+    title: 'Lock $WCB',
+    body: 'Locking through Streamflow turns commitment into credits. Credits are shown separately from normal holdings.',
+    action: 'Open lock page',
+    href: '/lock',
+  },
+  {
+    step: '03',
+    title: 'Use the app during the tournament',
+    body: 'When match windows go live, holder rank, lock credits, and activity can be used for campaign eligibility.',
+    action: 'View matches',
+    href: '/matches',
   },
 ];
 
-const FLOW_STEPS = [
+const SYSTEM_ROWS = [
   {
-    code: '01',
-    title: 'Connect',
-    body: 'A Solana wallet becomes the user identity. No account layer is needed to read ownership, lock state, or eligibility.',
+    layer: 'Holder Leaderboard',
+    source: 'Live token accounts for the $WCB mint',
+    means: 'Who owns the most $WCB right now.',
+    live: 'Live when token address and RPC are configured',
   },
   {
-    code: '02',
-    title: 'Hold',
-    body: '$WCB balance creates holder rank, tier status, social proof, and future snapshot eligibility.',
+    layer: 'Lock Leaderboard',
+    source: 'Active Streamflow locks for the same $WCB mint',
+    means: 'Who has locked tokens and built the strongest credit position.',
+    live: 'Live from Streamflow lock accounts',
   },
   {
-    code: '03',
-    title: 'Lock',
-    body: 'Streamflow positions turn idle tokens into credit depth and a visible commitment score.',
-  },
-  {
-    code: '04',
-    title: 'Compete',
-    body: 'Match windows, leaderboard status, and prize-pool credit create repeatable tournament loops.',
+    layer: 'Prize Pool Credit',
+    source: 'Estimated creator fee from token volume',
+    means: 'A transparent reward-capacity counter, not a fixed payout promise.',
+    live: 'Estimated from Jupiter volume and fee settings',
   },
 ];
 
-const MECHANISM_ROWS = [
+const LOCK_MECHANISM = [
   {
-    layer: 'Holder rank',
-    source: 'Live token accounts for the configured $WCB mint',
-    output: 'Balance rank, tier, badges, and holder snapshot context',
+    title: 'Connect wallet',
+    body: 'The app reads your Solana wallet so it can verify $WCB balance and future lock status.',
   },
   {
-    layer: 'Lock rank',
-    source: 'Active Streamflow accounts for the same $WCB mint',
-    output: 'Locked amount, credit score, active lock count, and Streamflow proof link',
+    title: 'Choose amount and duration',
+    body: 'The lock page estimates credits before the user commits. More tokens and longer duration can create a stronger credit position.',
   },
   {
-    layer: 'Credit score',
-    source: 'Locked amount multiplied by lock-duration tier',
-    output: 'Prepared betting credit position before live markets open',
+    title: 'Lock through Streamflow',
+    body: 'The lock action uses Streamflow as the on-chain lock layer, so the commitment can be verified from an external source.',
   },
   {
-    layer: 'Prize pool credit',
-    source: 'Estimated creator fee from live token volume and configured allocation',
-    output: 'Reward capacity for holder, locker, and campaign windows',
+    title: 'Receive credit position',
+    body: 'Credits are wallet-bound app credits used for ranking, launch preparation, and future campaign eligibility.',
   },
 ];
 
-const LEADERBOARD_LAYERS = [
+const CREDIT_RULES = [
   {
-    eyebrow: 'Ownership Layer',
-    title: 'Holder Leaderboard',
+    label: 'Base logic',
+    value: 'Credits are calculated from locked amount and lock duration.',
+  },
+  {
+    label: 'Wallet-bound',
+    value: 'Credits belong to the connected wallet and are not shown as transferable tokens.',
+  },
+  {
+    label: 'Ranking use',
+    value: 'Credits decide lock leaderboard position and prepared launch status.',
+  },
+  {
+    label: 'Future use',
+    value: 'Credits can be used by betting access, campaigns, and tournament reward rules once activated.',
+  },
+];
+
+const BETTING_FLOW = [
+  {
+    phase: 'Preview',
+    title: 'Match board before launch',
+    body: 'Users can explore fixtures, groups, and pre-launch market context before betting opens.',
+  },
+  {
+    phase: 'Access',
+    title: 'Wallet-gated product layer',
+    body: '$WCB balance, holder rank, and lock credits can be used to shape access and campaign eligibility.',
+  },
+  {
+    phase: 'Market',
+    title: 'Betting layer coming soon',
+    body: 'The betting product is planned for the World Cup window. Final behavior depends on launch configuration and jurisdiction rules.',
+  },
+  {
+    phase: 'Reward',
+    title: 'Campaign settlement',
+    body: 'Campaigns can use match activity, holder status, lock credits, and prize pool credit when reward windows close.',
+  },
+];
+
+const BENEFITS = [
+  {
+    title: 'For Holders',
     accent: GOLD,
-    body: 'Ranks wallets by live $WCB holdings. This is the visibility layer for long-term owners and the first signal users understand when they open the app.',
-    points: ['Token-account based ranking', 'Tier and badge display', 'Snapshot-ready holder status'],
+    items: [
+      'Appear on the holder leaderboard by wallet balance.',
+      'Build visible status through tiers and badges.',
+      'Qualify for holder snapshots and campaign access.',
+      'Stay eligible without needing to lock, depending on campaign rules.',
+    ],
   },
   {
-    eyebrow: 'Commitment Layer',
-    title: 'Lock Leaderboard',
+    title: 'For Lockers',
     accent: PURPLE,
-    body: 'Ranks active Streamflow locks by credit position. It proves who has prepared capital for launch instead of simply holding tokens in a wallet.',
-    points: ['Streamflow-sourced positions', 'Locked amount and credits', 'Direct lock proof link'],
+    items: [
+      'Turn $WCB commitment into wallet-bound credits.',
+      'Compete on the lock leaderboard using locked amount and duration.',
+      'Prepare betting-credit capacity before live markets open.',
+      'Show stronger long-term commitment than holding alone.',
+    ],
+  },
+  {
+    title: 'For Active Players',
+    accent: GREEN,
+    items: [
+      'Use the match app during tournament windows.',
+      'Join campaigns tied to fixtures, predictions, or market activity.',
+      'Combine holder rank, lock credits, and activity for eligibility.',
+      'Compete for rewards funded by transparent prize pool credit.',
+    ],
   },
 ];
 
-const PRIZE_POOL_FACTS = [
-  { label: 'Primary source', value: 'Live creator fee' },
-  { label: 'Live estimator', value: 'Jupiter token volume' },
-  { label: 'Fee model', value: 'Pump.fun creator tiers' },
-  { label: 'Allocation', value: 'Configurable per campaign' },
+const LEADERBOARD_CARDS = [
+  {
+    title: 'Holder Board',
+    accent: GOLD,
+    body: 'Ranks wallets by $WCB balance. This is the ownership layer.',
+    bullets: ['Shows holder rank', 'Uses token account balances', 'Good for holder snapshots'],
+  },
+  {
+    title: 'Lock Board',
+    accent: PURPLE,
+    body: 'Ranks wallets by active locked amount and credits. This is the commitment layer.',
+    bullets: ['Uses Streamflow locks', 'Shows locked $WCB and credits', 'Keeps lock rank separate from holdings'],
+  },
+];
+
+const PRIZE_POOL_STEPS = [
+  {
+    title: 'Volume is tracked',
+    body: 'The app reads token volume from the configured market data source.',
+  },
+  {
+    title: 'Creator fee is estimated',
+    body: 'The fee rate follows the configured creator-fee setting or the Pump.fun tier model.',
+  },
+  {
+    title: 'Credit is displayed',
+    body: 'The app displays estimated prize pool credit so users can understand reward capacity.',
+  },
+  {
+    title: 'Campaigns can allocate it',
+    body: 'Future campaigns can use holder rank, lock credits, and match activity for eligibility.',
+  },
+];
+
+const WHITEPAPER_SECTIONS = [
+  {
+    title: '1. The Problem',
+    body: 'World Cup attention is huge but short. Most crypto sports pages do not give users a clear reason to keep returning before matches start. They show a token and a promise, but not a real product loop.',
+  },
+  {
+    title: '2. The Product',
+    body: 'WORLDCUPBET is a Solana-native World Cup app. Users can explore matches, connect a wallet, hold $WCB, lock $WCB for credits, and track their rank before and during the tournament.',
+  },
+  {
+    title: '3. The Utility Loop',
+    body: 'The loop is simple: hold for status, lock for credits, prepare for betting access, use the app during match windows, and qualify for campaigns based on visible wallet behavior.',
+  },
+  {
+    title: '4. The Reward Model',
+    body: 'Prize pool credit is designed to be backed by creator-fee activity. It is shown as a live estimate so future campaign rewards can be connected to real usage instead of arbitrary emissions.',
+  },
+  {
+    title: '5. The Trust Model',
+    body: 'Holder rank comes from token accounts. Lock rank comes from Streamflow. Prize pool credit comes from market volume and transparent fee assumptions. Each layer has a separate source.',
+  },
 ];
 
 const ROADMAP = [
   {
-    phase: 'Phase 01',
-    status: 'Live foundation',
-    title: 'Protocol Surface',
-    window: 'Now - May 20, 2026',
-    progress: 72,
-    items: ['Docs and whitepaper system', 'Match, group, token, lock pages', 'Wallet-aware navigation'],
+    phase: 'Phase 1',
+    title: 'Pre-launch App',
+    window: 'Now - May 2026',
+    status: 'In progress',
+    items: ['Docs and whitepaper', 'Match and group pages', 'Token and wallet surfaces'],
   },
   {
-    phase: 'Phase 02',
-    status: 'Activation',
+    phase: 'Phase 2',
     title: 'Holder Layer',
-    window: 'May 20 - June 1, 2026',
-    progress: 54,
-    items: ['Live holder leaderboard', 'Tier and badge logic', 'Snapshot preparation'],
+    window: 'May - June 2026',
+    status: 'Activation',
+    items: ['Live holder leaderboard', 'Holder tiers and badges', 'Snapshot-ready wallet ranking'],
   },
   {
-    phase: 'Phase 03',
+    phase: 'Phase 3',
+    title: 'Lock Credit Layer',
+    window: 'Before kickoff',
     status: 'Utility',
-    title: 'Credit Layer',
-    window: 'June 1 - June 11, 2026',
-    progress: 38,
-    items: ['Streamflow lock leaderboard', 'Wallet credit dashboard', 'Pre-launch credit campaign'],
+    items: ['Streamflow lock tracking', 'Credit leaderboard', 'Wallet lock dashboard'],
   },
   {
-    phase: 'Phase 04',
-    status: 'Tournament',
-    title: 'Live Reward Layer',
+    phase: 'Phase 4',
+    title: 'Tournament Layer',
     window: 'June 11, 2026+',
-    progress: 18,
-    items: ['Matchday market windows', 'Creator-fee prize pool credit', 'Holder and locker reward cycles'],
+    status: 'Live event',
+    items: ['Betting layer activation', 'Matchday campaign windows', 'Prize pool credit tracking', 'Holder and locker rewards'],
   },
 ];
 
 const FAQS = [
   {
-    question: 'Is the holder leaderboard the same as the lock leaderboard?',
-    answer:
-      'No. Holder rank is based on live token balances for the $WCB mint. Lock rank is based on active Streamflow lock accounts and the credits generated by those locks.',
+    q: 'Is $WCB only a meme token?',
+    a: '$WCB is positioned as the access and status token for the WORLDCUPBET app. The app gives it visible utility through holder rank, lock credits, and campaign eligibility.',
   },
   {
-    question: 'What is prize pool credit?',
-    answer:
-      'Prize pool credit is the reward reserve accounting layer. It estimates how much reward capacity can be funded from creator-fee activity before a campaign or matchday distribution window.',
+    q: 'Why are there two leaderboards?',
+    a: 'Because holding and locking are different behaviors. Holder board shows ownership. Lock board shows commitment and prepared credits.',
   },
   {
-    question: 'Why use Streamflow?',
-    answer:
-      'Streamflow provides a clear on-chain lock primitive. It lets the app show real lock proof instead of relying on a private database for commitment scoring.',
+    q: 'Is prize pool credit guaranteed payout?',
+    a: 'No. It is a transparent credit estimate for reward capacity. Actual campaign rules, eligibility, and distribution windows should be announced per campaign.',
   },
   {
-    question: 'When do live markets activate?',
-    answer:
-      'The app is structured around the World Cup opening window on June 11, 2026. Availability and exact market behavior still depend on final configuration and jurisdictional requirements.',
+    q: 'What is live now?',
+    a: 'The app can show tournament pages, token access, wallet connection, holder data, Streamflow lock data, and estimated prize pool credit when the required API keys and token address are configured.',
   },
 ];
 
-function DocsButton({
+function AppButton({
   href,
   children,
   primary = false,
@@ -238,27 +292,21 @@ function DocsButton({
   primary?: boolean;
 }) {
   return (
-    <Link href={href} className={primary ? 'btn-primary' : 'btn-secondary'} style={{ minWidth: 148 }}>
+    <Link href={href} className={primary ? 'btn-primary' : 'btn-secondary'} style={{ minWidth: 150 }}>
       {children}
     </Link>
   );
 }
 
-function ExternalButton({
-  href,
-  children,
-}: {
-  href: string;
-  children: ReactNode;
-}) {
+function ExternalButton({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ minWidth: 148 }}>
+    <a href={href} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ minWidth: 150 }}>
       {children}
     </a>
   );
 }
 
-function AnchorButton({ href, children }: { href: string; children: ReactNode }) {
+function NavPill({ href, children }: { href: string; children: ReactNode }) {
   return (
     <a
       href={href}
@@ -266,14 +314,14 @@ function AnchorButton({ href, children }: { href: string; children: ReactNode })
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '0.55rem 0.8rem',
+        padding: '0.55rem 0.78rem',
         borderRadius: 8,
         border: '1px solid rgba(255,255,255,0.08)',
         background: 'rgba(255,255,255,0.04)',
         color: TEXT_SOFT,
-        textDecoration: 'none',
         fontSize: '0.78rem',
         fontWeight: 800,
+        textDecoration: 'none',
         whiteSpace: 'nowrap',
       }}
     >
@@ -282,7 +330,7 @@ function AnchorButton({ href, children }: { href: string; children: ReactNode })
   );
 }
 
-function SectionShell({
+function Section({
   id,
   eyebrow,
   title,
@@ -297,16 +345,16 @@ function SectionShell({
 }) {
   return (
     <section id={id} style={{ padding: '2.5rem 0', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 260px) minmax(0, 1fr)', gap: '1.5rem', alignItems: 'start' }} className="docs-section-grid">
+      <div className="docs-section-grid" style={{ display: 'grid', gridTemplateColumns: '240px minmax(0, 1fr)', gap: '1.5rem', alignItems: 'start' }}>
         <div>
           <p className="section-eyebrow" style={{ marginBottom: 10 }}>
             {eyebrow}
           </p>
-          <h2 className="text-2xl md:text-4xl" style={{ lineHeight: 1.1, fontWeight: 900, color: TEXT, marginBottom: '0.75rem' }}>
+          <h2 className="text-2xl md:text-4xl" style={{ color: TEXT, fontWeight: 900, lineHeight: 1.1, marginBottom: '0.75rem' }}>
             {title}
           </h2>
           {intro && (
-            <p style={{ color: TEXT_SOFT, fontSize: '0.92rem', lineHeight: 1.7, margin: 0 }}>
+            <p style={{ color: TEXT_SOFT, lineHeight: 1.7, fontSize: '0.92rem', margin: 0 }}>
               {intro}
             </p>
           )}
@@ -317,65 +365,54 @@ function SectionShell({
   );
 }
 
-function StatTile({ label, value }: { label: string; value: string }) {
+function StatusCard({
+  label,
+  value,
+  accent = GOLD,
+}: {
+  label: string;
+  value: string;
+  accent?: string;
+}) {
   return (
-    <div style={{ padding: '0.95rem 1rem', borderRadius: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-      <p style={{ fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.12em', color: TEXT_MUTED, marginBottom: 5 }}>
+    <div style={{ padding: '0.95rem', borderRadius: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <p style={{ color: TEXT_MUTED, fontSize: '0.62rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 5 }}>
         {label}
       </p>
-      <p style={{ fontSize: '0.98rem', fontWeight: 900, color: TEXT, margin: 0 }}>
+      <p style={{ color: accent, fontSize: '0.95rem', fontWeight: 900, margin: 0 }}>
         {value}
       </p>
     </div>
   );
 }
 
-function FeaturePanel({
+function ActionCard({
+  step,
   title,
   body,
-  eyebrow,
-  accent = GOLD,
-  children,
+  action,
+  href,
 }: {
+  step: string;
   title: string;
-  body?: string;
-  eyebrow?: string;
-  accent?: string;
-  children?: ReactNode;
+  body: string;
+  action: string;
+  href: string;
 }) {
   return (
-    <div className="card card-hover" style={{ padding: '1.2rem', minHeight: '100%', background: CARD }}>
-      {eyebrow && (
-        <p style={{ color: accent, fontSize: '0.62rem', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>
-          {eyebrow}
-        </p>
-      )}
-      <h3 style={{ color: TEXT, fontSize: '1rem', fontWeight: 900, marginBottom: 8 }}>
-        {title}
-      </h3>
-      {body && (
-        <p style={{ color: TEXT_SOFT, fontSize: '0.88rem', lineHeight: 1.65, margin: 0 }}>
-          {body}
-        </p>
-      )}
-      {children}
-    </div>
-  );
-}
-
-function FlowStep({ code, title, body }: { code: string; title: string; body: string }) {
-  return (
-    <div style={{ position: 'relative', padding: '1.1rem', borderRadius: 8, background: SURFACE, border: `1px solid ${BORDER}`, minHeight: 178 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1rem' }}>
-        <span style={{ color: GREEN, fontSize: '0.72rem', fontWeight: 900 }}>{code}</span>
-        <span style={{ width: 34, height: 6, borderRadius: 9999, background: `linear-gradient(90deg, ${GOLD}, ${GREEN})` }} />
-      </div>
+    <div className="card card-hover" style={{ padding: '1.25rem', background: CARD, minHeight: '100%' }}>
+      <p style={{ color: GOLD, fontSize: '0.72rem', fontWeight: 900, marginBottom: 10 }}>
+        {step}
+      </p>
       <h3 style={{ color: TEXT, fontSize: '1.05rem', fontWeight: 900, marginBottom: 8 }}>
         {title}
       </h3>
-      <p style={{ color: TEXT_SOFT, fontSize: '0.86rem', lineHeight: 1.65, margin: 0 }}>
+      <p style={{ color: TEXT_SOFT, fontSize: '0.88rem', lineHeight: 1.65, marginBottom: '1rem' }}>
         {body}
       </p>
+      <Link href={href} style={{ color: GOLD_SOFT, fontSize: '0.82rem', fontWeight: 900, textDecoration: 'none' }}>
+        {action}
+      </Link>
     </div>
   );
 }
@@ -389,144 +426,46 @@ function SpecRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function RoadmapCard({
-  phase,
-  status,
-  title,
-  window,
-  progress,
-  items,
-}: {
-  phase: string;
-  status: string;
-  title: string;
-  window: string;
-  progress: number;
-  items: string[];
-}) {
-  return (
-    <div className="card" style={{ padding: '1.15rem', background: CARD }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.75rem' }}>
-        <p style={{ color: GOLD, fontSize: '0.62rem', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
-          {phase}
-        </p>
-        <span style={{ padding: '0.18rem 0.55rem', borderRadius: 9999, background: 'rgba(20,241,149,0.1)', border: '1px solid rgba(20,241,149,0.25)', color: GREEN, fontSize: '0.62rem', fontWeight: 900 }}>
-          {status}
-        </span>
-      </div>
-      <h3 style={{ color: TEXT, fontSize: '1.05rem', fontWeight: 900, marginBottom: 5 }}>
-        {title}
-      </h3>
-      <p style={{ color: TEXT_MUTED, fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.9rem' }}>
-        {window}
-      </p>
-      <div style={{ height: 8, borderRadius: 9999, background: '#0B0B0B', border: `1px solid ${BORDER}`, overflow: 'hidden', marginBottom: '1rem' }}>
-        <div style={{ width: `${progress}%`, height: '100%', background: `linear-gradient(90deg, ${GOLD}, ${GREEN})` }} />
-      </div>
-      <ul style={{ margin: 0, paddingLeft: '1.1rem', display: 'grid', gap: '0.4rem' }}>
-        {items.map((item) => (
-          <li key={item} style={{ color: TEXT_SOFT, fontSize: '0.85rem', lineHeight: 1.55 }}>
-            {item}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function ProtocolConsole() {
-  return (
-    <div
-      style={{
-        borderRadius: 14,
-        border: '1px solid rgba(242,181,68,0.24)',
-        background: '#0D0D0D',
-        overflow: 'hidden',
-        boxShadow: '0 28px 80px rgba(0,0,0,0.38)',
-      }}
-    >
-      <div style={{ padding: '0.8rem 1rem', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: RED }} />
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: GOLD }} />
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: GREEN }} />
-        </div>
-        <span style={{ color: TEXT_MUTED, fontSize: '0.68rem', fontWeight: 800, letterSpacing: '0.1em' }}>
-          WCB PROTOCOL CONSOLE
-        </span>
-      </div>
-      <div style={{ padding: '1.1rem' }}>
-        <div className="grid grid-cols-2 gap-2" style={{ marginBottom: '1rem' }}>
-          {[
-            { label: 'Holder feed', value: 'Token accounts' },
-            { label: 'Lock feed', value: 'Streamflow' },
-            { label: 'Prize pool', value: 'Creator fee' },
-            { label: 'Status', value: 'Pre-launch' },
-          ].map((item) => (
-            <div key={item.label} style={{ padding: '0.85rem', borderRadius: 8, background: SURFACE, border: `1px solid ${BORDER}` }}>
-              <p style={{ color: TEXT_MUTED, fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>
-                {item.label}
-              </p>
-              <p style={{ color: item.label === 'Prize pool' ? GREEN : TEXT, fontSize: '0.86rem', fontWeight: 900, margin: 0 }}>
-                {item.value}
-              </p>
-            </div>
-          ))}
-        </div>
-        <div style={{ borderRadius: 8, border: `1px solid ${BORDER}`, overflow: 'hidden' }}>
-          {['Connect wallet', 'Read $WCB balance', 'Check active locks', 'Estimate fee-backed rewards'].map((item, index) => (
-            <div key={item} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', padding: '0.78rem 0.9rem', borderBottom: index < 3 ? `1px solid ${BORDER}` : 'none', background: index % 2 ? '#101010' : '#0C0C0C' }}>
-              <span style={{ color: TEXT_SOFT, fontSize: '0.82rem', fontWeight: 700 }}>{item}</span>
-              <span style={{ color: index < 3 ? GREEN : GOLD, fontSize: '0.72rem', fontWeight: 900 }}>
-                {index < 3 ? 'READY' : 'ESTIMATE'}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function DocsPage() {
-  const mintDisplay = WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'Configured at launch';
+  const mintDisplay = WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'Set by token config';
 
   return (
     <div style={{ background: '#070707' }}>
       <section style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-14">
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.05fr) minmax(320px, 0.95fr)', gap: '2rem', alignItems: 'center' }} className="docs-hero-grid">
+          <div className="docs-hero-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 360px', gap: '2rem', alignItems: 'center' }}>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
                 <BrandLogo size="lg" showText={false} />
                 <span style={{ padding: '0.28rem 0.72rem', borderRadius: 9999, background: 'rgba(20,241,149,0.1)', border: '1px solid rgba(20,241,149,0.25)', color: GREEN, fontSize: '0.68rem', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                  Protocol Docs
+                  Simple Docs
                 </span>
                 <span style={{ padding: '0.28rem 0.72rem', borderRadius: 9999, background: 'rgba(242,181,68,0.1)', border: '1px solid rgba(242,181,68,0.25)', color: GOLD_SOFT, fontSize: '0.68rem', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                   Whitepaper v1
                 </span>
               </div>
 
-              <h1 className="text-4xl md:text-7xl" style={{ color: TEXT, lineHeight: 1, fontWeight: 900, marginBottom: '1rem', maxWidth: 920 }}>
-                Introducing WORLDCUPBET Protocol.
+              <h1 className="text-4xl md:text-7xl" style={{ color: TEXT, lineHeight: 1, fontWeight: 900, marginBottom: '1rem', maxWidth: 900 }}>
+                WORLDCUPBET is a World Cup app powered by $WCB.
               </h1>
-              <p style={{ color: TEXT_SOFT, fontSize: '1.05rem', lineHeight: 1.75, maxWidth: 820, marginBottom: '1.4rem' }}>
-                A Solana-native World Cup 2026 app where wallet ownership, Streamflow lock commitment, matchday activity, and creator-fee-backed prize pool credit work together inside one product loop.
+              <p style={{ color: TEXT_SOFT, fontSize: '1.05rem', lineHeight: 1.75, maxWidth: 780, marginBottom: '1.35rem' }}>
+                The idea is simple: hold $WCB for status, lock $WCB for credits, and use those visible wallet signals inside World Cup 2026 match campaigns.
               </p>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3" style={{ marginBottom: '1.4rem' }}>
-                {HERO_STATS.map((stat) => (
-                  <StatTile key={stat.label} label={stat.label} value={stat.value} />
-                ))}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3" style={{ marginBottom: '1.35rem' }}>
+                <StatusCard label="Chain" value="Solana" />
+                <StatusCard label="Token" value="$WCB" />
+                <StatusCard label="Lock source" value="Streamflow" accent={PURPLE} />
+                <StatusCard label="Kickoff" value="June 11, 2026" accent={GREEN} />
               </div>
 
-              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
-                <DocsButton href="/leaderboard" primary>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                <AppButton href="/leaderboard" primary>
                   Open Leaderboards
-                </DocsButton>
-                <DocsButton href="/lock">
-                  Lock & Earn
-                </DocsButton>
+                </AppButton>
+                <AppButton href="/lock">
+                  Lock $WCB
+                </AppButton>
                 <ExternalButton href={PUMPFUN}>
                   Buy $WCB
                 </ExternalButton>
@@ -535,106 +474,78 @@ export default function DocsPage() {
                 </ExternalButton>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.55rem', flexWrap: 'wrap' }}>
-                {DOC_NAV.map((item) => (
-                  <AnchorButton key={item.href} href={item.href}>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                {NAV_ITEMS.map((item) => (
+                  <NavPill key={item.href} href={item.href}>
                     {item.label}
-                  </AnchorButton>
+                  </NavPill>
                 ))}
               </div>
             </div>
 
-            <ProtocolConsole />
+            <div className="card" style={{ padding: '1.2rem', background: SURFACE, boxShadow: '0 28px 80px rgba(0,0,0,0.36)' }}>
+              <p className="section-eyebrow" style={{ marginBottom: 10 }}>
+                One-Minute Summary
+              </p>
+              <div style={{ display: 'grid', gap: '0.8rem' }}>
+                {[
+                  ['Hold', 'Build holder rank from wallet balance.'],
+                  ['Lock', 'Turn locked $WCB into wallet-bound credits.'],
+                  ['Betting', 'Coming soon for World Cup match windows.'],
+                  ['Benefits', 'Use holder, locker, and activity status for campaigns.'],
+                ].map(([label, value]) => (
+                  <div key={label} style={{ padding: '0.9rem', borderRadius: 8, background: CARD, border: `1px solid ${BORDER}` }}>
+                    <p style={{ color: GOLD, fontSize: '0.7rem', fontWeight: 900, marginBottom: 4 }}>{label}</p>
+                    <p style={{ color: TEXT_SOFT, fontSize: '0.88rem', lineHeight: 1.55, margin: 0 }}>{value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: '1.25rem', alignItems: 'start' }} className="docs-layout">
+        <div className="docs-layout" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: '1.25rem', alignItems: 'start' }}>
           <main>
-            <SectionShell
-              id="intro"
-              eyebrow="Introduction"
-              title="A World Cup app with on-chain participation."
-              intro="The product is designed as an app first: users connect, inspect matches, hold the token, lock for credit, and track their rank. The docs exist to make every layer readable before the live tournament window opens."
+            <Section
+              id="start"
+              eyebrow="Start Here"
+              title="What is WORLDCUPBET?"
+              intro="WORLDCUPBET is a Solana-native app built around the 2026 World Cup. It gives $WCB holders a visible role inside the product instead of leaving the token as a standalone chart."
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {WHITEPAPER_BLOCKS.map((item) => (
-                  <FeaturePanel key={item.title} title={item.title} body={item.body} eyebrow="Whitepaper note" />
-                ))}
-              </div>
-            </SectionShell>
-
-            <SectionShell
-              id="whitepaper"
-              eyebrow="Whitepaper"
-              title="The protocol thesis."
-              intro="WORLDCUPBET combines familiar football behavior with Web3-native proof. The user should not have to understand every contract detail before seeing why their wallet state matters."
-            >
-              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.25fr) minmax(260px, 0.75fr)', gap: '1rem' }} className="docs-two-col">
-                <div className="card" style={{ padding: '1.35rem', background: CARD }}>
-                  <h3 style={{ color: TEXT, fontSize: '1.15rem', fontWeight: 900, marginBottom: '0.85rem' }}>
-                    Core thesis
-                  </h3>
-                  <p style={{ color: TEXT_SOFT, lineHeight: 1.75, marginBottom: '1rem' }}>
-                    The World Cup creates a short, intense attention cycle. A Web3 betting and prediction app needs more than fixtures: it needs a persistent wallet identity layer, a visible commitment layer, and a reward reserve that can be explained in one sentence.
-                  </p>
-                  <p style={{ color: TEXT_SOFT, lineHeight: 1.75, marginBottom: '1rem' }}>
-                    $WCB provides the access signal. Holder rank shows ownership. Streamflow locks show commitment. Prize pool credit connects future rewards to creator-fee activity instead of arbitrary emissions.
-                  </p>
-                  <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-                    <AnchorButton href="#mechanism">View Mechanism</AnchorButton>
-                    <AnchorButton href="#prizepool">Prize Pool Model</AnchorButton>
-                    <AnchorButton href="#roadmap">Roadmap</AnchorButton>
-                  </div>
+              <div className="card" style={{ padding: '1.35rem', background: CARD }}>
+                <p style={{ color: TEXT_SOFT, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1rem' }}>
+                  The app has three clear layers:
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <StatusCard label="Ownership" value="Holder rank" />
+                  <StatusCard label="Commitment" value="Lock credits" accent={PURPLE} />
+                  <StatusCard label="Rewards" value="Prize pool credit" accent={GREEN} />
                 </div>
-
-                <div className="card" style={{ padding: '1.2rem', background: SURFACE }}>
-                  <p className="section-eyebrow" style={{ marginBottom: 8 }}>
-                    Protocol Spec
-                  </p>
-                  <SpecRow label="Token" value="$WCB" />
-                  <SpecRow label="Mint" value={mintDisplay} />
-                  <SpecRow label="Network" value="Solana mainnet" />
-                  <SpecRow label="Lock source" value="Streamflow" />
-                  <SpecRow label="Volume source" value="Jupiter Token API" />
-                  <SpecRow label="Reward model" value="Creator-fee credit" />
-                </div>
+                <p style={{ color: TEXT_SOFT, fontSize: '0.92rem', lineHeight: 1.75, marginTop: '1rem', marginBottom: 0 }}>
+                  A user should understand the app without reading a complex whitepaper: buy or hold $WCB, lock if they want credits, then participate when tournament campaigns open.
+                </p>
               </div>
-            </SectionShell>
+            </Section>
 
-            <SectionShell
-              id="architecture"
-              eyebrow="Architecture"
-              title="The app surfaces are deliberately separated."
-              intro="Each page has a single job. This keeps the app usable for football users while still giving crypto users enough proof and mechanics to evaluate the protocol."
+            <Section
+              id="how-it-works"
+              eyebrow="How It Works"
+              title="Three user actions."
+              intro="The product loop is intentionally simple. Every important action has a visible output in the app."
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {APP_SURFACES.map((surface) => (
-                  <Link key={surface.title} href={surface.href} style={{ textDecoration: 'none' }}>
-                    <FeaturePanel title={surface.title} body={surface.body} eyebrow={surface.code} accent={surface.code === 'LOCK' ? PURPLE : GOLD} />
-                  </Link>
-                ))}
-              </div>
-            </SectionShell>
-
-            <SectionShell
-              id="mechanism"
-              eyebrow="Mechanism"
-              title="How wallet state becomes product utility."
-              intro="The mechanism is split into readable layers so ownership, lock commitment, and reward credit do not blur into one confusing score."
-            >
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-3" style={{ marginBottom: '1rem' }}>
-                {FLOW_STEPS.map((step) => (
-                  <FlowStep key={step.code} {...step} />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {USER_ACTIONS.map((item) => (
+                  <ActionCard key={item.step} {...item} />
                 ))}
               </div>
 
-              <div style={{ overflowX: 'auto', borderRadius: 10, border: `1px solid ${BORDER}`, background: CARD }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 720 }}>
+              <div style={{ overflowX: 'auto', marginTop: '1rem', borderRadius: 10, border: `1px solid ${BORDER}`, background: CARD }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 760 }}>
                   <thead>
                     <tr style={{ background: SURFACE, borderBottom: `1px solid ${BORDER}` }}>
-                      {['Layer', 'Source', 'Output'].map((head) => (
+                      {['Layer', 'Data Source', 'What It Means', 'Status'].map((head) => (
                         <th key={head} style={{ padding: '0.85rem 1rem', textAlign: 'left', color: TEXT_MUTED, fontSize: '0.68rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                           {head}
                         </th>
@@ -642,123 +553,275 @@ export default function DocsPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {MECHANISM_ROWS.map((row) => (
+                    {SYSTEM_ROWS.map((row) => (
                       <tr key={row.layer} style={{ borderBottom: `1px solid ${BORDER}` }}>
                         <td style={{ padding: '0.95rem 1rem', color: TEXT, fontWeight: 900 }}>{row.layer}</td>
                         <td style={{ padding: '0.95rem 1rem', color: TEXT_SOFT }}>{row.source}</td>
-                        <td style={{ padding: '0.95rem 1rem', color: TEXT_SOFT }}>{row.output}</td>
+                        <td style={{ padding: '0.95rem 1rem', color: TEXT_SOFT }}>{row.means}</td>
+                        <td style={{ padding: '0.95rem 1rem', color: GREEN, fontWeight: 800 }}>{row.live}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-            </SectionShell>
+            </Section>
 
-            <SectionShell
-              id="leaderboards"
-              eyebrow="Leaderboards"
-              title="Holder rank and lock rank are different products."
-              intro="This separation makes the app more credible. A wallet can own a lot of $WCB without locking. Another wallet can lock aggressively and build credit depth. Both behaviors are useful, but they should not be shown as the same metric."
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {LEADERBOARD_LAYERS.map((layer) => (
-                  <FeaturePanel key={layer.title} title={layer.title} body={layer.body} eyebrow={layer.eyebrow} accent={layer.accent}>
-                    <ul style={{ margin: '1rem 0 0', paddingLeft: '1.1rem', display: 'grid', gap: '0.45rem' }}>
-                      {layer.points.map((point) => (
-                        <li key={point} style={{ color: TEXT_SOFT, fontSize: '0.86rem', lineHeight: 1.55 }}>
-                          {point}
-                        </li>
-                      ))}
-                    </ul>
-                  </FeaturePanel>
-                ))}
-              </div>
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <DocsButton href="/leaderboard" primary>
-                  View Live Boards
-                </DocsButton>
-                <DocsButton href="/lock">
-                  Create Lock
-                </DocsButton>
-              </div>
-            </SectionShell>
-
-            <SectionShell
-              id="prizepool"
-              eyebrow="Prize Pool Credit"
-              title="A fee-backed reward reserve, not empty emissions."
-              intro="Prize pool credit estimates the reward capacity that can be funded from live creator fee. The current counter uses Jupiter token volume with the Pump.fun creator-fee tier model and configurable allocation settings."
+            <Section
+              id="lock-credits"
+              eyebrow="Lock & Credits"
+              title="How locking works."
+              intro="Locking is the commitment layer of WORLDCUPBET. It is designed for users who want to prepare a stronger launch position before the betting layer opens."
             >
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3" style={{ marginBottom: '1rem' }}>
-                {PRIZE_POOL_FACTS.map((fact) => (
-                  <StatTile key={fact.label} label={fact.label} value={fact.value} />
+                {LOCK_MECHANISM.map((item, index) => (
+                  <div key={item.title} style={{ padding: '1rem', borderRadius: 8, background: SURFACE, border: `1px solid ${BORDER}`, minHeight: 176 }}>
+                    <p style={{ color: PURPLE, fontSize: '0.72rem', fontWeight: 900, marginBottom: 8 }}>
+                      0{index + 1}
+                    </p>
+                    <h3 style={{ color: TEXT, fontSize: '0.95rem', fontWeight: 900, marginBottom: 7 }}>
+                      {item.title}
+                    </h3>
+                    <p style={{ color: TEXT_SOFT, fontSize: '0.84rem', lineHeight: 1.6, margin: 0 }}>
+                      {item.body}
+                    </p>
+                  </div>
                 ))}
               </div>
 
-              <div className="card" style={{ padding: '1.25rem', background: 'rgba(20,241,149,0.07)', border: '1px solid rgba(20,241,149,0.24)' }}>
-                <h3 style={{ color: GREEN, fontSize: '1rem', fontWeight: 900, marginBottom: 8 }}>
-                  Reward formula
+              <div className="card" style={{ padding: '1.2rem', background: CARD }}>
+                <h3 style={{ color: TEXT, fontSize: '1rem', fontWeight: 900, marginBottom: '0.85rem' }}>
+                  What credits mean inside the app
                 </h3>
-                <p style={{ color: TEXT_SOFT, lineHeight: 1.7, marginBottom: '1rem' }}>
-                  Prize Pool Credit = 24h Token Volume x Estimated Creator Fee Rate x Protocol Prize Allocation.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {['Holder campaign windows', 'Lock leaderboard rewards', 'Matchday tournament incentives'].map((item) => (
-                    <div key={item} style={{ padding: '0.9rem', borderRadius: 8, background: '#0B0F0D', border: '1px solid rgba(20,241,149,0.18)', color: TEXT, fontSize: '0.86rem', fontWeight: 800 }}>
-                      {item}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {CREDIT_RULES.map((rule) => (
+                    <div key={rule.label} style={{ padding: '0.9rem', borderRadius: 8, background: SURFACE, border: `1px solid ${BORDER}` }}>
+                      <p style={{ color: GOLD, fontSize: '0.68rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>
+                        {rule.label}
+                      </p>
+                      <p style={{ color: TEXT_SOFT, fontSize: '0.86rem', lineHeight: 1.6, margin: 0 }}>
+                        {rule.value}
+                      </p>
                     </div>
                   ))}
                 </div>
               </div>
-            </SectionShell>
 
-            <SectionShell
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+                <AppButton href="/lock" primary>
+                  Open Lock Page
+                </AppButton>
+                <AppButton href="/leaderboard">
+                  View Lock Board
+                </AppButton>
+              </div>
+            </Section>
+
+            <Section
+              id="betting"
+              eyebrow="Betting Coming Soon"
+              title="How the betting layer is intended to work."
+              intro="The current app prepares users before World Cup betting opens. The betting layer is presented as coming soon, so users understand what is planned without confusing previews with live wagering."
+            >
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                {BETTING_FLOW.map((item) => (
+                  <div key={item.phase} className="card" style={{ padding: '1rem', background: CARD, minHeight: 186 }}>
+                    <p style={{ color: GREEN, fontSize: '0.68rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 7 }}>
+                      {item.phase}
+                    </p>
+                    <h3 style={{ color: TEXT, fontSize: '0.95rem', fontWeight: 900, marginBottom: 7 }}>
+                      {item.title}
+                    </h3>
+                    <p style={{ color: TEXT_SOFT, fontSize: '0.84rem', lineHeight: 1.6, margin: 0 }}>
+                      {item.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: 10, background: 'rgba(242,181,68,0.07)', border: '1px solid rgba(242,181,68,0.22)' }}>
+                <h3 style={{ color: GOLD_SOFT, fontSize: '1rem', fontWeight: 900, marginBottom: 8 }}>
+                  Important status note
+                </h3>
+                <p style={{ color: TEXT_SOFT, fontSize: '0.9rem', lineHeight: 1.7, margin: 0 }}>
+                  Betting is not presented as live in the docs. The app currently uses match pages, leaderboards, locks, and prize pool credit to prepare the launch experience. Live betting functionality should be activated only when the final market layer is configured.
+                </p>
+              </div>
+            </Section>
+
+            <Section
+              id="benefits"
+              eyebrow="Benefits"
+              title="What users get from each role."
+              intro="The app should make the value of holding, locking, and participating easy to understand before users connect a wallet."
+            >
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {BENEFITS.map((benefit) => (
+                  <div key={benefit.title} className="card card-hover" style={{ padding: '1.2rem', background: CARD }}>
+                    <p style={{ color: benefit.accent, fontSize: '0.72rem', fontWeight: 900, marginBottom: 8 }}>
+                      {benefit.title}
+                    </p>
+                    <ul style={{ margin: 0, paddingLeft: '1.1rem', display: 'grid', gap: '0.5rem' }}>
+                      {benefit.items.map((item) => (
+                        <li key={item} style={{ color: TEXT_SOFT, fontSize: '0.86rem', lineHeight: 1.55 }}>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            <Section
+              id="leaderboards"
+              eyebrow="Leaderboards"
+              title="Two boards, two meanings."
+              intro="This is the most important distinction in the app: holding and locking are not the same action."
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {LEADERBOARD_CARDS.map((card) => (
+                  <div key={card.title} className="card card-hover" style={{ padding: '1.25rem', background: CARD }}>
+                    <p style={{ color: card.accent, fontSize: '0.7rem', fontWeight: 900, marginBottom: 8 }}>
+                      {card.title}
+                    </p>
+                    <p style={{ color: TEXT_SOFT, fontSize: '0.92rem', lineHeight: 1.7, marginBottom: '1rem' }}>
+                      {card.body}
+                    </p>
+                    <ul style={{ margin: 0, paddingLeft: '1.1rem', display: 'grid', gap: '0.45rem' }}>
+                      {card.bullets.map((bullet) => (
+                        <li key={bullet} style={{ color: TEXT_SOFT, fontSize: '0.86rem', lineHeight: 1.55 }}>
+                          {bullet}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+                <AppButton href="/leaderboard" primary>
+                  View Leaderboards
+                </AppButton>
+                <AppButton href="/lock">
+                  Create Lock
+                </AppButton>
+              </div>
+            </Section>
+
+            <Section
+              id="prize-pool"
+              eyebrow="Prize Pool"
+              title="Prize pool credit, explained clearly."
+              intro="Prize pool credit is not shown as a guaranteed payout. It is a live estimate of reward capacity based on creator-fee assumptions and market volume."
+            >
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                {PRIZE_POOL_STEPS.map((step, index) => (
+                  <div key={step.title} style={{ padding: '1rem', borderRadius: 8, background: SURFACE, border: `1px solid ${BORDER}`, minHeight: 168 }}>
+                    <p style={{ color: GREEN, fontSize: '0.72rem', fontWeight: 900, marginBottom: 8 }}>
+                      0{index + 1}
+                    </p>
+                    <h3 style={{ color: TEXT, fontSize: '0.95rem', fontWeight: 900, marginBottom: 7 }}>
+                      {step.title}
+                    </h3>
+                    <p style={{ color: TEXT_SOFT, fontSize: '0.84rem', lineHeight: 1.6, margin: 0 }}>
+                      {step.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="card" style={{ padding: '1.15rem', background: 'rgba(20,241,149,0.07)', border: '1px solid rgba(20,241,149,0.24)', marginTop: '1rem' }}>
+                <h3 style={{ color: GREEN, fontSize: '1rem', fontWeight: 900, marginBottom: 8 }}>
+                  Simple formula
+                </h3>
+                <p style={{ color: TEXT_SOFT, lineHeight: 1.7, margin: 0 }}>
+                  Prize Pool Credit = Token Volume x Estimated Creator Fee Rate x Prize Allocation.
+                </p>
+              </div>
+            </Section>
+
+            <Section
+              id="whitepaper"
+              eyebrow="Whitepaper"
+              title="The full thesis, without unnecessary jargon."
+              intro="This section gives the longer explanation for users, partners, and community members who want to understand the product model."
+            >
+              <div style={{ display: 'grid', gap: '0.75rem' }}>
+                {WHITEPAPER_SECTIONS.map((item) => (
+                  <div key={item.title} className="card" style={{ padding: '1.15rem', background: CARD }}>
+                    <h3 style={{ color: TEXT, fontSize: '1rem', fontWeight: 900, marginBottom: 8 }}>
+                      {item.title}
+                    </h3>
+                    <p style={{ color: TEXT_SOFT, fontSize: '0.92rem', lineHeight: 1.75, margin: 0 }}>
+                      {item.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            <Section
               id="roadmap"
               eyebrow="Roadmap"
-              title="A launch path built around the World Cup window."
-              intro="The roadmap is staged by product layer, not by vague announcements. Every phase adds a clearer reason for users to connect, hold, lock, and return."
+              title="Roadmap to the tournament."
+              intro="The roadmap is grouped by product layer so users can see what each stage adds to the app."
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {ROADMAP.map((item) => (
-                  <RoadmapCard key={item.phase} {...item} />
+                  <div key={item.phase} className="card" style={{ padding: '1.15rem', background: CARD }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                      <p style={{ color: GOLD, fontSize: '0.66rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.12em', margin: 0 }}>
+                        {item.phase}
+                      </p>
+                      <span style={{ padding: '0.18rem 0.55rem', borderRadius: 9999, background: 'rgba(20,241,149,0.1)', border: '1px solid rgba(20,241,149,0.25)', color: GREEN, fontSize: '0.62rem', fontWeight: 900 }}>
+                        {item.status}
+                      </span>
+                    </div>
+                    <h3 style={{ color: TEXT, fontSize: '1.05rem', fontWeight: 900, marginBottom: 4 }}>
+                      {item.title}
+                    </h3>
+                    <p style={{ color: TEXT_MUTED, fontSize: '0.78rem', fontWeight: 800, marginBottom: '0.9rem' }}>
+                      {item.window}
+                    </p>
+                    <ul style={{ margin: 0, paddingLeft: '1.1rem', display: 'grid', gap: '0.4rem' }}>
+                      {item.items.map((roadmapItem) => (
+                        <li key={roadmapItem} style={{ color: TEXT_SOFT, fontSize: '0.86rem', lineHeight: 1.55 }}>
+                          {roadmapItem}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 ))}
               </div>
-            </SectionShell>
+            </Section>
 
-            <SectionShell
+            <Section
               id="faq"
               eyebrow="FAQ"
-              title="Important mechanics and launch notes."
-              intro="These notes keep the docs honest about what is live now, what is estimated, and what depends on final market activation."
+              title="Clear answers."
+              intro="Short answers for the parts users are most likely to question."
             >
               <div style={{ display: 'grid', gap: '0.75rem' }}>
                 {FAQS.map((faq) => (
-                  <details key={faq.question} className="card" style={{ padding: '1rem 1.1rem', background: CARD }}>
+                  <details key={faq.q} className="card" style={{ padding: '1rem 1.1rem', background: CARD }}>
                     <summary style={{ color: TEXT, fontWeight: 900, cursor: 'pointer' }}>
-                      {faq.question}
+                      {faq.q}
                     </summary>
                     <p style={{ color: TEXT_SOFT, lineHeight: 1.7, margin: '0.8rem 0 0' }}>
-                      {faq.answer}
+                      {faq.a}
                     </p>
                   </details>
                 ))}
               </div>
-
-              <div style={{ marginTop: '1.25rem', padding: '1rem', borderRadius: 10, border: '1px solid rgba(239,68,68,0.18)', background: 'rgba(239,68,68,0.06)' }}>
-                <p style={{ color: TEXT_SOFT, fontSize: '0.82rem', lineHeight: 1.65, margin: 0 }}>
-                  $WCB is a crypto asset and may be volatile. Betting and prediction features are subject to final product configuration, launch timing, and user jurisdiction. This page explains product mechanics and should not be treated as financial advice.
-                </p>
-              </div>
-            </SectionShell>
+            </Section>
           </main>
 
           <aside className="docs-sidebar" style={{ position: 'sticky', top: '6rem', paddingTop: '2.5rem' }}>
             <div className="card" style={{ padding: '1.15rem', background: SURFACE, marginBottom: '1rem' }}>
               <p className="section-eyebrow" style={{ marginBottom: 10 }}>
-                Docs Index
+                Docs Menu
               </p>
               <div style={{ display: 'grid', gap: '0.5rem' }}>
-                {DOC_NAV.map((item) => (
+                {NAV_ITEMS.map((item) => (
                   <a key={item.href} href={item.href} className="sidebar-nav-link">
                     {item.label}
                     <span style={{ color: TEXT_MUTED }}>#</span>
@@ -769,34 +832,33 @@ export default function DocsPage() {
 
             <div className="card" style={{ padding: '1.15rem', background: SURFACE, marginBottom: '1rem' }}>
               <p className="section-eyebrow" style={{ marginBottom: 8 }}>
-                Quick Facts
+                Protocol Facts
               </p>
-              <SpecRow label="Platform" value="WORLDCUPBET" />
               <SpecRow label="Token" value="$WCB" />
-              <SpecRow label="Chain" value="Solana" />
-              <SpecRow label="Launch" value="June 11, 2026" />
-              <SpecRow label="Holder source" value="Token accounts" />
-              <SpecRow label="Lock source" value="Streamflow" />
-              <SpecRow label="Prize source" value="Creator fee" />
+              <SpecRow label="Mint" value={mintDisplay} />
+              <SpecRow label="Network" value="Solana" />
+              <SpecRow label="Holder data" value="Token accounts" />
+              <SpecRow label="Lock data" value="Streamflow" />
+              <SpecRow label="Prize data" value="Estimated fee credit" />
             </div>
 
             <div className="card" style={{ padding: '1.15rem', background: SURFACE }}>
               <p className="section-eyebrow" style={{ marginBottom: 10 }}>
-                App Actions
+                Quick Actions
               </p>
               <div style={{ display: 'grid', gap: '0.65rem' }}>
-                <DocsButton href="/leaderboard" primary>
+                <AppButton href="/leaderboard" primary>
                   Leaderboards
-                </DocsButton>
-                <DocsButton href="/lock">
+                </AppButton>
+                <AppButton href="/lock">
                   Lock & Earn
-                </DocsButton>
-                <DocsButton href="/matches">
-                  Match Center
-                </DocsButton>
-                <DocsButton href="/token">
-                  Token Utility
-                </DocsButton>
+                </AppButton>
+                <AppButton href="/matches">
+                  Matches
+                </AppButton>
+                <AppButton href="/token">
+                  Token Page
+                </AppButton>
               </div>
             </div>
           </aside>
@@ -806,7 +868,6 @@ export default function DocsPage() {
       <style>{`
         @media (max-width: 1023px) {
           .docs-hero-grid,
-          .docs-two-col,
           .docs-section-grid {
             grid-template-columns: 1fr !important;
           }
