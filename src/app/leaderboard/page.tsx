@@ -8,6 +8,7 @@ import { useLeaderboard } from '@/lib/hooks/useLeaderboard';
 import { usePrizePoolMetrics } from '@/lib/hooks/usePrizePoolMetrics';
 import type { PrizePoolMetrics } from '@/lib/api/prizepool';
 import { formatCredits, formatTokenAmount } from '@/lib/lock';
+import { WCB_MINT } from '@/lib/wallet';
 import { WalletButtonDynamic, WalletMultiButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 import type { WalletEntry } from '@/types/leaderboard';
 
@@ -17,8 +18,6 @@ const TIERS = [
   { tier: 'Gold',     color: '#F2B544', tint: 'rgba(242,181,68,0.12)', min: '1M' },
   { tier: 'Platinum', color: '#9945FF', tint: 'rgba(153,69,255,0.12)', min: '10M' },
 ];
-
-const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? '';
 
 const PRIZE_POOL_FLOW = [
   {
@@ -68,6 +67,13 @@ function formatUsd(value: number | undefined) {
 function formatRate(value: number | undefined) {
   const safeValue = Number.isFinite(value) ? value ?? 0 : 0;
   return `${(safeValue * 100).toFixed(safeValue > 0 && safeValue < 0.001 ? 3 : 2)}%`;
+}
+
+function formatSol(value: number | undefined) {
+  const safeValue = Number.isFinite(value) ? value ?? 0 : 0;
+  if (safeValue >= 1_000_000) return `${(safeValue / 1_000_000).toFixed(2)}M SOL`;
+  if (safeValue >= 1_000) return `${(safeValue / 1_000).toFixed(2)}K SOL`;
+  return `${safeValue.toFixed(safeValue < 0.1 ? 4 : 2)} SOL`;
 }
 
 // My position banner
@@ -196,13 +202,23 @@ function PrizePoolCreditPanel({
 }) {
   const statusLabel = error
     ? 'API fallback'
-    : metrics?.available
-      ? 'Live estimate'
-      : metrics?.message ?? 'Awaiting volume';
+    : metrics?.pumpCreatorVault
+      ? 'Live creator vault'
+      : metrics?.available
+        ? 'Live estimate'
+        : metrics?.message ?? 'Awaiting volume';
 
   const liveMetrics = [
     { label: 'Prize Pool 24h', value: loading ? 'Syncing' : formatUsd(metrics?.prizePoolCredit24hUsd), color: '#14F195' },
-    { label: 'Creator Fee 24h', value: loading ? 'Syncing' : formatUsd(metrics?.creatorFee24hUsd), color: '#F2B544' },
+    {
+      label: metrics?.pumpCreatorVault ? 'Live Vault' : 'Creator Fee 24h',
+      value: loading
+        ? 'Syncing'
+        : metrics?.pumpCreatorVault
+          ? `${formatUsd(metrics.pumpCreatorVault.liveCreatorFeeUsd ?? undefined)} / ${formatSol(metrics.pumpCreatorVault.liveCreatorFeeSol)}`
+          : formatUsd(metrics?.creatorFee24hUsd),
+      color: '#F2B544',
+    },
     { label: '24h Volume', value: loading ? 'Syncing' : formatUsd(metrics?.volume24hUsd), color: '#FFFFFF' },
     { label: 'Fee Rate', value: loading ? 'Syncing' : formatRate(metrics?.creatorFeeRate), color: '#FFD36B' },
   ];
@@ -228,7 +244,7 @@ function PrizePoolCreditPanel({
               Live creator-fee estimate for holder and locker rewards.
             </h2>
             <p style={{ fontSize: '0.92rem', color: '#B3B3B3', lineHeight: 1.7, maxWidth: 760 }}>
-              The prize pool credit counter estimates reward capacity from Jupiter token volume and Pump.fun creator-fee tiers. It keeps the reserve tied to real trading activity while a direct creator-fee endpoint is not exposed.
+              The prize pool credit counter uses a live creator vault when the creator wallet is available. Otherwise it estimates reward capacity from Jupiter token volume and Pump.fun creator-fee tiers.
             </p>
             {error && (
               <p style={{ color: '#EF4444', fontSize: '0.8rem', fontWeight: 700, marginTop: '0.65rem' }}>

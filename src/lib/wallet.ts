@@ -10,8 +10,9 @@ export const SOLANA_RPC =
     : 'https://api.mainnet-beta.solana.com');
 
 /** $WCB token mint address on Solana */
+export const DEFAULT_WCB_MINT = 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
 export const WCB_MINT =
-  process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? '';
+  process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? DEFAULT_WCB_MINT;
 
 /** Streamflow program ID on Solana mainnet */
 export const STREAMFLOW_PROGRAM_ID = 'strmRqUCoQUgGUan5YhzUZa6KqdzwX5L6FpUxfmKg5m';

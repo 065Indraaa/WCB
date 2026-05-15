@@ -3,6 +3,12 @@ export interface PrizePoolMetrics {
   source: string;
   message?: string;
   error?: string;
+  pumpCreatorVault?: {
+    creatorWallet: string;
+    creatorVault: string;
+    liveCreatorFeeSol: number;
+    liveCreatorFeeUsd: number | null;
+  } | null;
   token?: {
     mint: string;
     symbol: string;

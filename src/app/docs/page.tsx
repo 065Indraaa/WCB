@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { BrandLogo } from '@/components/shared/BrandLogo';
+import { WCB_MINT } from '@/lib/wallet';
 
 export const metadata = {
   title: 'Docs & Whitepaper | WORLDCUPBET Protocol',
@@ -19,7 +20,6 @@ const SURFACE = '#111111';
 const CARD = '#171717';
 const BORDER = '#2A2A2A';
 
-const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? '';
 const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
 const JUPITER = process.env.NEXT_PUBLIC_JUPITER_URL ?? 'https://jup.ag';
 
