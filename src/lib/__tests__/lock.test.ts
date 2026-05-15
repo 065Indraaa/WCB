@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { calculateCredits, getCreditDurationDays, SECONDS_PER_DAY } from '@/lib/lock';
+import {
+  calculateCredits,
+  getCreditDurationDays,
+  getLockCreditDurationDays,
+  getLockCreditStartTimestamp,
+  getLockUnlockTimestamp,
+  SECONDS_PER_DAY,
+} from '@/lib/lock';
 
 describe('lock credit duration', () => {
   it('uses exact configured durations for normal locks', () => {
@@ -27,5 +34,19 @@ describe('lock credit duration', () => {
 
     expect(duration).toBe(365);
     expect(calculateCredits(amount, duration)).toBe(25_000_000);
+  });
+
+  it('uses Streamflow lock creation time through unlock time for credit duration', () => {
+    const schedule = {
+      createdAt: 1_000,
+      start: 1_000 + 30 * SECONDS_PER_DAY,
+      cliff: 1_000 + 37 * 365 * SECONDS_PER_DAY,
+      end: 1_000 + 37 * 365 * SECONDS_PER_DAY,
+    };
+
+    expect(getLockCreditStartTimestamp(schedule)).toBe(schedule.createdAt);
+    expect(getLockUnlockTimestamp(schedule)).toBe(schedule.end);
+    expect(getLockCreditDurationDays(schedule)).toBe(365);
+    expect(calculateCredits(500_000_000, getLockCreditDurationDays(schedule))).toBe(25_000_000);
   });
 });

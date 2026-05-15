@@ -43,6 +43,35 @@ export const TOKENS_PER_CREDIT = 100;
 export const CREDIT_TO_TOKEN_RATE = 100; // 1 credit redeems for 100 $WCB
 export const SECONDS_PER_DAY = 86_400;
 
+export interface LockSchedule {
+  createdAt?: number;
+  start?: number;
+  cliff?: number;
+  end?: number;
+}
+
+function validUnixTimestamp(value: number | undefined): number | null {
+  return Number.isFinite(value) && value !== undefined && value > 0 ? value : null;
+}
+
+export function getLockCreditStartTimestamp(schedule: LockSchedule): number {
+  return (
+    validUnixTimestamp(schedule.createdAt) ??
+    validUnixTimestamp(schedule.start) ??
+    validUnixTimestamp(schedule.cliff) ??
+    validUnixTimestamp(schedule.end) ??
+    0
+  );
+}
+
+export function getLockUnlockTimestamp(schedule: LockSchedule): number {
+  const candidates = [schedule.end, schedule.cliff, schedule.start]
+    .map(validUnixTimestamp)
+    .filter((value): value is number => value !== null);
+
+  return candidates.length > 0 ? Math.max(...candidates) : 0;
+}
+
 /**
  * Convert a Streamflow lock timestamp range to the app's credit duration.
  * The duration is rounded up to avoid under-counting locks created with
@@ -53,6 +82,13 @@ export function getCreditDurationDays(startTs: number, endTs: number): number {
   const roundedDays = Math.max(1, Math.ceil(rawDays));
   const maxTierDays = Math.max(...LOCK_TIERS.map((tier) => tier.days));
   return Math.min(roundedDays, maxTierDays);
+}
+
+export function getLockCreditDurationDays(schedule: LockSchedule): number {
+  return getCreditDurationDays(
+    getLockCreditStartTimestamp(schedule),
+    getLockUnlockTimestamp(schedule),
+  );
 }
 
 /**

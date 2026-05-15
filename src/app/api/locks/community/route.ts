@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';
 import { SolanaStreamClient, StreamType, getNumberFromBN, type Stream } from '@streamflow/stream';
-import { calculateCredits, getCreditDurationDays } from '@/lib/lock';
+import { calculateCredits, getLockCreditDurationDays, getLockCreditStartTimestamp, getLockUnlockTimestamp } from '@/lib/lock';
 import { WCB_MINT, WCB_STREAMFLOW_LOCK_DASHBOARD_URL, WCB_TOKEN_DECIMALS } from '@/lib/tokenConfig';
 import { buildHeliusRpcUrl } from '@/lib/server/helius';
 
@@ -74,7 +74,15 @@ export async function GET() {
 
       const id = item.publicKey.toBase58();
       const wallet = stream.sender;
-      const durationDays = getCreditDurationDays(stream.start, stream.end);
+      const schedule = {
+        createdAt: stream.createdAt,
+        start: stream.start,
+        cliff: stream.cliff,
+        end: stream.end,
+      };
+      const startTs = getLockCreditStartTimestamp(schedule);
+      const endTs = getLockUnlockTimestamp(schedule);
+      const durationDays = getLockCreditDurationDays(schedule);
       const lock: StreamflowLock = {
         id,
         wallet,
@@ -84,8 +92,8 @@ export async function GET() {
         durationDays,
         credits: calculateCredits(amount, durationDays),
         isActive: true,
-        startTs: stream.start,
-        endTs: stream.end,
+        startTs,
+        endTs,
         streamflowUrl: streamUrl(id),
       };
 

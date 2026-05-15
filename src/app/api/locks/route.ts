@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { SolanaStreamClient, StreamType, getNumberFromBN, type Stream } from '@streamflow/stream';
-import { calculateCredits, getCreditDurationDays } from '@/lib/lock';
+import { calculateCredits, getLockCreditDurationDays, getLockCreditStartTimestamp, getLockUnlockTimestamp } from '@/lib/lock';
 import { WCB_MINT, WCB_TOKEN_DECIMALS } from '@/lib/tokenConfig';
 import { buildHeliusRpcUrl } from '@/lib/server/helius';
 
@@ -80,9 +80,15 @@ export async function GET(request: NextRequest) {
       const amount = lockedTokenAmount(stream);
       if (!Number.isFinite(amount) || amount <= 0) continue;
 
-      const startTs = stream.start;
-      const endTs = stream.end;
-      const durationDays = getCreditDurationDays(startTs, endTs);
+      const schedule = {
+        createdAt: stream.createdAt,
+        start: stream.start,
+        cliff: stream.cliff,
+        end: stream.end,
+      };
+      const startTs = getLockCreditStartTimestamp(schedule);
+      const endTs = getLockUnlockTimestamp(schedule);
+      const durationDays = getLockCreditDurationDays(schedule);
       const id = item.publicKey.toBase58();
 
       locks.push({
