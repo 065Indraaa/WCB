@@ -120,6 +120,7 @@ export function Footer() {
                 { href: '/matches',     label: 'Matches' },
                 { href: '/groups',      label: 'Groups' },
                 { href: '/bracket',     label: 'Bracket' },
+                { href: '/docs',        label: 'Docs' },
                 { href: '/lock',        label: 'Lock & Earn' },
                 { href: '/leaderboard', label: 'Leaderboard' },
               ].map((l) => (

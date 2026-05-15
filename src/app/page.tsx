@@ -314,6 +314,7 @@ export default function Home() {
                 { href: '/matches',     label: 'All Matches',       badge: '72' },
                 { href: '/groups',      label: 'Group Stage',       badge: '12' },
                 { href: '/bracket',     label: 'Knockout Bracket',  badge: null },
+                { href: '/docs',        label: 'Docs',              badge: null },
                 { href: '/lock',        label: 'Lock & Earn',       badge: 'NEW' },
                 { href: '/leaderboard', label: 'Leaderboard',       badge: null },
               ].map((l) => (

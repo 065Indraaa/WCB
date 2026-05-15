@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { LockCalculator } from '@/components/lock/LockCalculator';
 import { LockConfirmModal } from '@/components/lock/LockConfirmModal';
 import { CreditRedemptionInfo } from '@/components/lock/CreditRedemptionInfo';
@@ -39,8 +40,11 @@ export default function LockPage() {
         }}
       >
         <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>
-          Betting opens on <strong>June 11, 2026</strong>. Early locks receive a <strong>2x credit multiplier</strong> before launch.
+          Pre-launch lock window: earn a <strong>2x credit multiplier</strong> before markets open on <strong>June 11, 2026</strong>.
         </p>
+        <Link href="/docs" className="btn-secondary" style={{ marginLeft: 'auto' }}>
+          Read Docs
+        </Link>
       </div>
 
       {/* Page header */}
@@ -66,13 +70,18 @@ export default function LockPage() {
               className="text-4xl sm:text-5xl font-black tracking-tight"
               style={{ color: '#FFFFFF', marginBottom: '0.75rem' }}
             >
-              Lock early. Bet first.
+              Lock early. Enter launch with more credit.
             </h1>
             <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
-              Lock $WCB through Streamflow Finance to receive betting credits. Longer lock periods earn higher multipliers, and credits become available for match markets when betting opens on June 11, 2026.
+              Lock $WCB through Streamflow Finance to reserve betting credits before launch. Longer lock periods earn higher multipliers, and early locks receive a stronger launch position when markets open on June 11, 2026.
             </p>
           </div>
-          <WalletButtonDynamic />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <Link href="/docs" className="btn-secondary">
+              Read Docs
+            </Link>
+            <WalletButtonDynamic />
+          </div>
         </div>
       </div>
 
@@ -129,17 +138,17 @@ export default function LockPage() {
           {[
             {
               title: 'Launch multiplier',
-              desc: 'Early lockers receive double credits before the June 11 launch window closes.',
+              desc: 'Lock before launch to receive a 2x credit multiplier while the pre-market window is still open.',
               img: 'Countdown Visual',
             },
             {
               title: 'Betting credits',
-              desc: 'Credits determine the amount you can deploy across match markets once betting opens.',
+              desc: 'Credits define how much capacity you carry into the first match markets when betting opens.',
               img: 'Betting Credits Visual',
             },
             {
               title: 'Non-custodial lock',
-              desc: 'Locking is non-custodial via Streamflow. You set the unlock date. Nobody else touches your $WCB.',
+              desc: 'Locking is non-custodial via Streamflow. You choose the duration, and the tokens remain under your control on-chain.',
               img: 'Security Visual',
             },
           ].map((r) => (

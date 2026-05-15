@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { label: 'Bracket',     href: '/bracket',     icon: 'CUP' },
   { label: 'Token',       href: '/token',       icon: 'WCB' },
   { label: 'Lock & Earn', href: '/lock',        icon: 'LOCK', dot: true },
+  { label: 'Docs',        href: '/docs',        icon: 'DOCS' },
   { label: 'Leaderboard', href: '/leaderboard', icon: 'BOARD' },
 ];
 

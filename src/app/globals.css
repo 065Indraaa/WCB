@@ -607,6 +607,16 @@
   }
 }
 
+/* Docs page */
+@media (max-width: 1023px) {
+  .docs-layout {
+    grid-template-columns: 1fr !important;
+  }
+  .docs-sidebar {
+    position: static !important;
+  }
+}
+
 /* Wallet adapter theme overrides */
 .wallet-adapter-button,
 .wallet-adapter-button-trigger {
