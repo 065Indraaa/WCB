@@ -91,6 +91,10 @@ export function getLockCreditDurationDays(schedule: LockSchedule): number {
   );
 }
 
+export function calculateLockCredits(amount: number, schedule: LockSchedule): number {
+  return calculateCredits(amount, getLockCreditDurationDays(schedule));
+}
+
 /**
  * Calculate credits earned for a given lock.
  *
