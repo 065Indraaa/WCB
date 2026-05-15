@@ -20,4 +20,12 @@ describe('lock credit duration', () => {
     expect(duration).toBe(365);
     expect(calculateCredits(amount, duration)).toBe(calculateCredits(amount, 365));
   });
+
+  it('matches the lock calculator for a long 500M WCB lock', () => {
+    const amount = 500_000_000;
+    const duration = getCreditDurationDays(1_000, 1_000 + 37 * 365 * SECONDS_PER_DAY);
+
+    expect(duration).toBe(365);
+    expect(calculateCredits(amount, duration)).toBe(25_000_000);
+  });
 });

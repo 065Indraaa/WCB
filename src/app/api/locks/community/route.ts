@@ -42,9 +42,7 @@ function streamUrl(id: string) {
   return `https://app.streamflow.finance/contract/solana/mainnet/${id}`;
 }
 
-function tokenAmount(stream: Stream) {
-  const remaining = stream.remaining(WCB_TOKEN_DECIMALS);
-  if (Number.isFinite(remaining) && remaining > 0) return remaining;
+function lockedTokenAmount(stream: Stream) {
   return getNumberFromBN(stream.depositedAmount, WCB_TOKEN_DECIMALS);
 }
 
@@ -70,7 +68,7 @@ export async function GET() {
       const stream = item.account;
       if (!isActiveTokenLock(stream, now)) continue;
 
-      const amount = tokenAmount(stream);
+      const amount = lockedTokenAmount(stream);
       if (!Number.isFinite(amount) || amount <= 0) continue;
       totalActiveLocks += 1;
 
