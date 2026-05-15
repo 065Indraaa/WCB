@@ -391,6 +391,10 @@
     background: rgba(242,181,68,0.08);
     color: #FFFFFF;
   }
+
+  .match-market-launch {
+    display: none;
+  }
 }
 
 /* ============================================================
@@ -604,6 +608,15 @@
 @media (max-width: 900px) {
   .sportsbook-preview-grid {
     grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .match-odds-strip {
+    display: none !important;
+  }
+  .match-market-launch {
+    display: inline-flex !important;
   }
 }
 

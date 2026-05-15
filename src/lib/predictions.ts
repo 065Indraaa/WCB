@@ -1,8 +1,9 @@
 /**
  * Client-side prediction system for pre-launch market sentiment.
  *
- * All data lives in memory (no localStorage, no API).
- * This avoids ALL hydration mismatches.
+ * Baseline market data is deterministic. User votes are persisted locally in
+ * the browser so the preview feels stable across refreshes without requiring
+ * a backend yet.
  *
  * Baseline votes are seeded deterministically from matchId + FIFA rankings
  * so percentages look realistic from day 1.
@@ -27,14 +28,80 @@ interface Store {
   listeners: Set<() => void>;
 }
 
+interface PersistedStore {
+  votes?: Record<string, { home: number; draw: number; away: number }>;
+  myVotes?: Record<string, PredictionChoice>;
+}
+
+const STORAGE_KEY = 'wcblive.predictions.v1';
+
 const store: Store = {
   votes: {},
   myVotes: {},
   listeners: new Set(),
 };
+let hydrated = false;
 
 function notify() {
   store.listeners.forEach((fn) => fn());
+}
+
+function isTotals(value: unknown): value is { home: number; draw: number; away: number } {
+  return !!value && typeof value === 'object'
+    && Number.isFinite((value as { home?: unknown }).home as number)
+    && Number.isFinite((value as { draw?: unknown }).draw as number)
+    && Number.isFinite((value as { away?: unknown }).away as number);
+}
+
+function hydrateStore() {
+  if (hydrated || typeof window === 'undefined') return;
+  hydrated = true;
+
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+
+    const parsed = JSON.parse(raw) as PersistedStore;
+
+    if (parsed.votes) {
+      Object.entries(parsed.votes).forEach(([matchId, totals]) => {
+        const id = Number(matchId);
+        if (Number.isFinite(id) && isTotals(totals)) {
+          store.votes[id] = {
+            home: Math.max(0, Math.round(totals.home)),
+            draw: Math.max(0, Math.round(totals.draw)),
+            away: Math.max(0, Math.round(totals.away)),
+          };
+        }
+      });
+    }
+
+    if (parsed.myVotes) {
+      Object.entries(parsed.myVotes).forEach(([matchId, choice]) => {
+        const id = Number(matchId);
+        if (Number.isFinite(id) && (choice === 'home' || choice === 'draw' || choice === 'away')) {
+          store.myVotes[id] = choice;
+        }
+      });
+    }
+  } catch {
+    // Ignore malformed local storage and keep the seeded preview.
+  }
+}
+
+function persistStore() {
+  if (typeof window === 'undefined') return;
+  try {
+    const payload: PersistedStore = {
+      votes: Object.fromEntries(
+        Object.entries(store.votes).map(([matchId, totals]) => [matchId, { ...totals }]),
+      ),
+      myVotes: { ...store.myVotes },
+    };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  } catch {
+    // Ignore quota/private mode failures.
+  }
 }
 
 export function subscribe(fn: () => void): () => void {
@@ -72,6 +139,7 @@ function seedFor(matchId: number, homeRank: number, awayRank: number) {
 }
 
 function ensureSeeded(matchId: number, homeRank: number, awayRank: number) {
+  hydrateStore();
   if (!store.votes[matchId]) {
     store.votes[matchId] = seedFor(matchId, homeRank, awayRank);
   }
@@ -84,6 +152,7 @@ export function getPrediction(
   homeRank = 50,
   awayRank = 50,
 ): PredictionStats {
+  hydrateStore();
   ensureSeeded(matchId, homeRank, awayRank);
   const totals = store.votes[matchId];
   return {
@@ -100,6 +169,7 @@ export function castPrediction(
   homeRank = 50,
   awayRank = 50,
 ): PredictionStats {
+  hydrateStore();
   ensureSeeded(matchId, homeRank, awayRank);
 
   // Remove previous vote
@@ -112,6 +182,7 @@ export function castPrediction(
   store.votes[matchId][choice] += 1;
   store.myVotes[matchId] = choice;
 
+  persistStore();
   notify(); // trigger all subscribers to re-render
   return getPrediction(matchId, homeRank, awayRank);
 }

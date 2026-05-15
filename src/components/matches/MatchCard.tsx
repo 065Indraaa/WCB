@@ -55,6 +55,11 @@ export function MatchCard({ match }: MatchCardProps) {
 
   const { date, time } = utcKickoff(match.kickoff);
   const isLive = match.displayStatus === 'LIVE';
+  const marketOptions = [
+    { id: 'home', label: '1', price: previewOdds.home, name: match.homeTeam.name },
+    { id: 'draw', label: 'X', price: previewOdds.draw, name: 'Draw' },
+    { id: 'away', label: '2', price: previewOdds.away, name: match.awayTeam.name },
+  ] as const;
 
   return (
     <>
@@ -90,6 +95,7 @@ export function MatchCard({ match }: MatchCardProps) {
           style={{
             display: 'flex',
             alignItems: 'center',
+            flexWrap: 'wrap',
             padding: '10px 10px',
             gap: 8,
             minHeight: 64,
@@ -137,15 +143,42 @@ export function MatchCard({ match }: MatchCardProps) {
           </div>
 
           {/* Preview odds */}
+          <div
+            className="match-odds-strip"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+              gap: 4,
+              width: 148,
+              flexShrink: 0,
+              marginLeft: 'auto',
+            }}
+            aria-label="Market preview odds"
+          >
+            {marketOptions.map((item) => (
+              <button
+                key={item.id}
+                onClick={(e) => { e.stopPropagation(); setModalOpen(true); }}
+                className={`odds-btn${myChoice === item.id ? ' active' : ''}`}
+                style={{ minWidth: 0, width: '100%' }}
+                aria-label={`Open market preview for ${item.name}`}
+              >
+                <span className="odds-label">{item.label}</span>
+                <span style={{ fontSize: '0.82rem', fontVariantNumeric: 'tabular-nums' }}>
+                  {item.price}
+                </span>
+              </button>
+            ))}
+          </div>
           <button
             onClick={(e) => { e.stopPropagation(); setModalOpen(true); }}
-            className={`odds-btn${myChoice ? ' active' : ''}`}
-            style={{ flexShrink: 0, marginLeft: 4 }}
+            className="match-market-launch odds-btn"
+            style={{ display: 'none', flexShrink: 0, marginLeft: 'auto' }}
             aria-label={`Open market preview for ${match.homeTeam.name} vs ${match.awayTeam.name}`}
           >
-            <span className="odds-label">Preview</span>
+            <span className="odds-label">Market</span>
             <span style={{ fontSize: '0.82rem', fontVariantNumeric: 'tabular-nums' }}>
-              {previewOdds.home}
+              Preview
             </span>
           </button>
         </div>
@@ -175,7 +208,7 @@ export function MatchCard({ match }: MatchCardProps) {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
             <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#F2B544', fontVariantNumeric: 'tabular-nums' }}>{pct.home}%</span>
             <span style={{ fontSize: '0.6rem', fontWeight: 600, color: '#6E6E6E', fontVariantNumeric: 'tabular-nums' }}>
-              {loaded ? `${total.toLocaleString()} votes` : '...'} / pre-launch sentiment
+              {loaded ? `${total.toLocaleString()} votes` : '...'} / {myChoice ? 'saved locally' : 'pre-launch sentiment'}
             </span>
             <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#9945FF', fontVariantNumeric: 'tabular-nums' }}>{pct.away}%</span>
           </div>

@@ -220,7 +220,7 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
                         Your pick: <strong>
                           {myChoice === 'home' ? match.homeTeam.name : myChoice === 'away' ? match.awayTeam.name : 'Draw'}
                         </strong>
-                        {' '}- you can change it anytime.
+                        {' '}- saved on this device. You can change it anytime.
                       </p>
                     </div>
                   </motion.div>
