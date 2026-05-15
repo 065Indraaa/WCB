@@ -11,25 +11,11 @@ import type { PrizePoolMetrics } from '@/lib/api/prizepool';
 import { formatCredits, formatTokenAmount } from '@/lib/lock';
 import { WCB_MINT } from '@/lib/wallet';
 import { WalletButtonDynamic, WalletMultiButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
+import { WcbMark } from '@/components/shared/WcbText';
 import type { WalletEntry } from '@/types/leaderboard';
 
 const LEADERBOARD_PAGE_SIZE = 10;
 const LEADERBOARD_MAX_ROWS = 20;
-
-function WcbMark({ children = '$WCB' }: { children?: string }) {
-  return (
-    <span
-      style={{
-        color: '#14F195',
-        fontWeight: 900,
-        textShadow: '0 0 18px rgba(20,241,149,0.38)',
-        WebkitTextFillColor: '#14F195',
-      }}
-    >
-      {children}
-    </span>
-  );
-}
 
 const TIERS = [
   { tier: 'Bronze',   color: '#CD7F32', tint: 'rgba(205,127,50,0.12)', min: '1' },
@@ -504,23 +490,26 @@ export default function LeaderboardPage() {
     <div className="max-w-5xl mx-auto px-4 md:px-6 py-12">
 
       {/* Page header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
+      <div className="premium-panel" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem', padding: '1.45rem', borderRadius: 16 }}>
         <div>
-          <p className="section-eyebrow mb-2">Top Lockers</p>
+          <p className="section-eyebrow mb-2">Live Ranking Center</p>
           <h1 className="text-4xl sm:text-5xl font-black mb-3" style={{ color: '#FFFFFF' }}>
             <WcbMark /> Leaderboards
           </h1>
           <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
             Holder rank shows ownership. Lock rank shows locked amount. Prize pool credit is funded from live creator fee once markets are active.
           </p>
-          <p style={{ marginTop: 8, fontSize: '0.76rem', fontWeight: 700, color: '#6E6E6E' }}>
-            Holder source: {holderSource} / Lock source: {meta.source ?? 'Streamflow'} / Mint: {WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'N/A'}
-          </p>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: 14 }}>
+            <span className="data-pill">Holder source: {holderSource}</span>
+            <span className="data-pill">Lock source: {meta.source ?? 'Streamflow'}</span>
+            <span className="data-pill">Mint: {WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'N/A'}</span>
+          </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
           <button
             onClick={refreshAll}
-            style={{ padding: '0.5rem 0.875rem', borderRadius: 8, border: '1px solid #2A2A2A', background: '#111111', color: '#B3B3B3', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}
+            className="btn-secondary"
+            style={{ padding: '0.5rem 0.875rem', fontSize: '0.8rem' }}
           >
             Refresh
           </button>
@@ -536,7 +525,7 @@ export default function LeaderboardPage() {
           { label: 'Active Locks', value: (totals.totalLocks ?? totals.totalLockers).toLocaleString('en-US'), color: '#FFD36B' },
           { label: 'Prize Pool 24h', value: prizePoolQuery.isLoading ? 'Syncing' : formatUsd(prizePoolQuery.data?.prizePoolCredit24hUsd), color: '#14F195' },
         ].map((s) => (
-          <div key={s.label} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
+          <div key={s.label} className="card card-hover" style={{ padding: '1.25rem', textAlign: 'center', minHeight: 108 }}>
             <div style={{ fontSize: '1.4rem', fontWeight: 900, color: s.color }}>{s.value}</div>
             <div style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E', marginTop: '0.25rem' }}>{s.label}</div>
           </div>
@@ -587,13 +576,13 @@ export default function LeaderboardPage() {
       )}
 
       {/* Tier legend */}
-      <div className="card p-5 mb-6">
+      <div className="card p-5 mb-6" style={{ borderColor: 'rgba(242,181,68,0.16)' }}>
         <p style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E', marginBottom: '0.75rem' }}>
           Tier Thresholds
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {TIERS.map((t) => (
-            <div key={t.tier} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: t.tint, border: '1px solid #2A2A2A' }}>
+            <div key={t.tier} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: t.tint, border: '1px solid rgba(255,255,255,0.08)' }}>
               <div style={{ width: 10, height: 36, borderRadius: 9999, background: t.color, flexShrink: 0 }} aria-hidden="true" />
               <div>
                 <p style={{ fontSize: '0.85rem', fontWeight: 800, color: t.color }}>{t.tier}</p>
@@ -605,7 +594,7 @@ export default function LeaderboardPage() {
       </div>
 
       {/* Lock leaderboard table */}
-      <div style={{ marginBottom: '0.75rem' }}>
+      <div className="premium-panel" style={{ marginBottom: '0.75rem', padding: '1rem 1.15rem', borderRadius: 14 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
           <div>
             <p className="section-eyebrow" style={{ marginBottom: 6 }}>
@@ -619,7 +608,8 @@ export default function LeaderboardPage() {
             href={meta.streamflowDashboardUrl ?? `https://app.streamflow.finance/token-dashboard/solana/mainnet/${WCB_MINT}?type=lock`}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#F2B544', fontSize: '0.78rem', fontWeight: 800, textDecoration: 'none' }}
+            className="btn-secondary"
+            style={{ fontSize: '0.78rem', padding: '0.5rem 0.75rem' }}
           >
             Verify on Streamflow
           </a>
@@ -653,7 +643,7 @@ export default function LeaderboardPage() {
           <motion.div key="table" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card overflow-hidden">
             <table className="w-full" aria-label="$WCB Lock Leaderboard">
               <thead>
-                <tr style={{ background: '#111111', borderBottom: '1px solid #2A2A2A', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6E6E6E' }}>
+                <tr style={{ background: 'rgba(255,255,255,0.025)', borderBottom: '1px solid rgba(255,255,255,0.08)', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6E6E6E' }}>
                   <th className="py-3 px-4 text-left w-16" scope="col">Rank</th>
                   <th className="py-3 px-4 text-left" scope="col">Wallet</th>
                   <th className="py-3 px-4 text-right" scope="col">Locked</th>
@@ -669,9 +659,9 @@ export default function LeaderboardPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.04 }}
-                    style={{ borderBottom: '1px solid #2A2A2A', cursor: 'pointer', transition: 'background 0.15s' }}
+                    style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', cursor: 'pointer', transition: 'background 0.15s' }}
                     onClick={() => window.open(e.streamflowUrl, '_blank', 'noopener,noreferrer')}
-                    onMouseEnter={(el) => (el.currentTarget.style.background = '#171717')}
+                    onMouseEnter={(el) => (el.currentTarget.style.background = 'rgba(242,181,68,0.055)')}
                     onMouseLeave={(el) => (el.currentTarget.style.background = 'transparent')}
                     title={`View ${e.displayWallet} on Streamflow`}
                   >
@@ -699,7 +689,7 @@ export default function LeaderboardPage() {
                       </span>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', padding: '0.3rem 0.625rem', borderRadius: 8, border: '1px solid #2A2A2A', background: '#111111', color: '#B3B3B3', fontSize: '0.72rem', fontWeight: 700 }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', padding: '0.3rem 0.625rem', borderRadius: 8, border: '1px solid rgba(242,181,68,0.22)', background: 'rgba(242,181,68,0.07)', color: '#FFD36B', fontSize: '0.72rem', fontWeight: 800 }}>
                         View
                       </span>
                     </td>

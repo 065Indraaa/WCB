@@ -103,6 +103,9 @@ export function HeroSection() {
             }}>
               Solana Native
             </span>
+            <span className="data-pill">
+              Streamflow Locks
+            </span>
           </motion.div>
 
           {/* Headline */}
@@ -209,6 +212,19 @@ export function HeroSection() {
             >
               Lock & Earn Credits
             </Link>
+          </motion.div>
+
+          <motion.div
+            initial={rm ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.36 }}
+            style={{ display: 'flex', justifyContent: 'center', gap: '0.55rem', flexWrap: 'wrap', margin: '-1.65rem 0 2.25rem' }}
+          >
+            {['On-chain holder board', 'Lock-credit ranking', 'Creator-fee prize pool'].map((item) => (
+              <span key={item} className="data-pill">
+                {item}
+              </span>
+            ))}
           </motion.div>
 
           {/* Countdown card */}

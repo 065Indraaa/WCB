@@ -41,7 +41,7 @@ export function BrandLogo({ size = 'md', showText = true, className = '' }: Bran
       </div>
       {showText && (
         <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-          <span className="wcb-mark wcb-mark-hero" style={{ fontWeight: 950, fontSize: s.titleSize, letterSpacing: 0, lineHeight: 1.1 }}>
+          <span className="brand-token-mark" style={{ fontWeight: 950, fontSize: s.titleSize, letterSpacing: 0, lineHeight: 1.1 }}>
             $WCB
           </span>
           <span style={{ fontSize: s.subtitleSize, fontWeight: 800, color: '#F2B544', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 2 }}>

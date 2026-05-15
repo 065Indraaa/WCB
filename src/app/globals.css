@@ -35,6 +35,10 @@
 
   body {
     background-color: #070707;
+    background-image:
+      linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(7,7,7,0) 220px),
+      linear-gradient(90deg, rgba(242,181,68,0.035) 0%, rgba(7,7,7,0) 28%, rgba(153,69,255,0.03) 72%, rgba(7,7,7,0) 100%);
+    background-attachment: fixed;
     color: #FFFFFF;
     font-family: 'Aptos', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -91,21 +95,38 @@
 
   .wcb-mark {
     display: inline;
-    color: #14F195;
-    font-weight: 950;
+    color: #2CE7B7;
+    font-weight: 900;
     letter-spacing: 0;
-    text-shadow:
-      0 0 10px rgba(20,241,149,0.55),
-      0 0 24px rgba(20,241,149,0.32);
-    -webkit-text-fill-color: #14F195;
+    text-shadow: 0 0 12px rgba(20,241,149,0.18);
+    -webkit-text-fill-color: #2CE7B7;
   }
 
   .wcb-mark-hero {
-    background: linear-gradient(135deg, #14F195 0%, #FFD36B 48%, #9945FF 100%);
+    background: linear-gradient(135deg, #FFD36B 0%, #2CE7B7 54%, #BFA7FF 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 34px rgba(20,241,149,0.32);
+    text-shadow: 0 0 22px rgba(242,181,68,0.18);
+  }
+
+  .brand-token-mark {
+    color: #FFD36B;
+    -webkit-text-fill-color: #FFD36B;
+    text-shadow: 0 0 14px rgba(242,181,68,0.22);
+  }
+
+  .token-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.22rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(20,241,149,0.075);
+    border: 1px solid rgba(20,241,149,0.18);
+    color: #BFFBE7;
+    font-weight: 850;
+    white-space: nowrap;
   }
 
   /* Buttons */
@@ -118,16 +139,16 @@
     border-radius: 8px;
     font-weight: 700;
     font-size: 0.875rem;
-    background: #F2B544;
+    background: linear-gradient(180deg, #FFD36B 0%, #F2B544 100%);
     color: #070707;
-    border: none;
+    border: 1px solid rgba(255,211,107,0.45);
     cursor: pointer;
     transition: opacity 0.15s ease, transform 0.15s ease;
     text-decoration: none;
     white-space: nowrap;
     line-height: 1.4;
     font-variant-numeric: tabular-nums;
-    box-shadow: 0 6px 18px rgba(242,181,68,0.24);
+    box-shadow: 0 8px 22px rgba(242,181,68,0.22), inset 0 1px 0 rgba(255,255,255,0.28);
   }
   .btn-primary:hover {
     opacity: 0.9;
@@ -147,9 +168,9 @@
     border-radius: 8px;
     font-weight: 700;
     font-size: 0.875rem;
-    background: #111111;
+    background: rgba(17,17,17,0.86);
     color: #FFFFFF;
-    border: 1px solid #2A2A2A;
+    border: 1px solid rgba(255,255,255,0.1);
     cursor: pointer;
     transition: all 0.15s ease;
     text-decoration: none;
@@ -164,9 +185,12 @@
 
   /* Cards */
   .card {
-    background: #171717;
-    border: 1px solid #2A2A2A;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.012) 100%),
+      #141414;
+    border: 1px solid rgba(255,255,255,0.085);
     border-radius: 10px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.22);
   }
   .card-hover {
     transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
@@ -178,8 +202,10 @@
 
   /* Bet card */
   .bet-card {
-    background: #111111;
-    border: 1px solid #2A2A2A;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.006) 100%),
+      #101010;
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 8px;
     overflow: hidden;
     transition: border-color 0.15s ease;
@@ -289,7 +315,7 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    animation: live-badge-pulse 1.8s ease-in-out infinite;
+    animation: live-badge-pulse 2.4s ease-in-out infinite;
   }
 
   /* Mobile bottom nav bar */
@@ -380,6 +406,38 @@
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: #F2B544;
+  }
+
+  .data-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.42rem 0.68rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.045);
+    border: 1px solid rgba(255,255,255,0.09);
+    color: #B3B3B3;
+    font-size: 0.72rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .data-pill::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: #14F195;
+    box-shadow: 0 0 8px rgba(20,241,149,0.34);
+    flex-shrink: 0;
+  }
+
+  .premium-panel {
+    background:
+      linear-gradient(135deg, rgba(242,181,68,0.095) 0%, rgba(255,255,255,0.025) 36%, rgba(153,69,255,0.06) 100%),
+      #111111;
+    border: 1px solid rgba(242,181,68,0.18);
+    box-shadow: 0 24px 70px rgba(0,0,0,0.28);
   }
 
   /* Divider */

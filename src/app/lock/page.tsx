@@ -24,9 +24,8 @@ export default function LockPage() {
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
       {/* Urgency banner */}
       <div
+        className="premium-panel"
         style={{
-          background: 'linear-gradient(90deg, #111111 0%, #171717 100%)',
-          border: '1px solid rgba(242,181,68,0.22)',
           borderRadius: 12,
           padding: '0.875rem 1.25rem',
           marginBottom: '2rem',
@@ -37,7 +36,7 @@ export default function LockPage() {
         }}
       >
         <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>
-          Pre-launch lock window: earn a <strong>2x credit multiplier</strong> before markets open on <strong>June 11, 2026</strong>.
+          Pre-launch lock window: credits are calculated from active Streamflow locks and become visible after wallet connection.
         </p>
         <Link href="/docs" className="btn-secondary" style={{ marginLeft: 'auto' }}>
           Read Docs
@@ -47,19 +46,9 @@ export default function LockPage() {
       {/* Page header */}
       <div style={{ marginBottom: '2.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-          <span
-            style={{
-              padding: '0.2rem 0.75rem',
-              borderRadius: 9999,
-              fontSize: '0.7rem',
-              fontWeight: 800,
-              background: 'rgba(20,241,149,0.12)',
-              color: '#14F195',
-              border: '1px solid rgba(20,241,149,0.28)',
-            }}
-          >
-            LIVE NOW
-          </span>
+          <span className="data-pill">Streamflow live</span>
+          <span className="data-pill">Wallet credits auto-detect</span>
+          <span className="data-pill">365-day tier cap</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
@@ -70,7 +59,7 @@ export default function LockPage() {
               Lock early. Enter launch with more credit.
             </h1>
             <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
-              Lock $WCB through Streamflow Finance to reserve betting credits before launch. Longer lock periods earn higher multipliers, and early locks receive a stronger launch position when markets open on June 11, 2026.
+              Lock $WCB through Streamflow Finance to reserve betting credits before launch. The app reads active locks from the configured mint, calculates credits from locked amount and unlock duration, then displays the position when the wallet connects.
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -95,7 +84,7 @@ export default function LockPage() {
           <div
             key={s.label}
             className="card"
-            style={{ padding: '1.25rem', textAlign: 'center' }}
+            style={{ padding: '1.25rem', textAlign: 'center', minHeight: 112 }}
           >
             <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#F2B544' }}>{s.value}</div>
             <div style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#B3B3B3', marginTop: '0.25rem' }}>
