@@ -12,6 +12,21 @@ import { WCB_MINT } from '@/lib/wallet';
 import { WalletButtonDynamic, WalletMultiButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 import type { WalletEntry } from '@/types/leaderboard';
 
+function WcbMark({ children = '$WCB' }: { children?: string }) {
+  return (
+    <span
+      style={{
+        color: '#14F195',
+        fontWeight: 900,
+        textShadow: '0 0 18px rgba(20,241,149,0.38)',
+        WebkitTextFillColor: '#14F195',
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
 const TIERS = [
   { tier: 'Bronze',   color: '#CD7F32', tint: 'rgba(205,127,50,0.12)', min: '1' },
   { tier: 'Silver',   color: '#B3B3B3', tint: 'rgba(179,179,179,0.12)', min: '100K' },
@@ -162,7 +177,11 @@ function MyPositionBanner() {
       {/* Stats */}
       <div className="stats-grid-4" style={{ padding: '1rem 1.25rem' }}>
         {[
-          { label: 'My Locked', value: formatTokenAmount(stats.totalLocked) + ' $WCB', highlight: stats.totalLocked > 0 },
+          {
+            label: 'My Locked',
+            value: <>{formatTokenAmount(stats.totalLocked)} <WcbMark /></>,
+            highlight: stats.totalLocked > 0,
+          },
           { label: 'My Credits', value: formatCredits(stats.totalCredits), highlight: stats.totalCredits > 0 },
           { label: 'Active Locks', value: stats.activeLocks.toString(), highlight: stats.activeLocks > 0 },
           { label: 'Longest Lock', value: stats.longestDays > 0 ? stats.longestDays + 'd' : '-', highlight: stats.longestDays > 0 },
@@ -178,7 +197,7 @@ function MyPositionBanner() {
       {!hasLocks && (
         <div style={{ padding: '0.75rem 1.25rem', borderTop: '1px solid #2A2A2A', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
           <p style={{ fontSize: '0.8rem', color: '#B3B3B3' }}>
-            Lock $WCB to earn credits and appear on the leaderboard
+            Lock <WcbMark /> to earn credits and appear on the leaderboard
           </p>
           <a href="/lock" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.4rem 0.875rem', borderRadius: 8, background: '#F2B544', color: '#070707', fontSize: '0.8rem', fontWeight: 800, textDecoration: 'none' }}>
             Lock Now
@@ -415,7 +434,7 @@ function HolderLeaderboardPanel({
                       </td>
                       <td className="py-4 px-4 text-right">
                         <span style={{ fontWeight: 900, color: '#FFFFFF', fontSize: '0.9rem' }}>
-                          {formatTokenAmount(entry.holdings)} $WCB
+                          {formatTokenAmount(entry.holdings)} <WcbMark />
                         </span>
                       </td>
                       <td className="py-4 px-4 text-center hidden sm:table-cell">
@@ -450,9 +469,8 @@ export default function LeaderboardPage() {
   const holderQuery = useLeaderboard(1, 100);
   const prizePoolQuery = usePrizePoolMetrics();
   const lockLeaderboard = [...leaderboard].sort((a, b) => {
-    if (b.totalCredits !== a.totalCredits) return b.totalCredits - a.totalCredits;
     if (b.totalLocked !== a.totalLocked) return b.totalLocked - a.totalLocked;
-    return b.holdings - a.holdings;
+    return b.totalCredits - a.totalCredits;
   });
   const holderEntries = holderQuery.data?.entries ?? [];
   const holderTotal = holderQuery.data?.total ?? holderEntries.length;
@@ -473,7 +491,7 @@ export default function LeaderboardPage() {
         <div>
           <p className="section-eyebrow mb-2">Top Lockers</p>
           <h1 className="text-4xl sm:text-5xl font-black mb-3" style={{ color: '#FFFFFF' }}>
-            $WCB Leaderboards
+            <WcbMark /> Leaderboards
           </h1>
           <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
             Holder rank shows ownership. Lock rank shows credit depth. Prize pool credit is funded from live creator fee once markets are active.
@@ -537,7 +555,7 @@ export default function LeaderboardPage() {
               <div style={{ width: 10, height: 36, borderRadius: 9999, background: t.color, flexShrink: 0 }} aria-hidden="true" />
               <div>
                 <p style={{ fontSize: '0.85rem', fontWeight: 800, color: t.color }}>{t.tier}</p>
-                <p style={{ fontSize: '0.7rem', fontWeight: 600, color: '#B3B3B3' }}>{t.min}+ $WCB</p>
+                <p style={{ fontSize: '0.7rem', fontWeight: 600, color: '#B3B3B3' }}>{t.min}+ <WcbMark /></p>
               </div>
             </div>
           ))}
@@ -552,7 +570,7 @@ export default function LeaderboardPage() {
               Lock Leaderboard
             </p>
             <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#FFFFFF' }}>
-              Top wallets by Streamflow lock credits
+              Top wallets by Streamflow locked amount
             </h2>
           </div>
           <a
@@ -586,8 +604,8 @@ export default function LeaderboardPage() {
         ) : lockLeaderboard.length === 0 ? (
           <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="card p-16 text-center">
             <p style={{ fontSize: '1.1rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.5rem' }}>No data yet</p>
-            <p style={{ color: '#B3B3B3', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Lock $WCB to establish a leaderboard position.</p>
-            <a href="/lock" className="btn-primary" style={{ display: 'inline-flex' }}>Lock $WCB Now</a>
+            <p style={{ color: '#B3B3B3', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Lock <WcbMark /> to establish a leaderboard position.</p>
+            <a href="/lock" className="btn-primary" style={{ display: 'inline-flex' }}>Lock <WcbMark /> Now</a>
           </motion.div>
         ) : (
           <motion.div key="table" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card overflow-hidden">
@@ -625,7 +643,7 @@ export default function LeaderboardPage() {
                     </td>
                     <td className="py-4 px-4 text-right">
                       <span style={{ fontWeight: 800, color: '#FFFFFF', fontSize: '0.9rem' }}>
-                        {formatTokenAmount(e.totalLocked)} $WCB
+                        {formatTokenAmount(e.totalLocked)} <WcbMark />
                       </span>
                     </td>
                     <td className="py-4 px-4 text-right hidden sm:table-cell">
@@ -650,7 +668,7 @@ export default function LeaderboardPage() {
 
             <div style={{ padding: '0.875rem 1.25rem', background: '#111111', borderTop: '1px solid #2A2A2A', textAlign: 'center' }}>
               <p style={{ fontSize: '0.72rem', color: '#6E6E6E' }}>
-                Top 10 credit positions / Token:{' '}
+                Top 10 locked positions / Token:{' '}
                 <a href={`https://solscan.io/token/${WCB_MINT}`} target="_blank" rel="noopener noreferrer" style={{ color: '#F2B544', textDecoration: 'none' }}>
                   {WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'N/A'}
                 </a>
@@ -667,10 +685,10 @@ export default function LeaderboardPage() {
           Want to climb the leaderboard?
         </p>
         <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>
-          Lock more $WCB for longer to earn more credits and secure your tier.
+          Lock more <WcbMark /> for longer to earn more credits and secure your tier.
         </p>
         <a href="/lock" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.875rem 2rem', borderRadius: 12, background: '#F2B544', color: '#070707', fontWeight: 800, fontSize: '0.95rem', textDecoration: 'none', boxShadow: '0 8px 22px rgba(242,181,68,0.24)' }}>
-          Lock $WCB Now
+          Lock <WcbMark /> Now
         </a>
       </div>
     </div>

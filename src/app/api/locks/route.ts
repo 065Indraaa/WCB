@@ -15,7 +15,7 @@ import { WCB_MINT, WCB_TOKEN_DECIMALS } from '@/lib/tokenConfig';
 import { buildHeliusRpcUrl } from '@/lib/server/helius';
 
 function streamUrl(id: string) {
-  return `https://app.streamflow.finance/stream/solana/mainnet/${id}`;
+  return `https://app.streamflow.finance/contract/solana/mainnet/${id}`;
 }
 
 function tokenAmount(stream: Stream) {
@@ -103,7 +103,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    locks.sort((a, b) => b.credits - a.credits);
+    locks.sort((a, b) => {
+      if (b.amount !== a.amount) return b.amount - a.amount;
+      return b.credits - a.credits;
+    });
     return NextResponse.json({
       locks,
       total: locks.length,

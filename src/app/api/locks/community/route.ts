@@ -39,7 +39,7 @@ function dashboardUrl() {
 }
 
 function streamUrl(id: string) {
-  return `https://app.streamflow.finance/stream/solana/mainnet/${id}`;
+  return `https://app.streamflow.finance/contract/solana/mainnet/${id}`;
 }
 
 function tokenAmount(stream: Stream) {
@@ -96,7 +96,10 @@ export async function GET() {
 
     const leaderboard = Array.from(byWallet.values())
       .map((entry) => {
-        const sortedLocks = [...entry.locks].sort((a, b) => b.credits - a.credits);
+        const sortedLocks = [...entry.locks].sort((a, b) => {
+          if (b.amount !== a.amount) return b.amount - a.amount;
+          return b.credits - a.credits;
+        });
         const totalLocked = sortedLocks.reduce((sum, lock) => sum + lock.amount, 0);
         const totalCredits = sortedLocks.reduce((sum, lock) => sum + lock.credits, 0);
 
@@ -113,8 +116,8 @@ export async function GET() {
         };
       })
       .sort((a, b) => {
-        if (b.totalCredits !== a.totalCredits) return b.totalCredits - a.totalCredits;
-        return b.totalLocked - a.totalLocked;
+        if (b.totalLocked !== a.totalLocked) return b.totalLocked - a.totalLocked;
+        return b.totalCredits - a.totalCredits;
       });
 
     leaderboard.forEach((entry, index) => {
