@@ -29,7 +29,7 @@ function statusLabel(status: MatchDisplayStatus, elapsed?: number) {
   }
 }
 
-/** UTC kickoff — no hydration mismatch */
+/** UTC kickoff, no hydration mismatch. */
 function utcKickoff(iso: string): { date: string; time: string } {
   const d = new Date(iso);
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -42,7 +42,7 @@ function utcKickoff(iso: string): { date: string; time: string } {
 export function MatchCard({ match }: MatchCardProps) {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { pct, myChoice, total, loaded } = usePrediction(
+  const { pct, previewOdds, myChoice, total, loaded } = usePrediction(
     match.id,
     match.homeTeam.fifaRanking,
     match.awayTeam.fifaRanking,
@@ -58,7 +58,7 @@ export function MatchCard({ match }: MatchCardProps) {
 
   return (
     <>
-      {/* ── Compact horizontal bet row ── */}
+      {/* Compact horizontal bet row */}
       <article
         className="bet-card"
         aria-label={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
@@ -136,16 +136,16 @@ export function MatchCard({ match }: MatchCardProps) {
             <TeamFlag code={match.awayTeam.code} name={match.awayTeam.name} size="sm" />
           </div>
 
-          {/* Predict button */}
+          {/* Preview odds */}
           <button
             onClick={(e) => { e.stopPropagation(); setModalOpen(true); }}
             className={`odds-btn${myChoice ? ' active' : ''}`}
             style={{ flexShrink: 0, marginLeft: 4 }}
-            aria-label={`Predict ${match.homeTeam.name} vs ${match.awayTeam.name}`}
+            aria-label={`Open market preview for ${match.homeTeam.name} vs ${match.awayTeam.name}`}
           >
-            <span className="odds-label">{myChoice ? 'Voted' : 'Predict'}</span>
+            <span className="odds-label">Preview</span>
             <span style={{ fontSize: '0.82rem', fontVariantNumeric: 'tabular-nums' }}>
-              {myChoice ? 'OK' : `${pct.home}%`}
+              {previewOdds.home}
             </span>
           </button>
         </div>
@@ -175,13 +175,13 @@ export function MatchCard({ match }: MatchCardProps) {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
             <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#F2B544', fontVariantNumeric: 'tabular-nums' }}>{pct.home}%</span>
             <span style={{ fontSize: '0.6rem', fontWeight: 600, color: '#6E6E6E', fontVariantNumeric: 'tabular-nums' }}>
-              {loaded ? `${total.toLocaleString()} votes` : '...'} / {pct.draw}% draw
+              {loaded ? `${total.toLocaleString()} votes` : '...'} / pre-launch sentiment
             </span>
             <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#9945FF', fontVariantNumeric: 'tabular-nums' }}>{pct.away}%</span>
           </div>
         </div>
 
-        {/* Venue — desktop only via CSS */}
+        {/* Venue, desktop only via CSS */}
         <div
           style={{ padding: '0 10px 7px', display: 'none' }}
           className="md:block"

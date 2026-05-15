@@ -9,9 +9,9 @@ export const runtime = 'edge';
  * Keeps LIVESCORE_API_KEY server-side (never sent to the browser).
  *
  * Query params forwarded:
- *   date   – ISO date string (YYYY-MM-DD)
- *   status – MatchStatus code (e.g. "1H", "FT")
- *   league – numeric league ID (defaults to FIFA World Cup)
+ *   date   - ISO date string (YYYY-MM-DD)
+ *   status - MatchStatus code (e.g. "1H", "FT")
+ *   league - numeric league ID (defaults to FIFA World Cup)
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);

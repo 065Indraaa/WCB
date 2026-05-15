@@ -9,7 +9,7 @@ import { SOLANA_RPC } from '@/lib/wallet';
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 export function WalletContextProvider({ children }: { children: React.ReactNode }) {
-  // No specific adapters needed — wallet-adapter-react-ui handles wallet detection
+  // No specific adapters needed; wallet-adapter-react-ui handles wallet detection.
   // via the Wallet Standard (Phantom, Solflare, Backpack, etc. auto-register)
   const wallets = useMemo(() => [], []);
 

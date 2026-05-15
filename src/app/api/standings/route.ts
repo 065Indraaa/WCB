@@ -9,7 +9,7 @@ export const runtime = 'edge';
  * Keeps LIVESCORE_API_KEY server-side (never sent to the browser).
  *
  * Query params:
- *   group – group letter (e.g. "A") to filter results client-side
+ *   group - group letter (e.g. "A") to filter results client-side
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);

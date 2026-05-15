@@ -78,7 +78,7 @@ function LockRow({ lock }: { lock: ReturnType<typeof useWalletLocks>['locks'][0]
             )}
           </div>
           <p style={{ fontSize: '0.75rem', color: '#B3B3B3' }}>
-            {lock.durationDays} days · Unlocks {unlockDate}
+            {lock.durationDays} days | Unlocks {unlockDate}
           </p>
         </div>
         <div style={{ textAlign: 'right' }}>
@@ -180,7 +180,7 @@ export function WalletDashboard() {
             cursor: 'pointer',
           }}
         >
-          ↻ Refresh
+          Refresh
         </button>
       </div>
 
@@ -189,7 +189,7 @@ export function WalletDashboard() {
         <StatCard label="Total Locked" value={formatTokenAmount(stats.totalLocked)} sub="$WCB tokens" color="#FFFFFF" />
         <StatCard label="Total Credits" value={formatCredits(stats.totalCredits)} sub="available to bet" color="#F2B544" />
         <StatCard label="Active Locks" value={stats.activeLocks.toString()} sub="on Streamflow" />
-        <StatCard label="Longest Lock" value={stats.longestDays > 0 ? `${stats.longestDays}d` : '—'} sub="duration" />
+        <StatCard label="Longest Lock" value={stats.longestDays > 0 ? `${stats.longestDays}d` : '-'} sub="duration" />
       </div>
 
       {/* Locks list */}

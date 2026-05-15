@@ -9,7 +9,7 @@ export const runtime = 'edge';
  * Keeps LIVESCORE_API_KEY server-side (never sent to the browser).
  *
  * Query params:
- *   type – 'goals' | 'assists' | 'cleansheets' | 'cards'
+ *   type - 'goals' | 'assists' | 'cleansheets' | 'cards'
  *          Maps to the appropriate api-football endpoint.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {

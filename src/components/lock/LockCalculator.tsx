@@ -333,7 +333,7 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
         </button>
 
         <p style={{ fontSize: '0.72rem', color: '#6E6E6E', textAlign: 'center', lineHeight: 1.5 }}>
-          Powered by <strong style={{ color: '#B3B3B3' }}>Streamflow Finance</strong> / Tokens locked on-chain / No early withdrawal / Early stage only
+          Powered by <strong style={{ color: '#B3B3B3' }}>Streamflow Finance</strong>. Tokens locked on-chain. No early withdrawal. Early stage only.
         </p>
       </div>
     </div>

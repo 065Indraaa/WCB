@@ -10,7 +10,7 @@ interface WalletButtonProps {
 }
 
 /**
- * WalletButton — wraps WalletMultiButton from @solana/wallet-adapter-react-ui
+ * WalletButton wraps WalletMultiButton from @solana/wallet-adapter-react-ui
  * with custom styling to match the $WCB premium theme.
  *
  * When connected, shows truncated address + disconnect option.

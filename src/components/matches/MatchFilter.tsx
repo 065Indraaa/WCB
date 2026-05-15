@@ -22,8 +22,8 @@ export function MatchFilter({ value, onChange, liveCount = 0 }: MatchFilterProps
         display: 'inline-flex',
         padding: '3px',
         borderRadius: 6,
-        background: '#161B22',
-        border: '1px solid #30363D',
+        background: '#111111',
+        border: '1px solid #2A2A2A',
         gap: 2,
       }}
       role="tablist"
@@ -47,8 +47,8 @@ export function MatchFilter({ value, onChange, liveCount = 0 }: MatchFilterProps
               cursor: 'pointer',
               border: 'none',
               transition: 'all 0.1s ease',
-              background: active ? '#238636' : 'transparent',
-              color: active ? '#ffffff' : '#8B949E',
+              background: active ? 'rgba(242,181,68,0.14)' : 'transparent',
+              color: active ? '#FFD36B' : '#B3B3B3',
               whiteSpace: 'nowrap',
             }}
           >
@@ -59,7 +59,7 @@ export function MatchFilter({ value, onChange, liveCount = 0 }: MatchFilterProps
                   width: 5,
                   height: 5,
                   borderRadius: '50%',
-                  background: active ? '#ffffff' : '#DA3633',
+                  background: active ? '#FFD36B' : '#EF4444',
                   animation: 'live-pulse 1.4s ease-in-out infinite',
                   flexShrink: 0,
                 }}
@@ -70,8 +70,8 @@ export function MatchFilter({ value, onChange, liveCount = 0 }: MatchFilterProps
             {f.id === 'live' && liveCount > 0 && (
               <span
                 style={{
-                  background: active ? 'rgba(255,255,255,0.25)' : '#DA3633',
-                  color: '#ffffff',
+                  background: active ? 'rgba(242,181,68,0.22)' : 'rgba(239,68,68,0.18)',
+                  color: active ? '#FFD36B' : '#EF4444',
                   fontSize: '0.6rem',
                   fontWeight: 800,
                   padding: '1px 5px',

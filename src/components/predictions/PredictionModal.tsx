@@ -22,7 +22,7 @@ const VARIANT_COLORS = {
 export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps) {
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
-  const { pct, myChoice, total, vote, loaded } = usePrediction(
+  const { pct, previewOdds, myChoice, total, vote, loaded } = usePrediction(
     match?.id ?? 0,
     match?.homeTeam.fifaRanking,
     match?.awayTeam.fifaRanking,
@@ -43,17 +43,17 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
 
   if (!match) return null;
 
-  // UTC date string — consistent server/client
+  // UTC date string, consistent server/client.
   const kickoffUTC = (() => {
     const d = new Date(match.kickoff);
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()} / ${String(d.getUTCHours()).padStart(2,'0')}:${String(d.getUTCMinutes()).padStart(2,'0')} UTC`;
   })();
 
-  const options: { choice: PredictionChoice; label: string; pct: number }[] = [
-    { choice: 'home', label: match.homeTeam.name, pct: pct.home },
-    { choice: 'draw', label: 'Draw',              pct: pct.draw },
-    { choice: 'away', label: match.awayTeam.name, pct: pct.away },
+  const options: { choice: PredictionChoice; label: string; pct: number; odds: string }[] = [
+    { choice: 'home', label: match.homeTeam.name, pct: pct.home, odds: previewOdds.home },
+    { choice: 'draw', label: 'Draw',              pct: pct.draw, odds: previewOdds.draw },
+    { choice: 'away', label: match.awayTeam.name, pct: pct.away, odds: previewOdds.away },
   ];
 
   return (
@@ -93,10 +93,10 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
               <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #2A2A2A', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
                 <div>
                   <p className="section-eyebrow" style={{ marginBottom: '0.25rem' }}>
-                    Community Market
+                    Market Preview
                   </p>
                   <h2 id="pred-title" style={{ fontSize: '1.2rem', fontWeight: 900, color: '#FFFFFF', margin: 0 }}>
-                    Who wins this match?
+                    Pre-launch prices
                   </h2>
                   <p style={{ fontSize: '0.8rem', color: '#B3B3B3', marginTop: '0.25rem' }}>
                     {match.group} / {kickoffUTC}
@@ -136,10 +136,10 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
               {/* Vote options */}
               <div style={{ padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
                 <p style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6E6E6E', marginBottom: '0.25rem' }}>
-                  {loaded ? `${total.toLocaleString()} community votes` : 'Cast your vote'}
+                  {loaded ? `${total.toLocaleString()} community votes` : 'Cast your pick'}
                 </p>
 
-                {options.map(({ choice, label, pct: p }) => {
+                {options.map(({ choice, label, pct: p, odds }) => {
                   const c = VARIANT_COLORS[choice];
                   const isSelected = myChoice === choice;
                   return (
@@ -161,7 +161,7 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
                         boxShadow: isSelected ? `0 0 0 3px ${c.border}22` : 'none',
                       }}
                     >
-                      {/* Fill bar — animates on vote */}
+                      {/* Fill bar animates on vote. */}
                       <motion.div
                         style={{
                           position: 'absolute',
@@ -177,31 +177,32 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
 
                       {/* Content */}
                       <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          {isSelected && (
-                            <motion.span
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              style={{ width: 10, height: 10, borderRadius: '50%', background: c.border, flexShrink: 0 }}
-                              aria-hidden="true"
-                            />
-                          )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
+                          <span style={{ width: 10, height: 10, borderRadius: '50%', background: isSelected ? c.border : '#3A3A3A', flexShrink: 0 }} aria-hidden="true" />
                           <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#FFFFFF' }}>
                             {label}
                           </span>
                         </div>
-                        <motion.span
-                          key={p}
-                          initial={{ opacity: 0, y: -4 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          style={{ fontSize: '1.1rem', fontWeight: 900, color: c.text }}
-                        >
-                          {p}%
-                        </motion.span>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.55rem', flexShrink: 0 }}>
+                          <motion.span
+                            key={p}
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            style={{ fontSize: '0.86rem', fontWeight: 800, color: c.text }}
+                          >
+                            {p}%
+                          </motion.span>
+                          <span style={{ fontSize: '1.08rem', fontWeight: 900, color: '#FFFFFF', fontVariantNumeric: 'tabular-nums' }}>
+                            {odds}
+                          </span>
+                        </div>
                       </div>
                     </button>
                   );
                 })}
+                <p style={{ fontSize: '0.72rem', color: '#6E6E6E', lineHeight: 1.45, marginTop: '0.15rem' }}>
+                  Prices are indicative only and based on community sentiment. Real money markets are not live yet.
+                </p>
               </div>
 
               {/* Voted confirmation */}
@@ -219,7 +220,7 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
                         Your pick: <strong>
                           {myChoice === 'home' ? match.homeTeam.name : myChoice === 'away' ? match.awayTeam.name : 'Draw'}
                         </strong>
-                        {' '}- you can change it anytime
+                        {' '}- you can change it anytime.
                       </p>
                     </div>
                   </motion.div>
@@ -229,7 +230,7 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
               {/* Footer CTA */}
               <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid #2A2A2A', marginTop: '0.75rem' }}>
                 <p style={{ fontSize: '0.75rem', color: '#B3B3B3', textAlign: 'center', marginBottom: '0.75rem', lineHeight: 1.5 }}>
-                  <strong style={{ color: '#FFFFFF' }}>Betting opens June 11, 2026.</strong> Hold $WCB to unlock priority market access and betting credits.
+                  <strong style={{ color: '#FFFFFF' }}>Betting opens June 11, 2026.</strong> Lock $WCB before launch to receive credits for the opening market window.
                 </p>
                 <a
                   href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}

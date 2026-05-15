@@ -16,12 +16,12 @@ const TIERS = [
 
 const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? '';
 
-// ── My Position Banner ────────────────────────────────────────────────────────
+// My position banner
 function MyPositionBanner() {
   const { connected, publicKey } = useWallet();
   const { stats, loading, locks } = useWalletLocks();
 
-  // NOT connected — teaser to connect
+  // Not connected: teaser to connect.
   if (!connected) {
     return (
       <div
@@ -71,7 +71,7 @@ function MyPositionBanner() {
     );
   }
 
-  // Connected — show real stats
+  // Connected: show real stats.
   const hasLocks = locks.length > 0;
 
   return (
@@ -129,7 +129,7 @@ function MyPositionBanner() {
   );
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
+// Main page
 export default function LeaderboardPage() {
   const { leaderboard, totals, loading, error, refetch } = useCommunityLocks();
 
@@ -172,7 +172,7 @@ export default function LeaderboardPage() {
         ))}
       </div>
 
-      {/* My position — changes based on wallet state */}
+      {/* My position changes based on wallet state */}
       <MyPositionBanner />
 
       {/* Tier legend */}

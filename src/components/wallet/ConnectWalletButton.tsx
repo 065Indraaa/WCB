@@ -124,7 +124,7 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
     );
   }
 
-  // Not connected — show wallet selector
+  // Not connected: show wallet selector.
   return (
     <div style={{ position: 'relative' }} ref={dropdownRef}>
       <button

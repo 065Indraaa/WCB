@@ -54,7 +54,7 @@ export default function MatchesPage() {
   return (
     <div className="page-layout">
 
-      {/* ── Main column ── */}
+      {/* Main column */}
       <div>
         {/* Page header */}
         <div style={{ marginBottom: '16px' }}>
@@ -64,7 +64,7 @@ export default function MatchesPage() {
             </h1>
           </div>
           <p style={{ color: '#B3B3B3', fontSize: '0.8rem', marginTop: 4 }}>
-            {all.length} matches / Predict fixtures and review community market sentiment.
+            {all.length} matches / Pre-launch prices are sentiment previews. Live betting opens June 11, 2026.
           </p>
         </div>
 
@@ -123,7 +123,7 @@ export default function MatchesPage() {
         )}
       </div>
 
-      {/* ── Sidebar ── */}
+      {/* Sidebar */}
       <aside className="page-sidebar">
         {/* Token widget */}
         <div className="bet-card" style={{ padding: '12px' }}>

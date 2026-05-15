@@ -1,5 +1,5 @@
 /**
- * Client-side prediction system — pure static mockup.
+ * Client-side prediction system for pre-launch market sentiment.
  *
  * All data lives in memory (no localStorage, no API).
  * This avoids ALL hydration mismatches.
@@ -19,7 +19,7 @@ export interface PredictionStats {
   myChoice: PredictionChoice | null;
 }
 
-// ─── In-memory store ──────────────────────────────────────────────────────────
+// In-memory store
 
 interface Store {
   votes: Record<number, { home: number; draw: number; away: number }>;
@@ -42,7 +42,7 @@ export function subscribe(fn: () => void): () => void {
   return () => store.listeners.delete(fn);
 }
 
-// ─── Seed ─────────────────────────────────────────────────────────────────────
+// Seed
 
 /**
  * Deterministic baseline votes per match.
@@ -62,7 +62,7 @@ function seedFor(matchId: number, homeRank: number, awayRank: number) {
   const drawPct = Math.max(12, Math.min(30, Math.round(22 + noise * 6)));
   const awayPct = Math.max(20, 100 - homePct - drawPct);
 
-  // Scale to realistic vote counts (800–2400 baseline)
+  // Scale to realistic vote counts (800-2400 baseline).
   const scale = 800 + Math.round(noise * 1600);
   return {
     home: Math.round((homePct / 100) * scale),
@@ -77,7 +77,7 @@ function ensureSeeded(matchId: number, homeRank: number, awayRank: number) {
   }
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
+// Public API
 
 export function getPrediction(
   matchId: number,
@@ -125,4 +125,11 @@ export function toPercent(stats: PredictionStats): { home: number; draw: number;
   const d = Math.round((draw / total) * 100);
   const a = 100 - h - d;
   return { home: h, draw: d, away: a };
+}
+
+export function toPreviewOdds(percent: number): string {
+  const safePercent = Math.max(1, Math.min(95, percent));
+  const fairDecimal = 100 / safePercent;
+  const previewPrice = fairDecimal * 0.96;
+  return Math.max(1.05, Math.min(15, previewPrice)).toFixed(2);
 }

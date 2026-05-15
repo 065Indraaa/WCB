@@ -2,7 +2,7 @@
  * GET /api/locks?wallet=<address>
  *
  * Fetches $WCB locks for a wallet by querying Streamflow accounts
- * directly via Helius RPC — no Streamflow SDK needed.
+ * directly via Helius RPC. No Streamflow SDK needed.
  *
  * Streamflow stores each lock as a Solana account owned by the
  * Streamflow program. We use getProgramAccounts with a memcmp filter
@@ -47,7 +47,7 @@ function decodeStreamflowAccount(data: string): {
 } | null {
   try {
     const buf = Buffer.from(data, 'base64');
-    // Streamflow account layout (simplified — key offsets):
+    // Streamflow account layout with simplified key offsets:
     // [0..8]   discriminator
     // [8..40]  sender pubkey (32 bytes)
     // [40..72] recipient pubkey (32 bytes)

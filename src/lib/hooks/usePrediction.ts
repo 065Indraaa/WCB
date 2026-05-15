@@ -6,6 +6,7 @@ import {
   castPrediction,
   subscribe,
   toPercent,
+  toPreviewOdds,
   type PredictionChoice,
   type PredictionStats,
 } from '@/lib/predictions';
@@ -39,10 +40,16 @@ export function usePrediction(matchId: number, homeRank = 50, awayRank = 50) {
   );
 
   const pct = stats ? toPercent(stats) : { home: 33, draw: 34, away: 33 };
+  const previewOdds = {
+    home: toPreviewOdds(pct.home),
+    draw: toPreviewOdds(pct.draw),
+    away: toPreviewOdds(pct.away),
+  };
 
   return {
     stats,
     pct,
+    previewOdds,
     myChoice: stats?.myChoice ?? null,
     total: stats?.total ?? 0,
     vote,

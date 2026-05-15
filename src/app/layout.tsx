@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: '$WCB | WORLDCUPBET - World Cup 2026',
-    description: 'Predict every match. Hold $WCB. Win the cup. Built on Solana.',
+    description: 'Predict every match. Hold $WCB. Built for World Cup markets on Solana.',
     creator: '@WCBLIVE',
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },

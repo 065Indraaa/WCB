@@ -20,10 +20,10 @@ function PromoBanner() {
     >
       <div className="promo-banner-inner" style={{ maxWidth: '80rem', margin: '0 auto' }}>
         {[
-          'Early lockers get 2x credit bonus',
-          '104 matches open for predictions',
-          'Lock $WCB to earn betting credits',
-          'Leaderboard rewards for top predictors',
+          'Pre-launch market previews are open',
+          'Betting activates June 11, 2026',
+          'Lock $WCB to reserve betting credits',
+          'Leaderboard tiers track wallet activity',
         ].map((t) => (
           <span key={t} style={{ fontSize: '0.72rem', fontWeight: 700, color: '#B3B3B3', whiteSpace: 'nowrap' }}>
             {t}
@@ -132,10 +132,10 @@ function SportsbookPreview() {
             Market Preview
           </p>
           <h2 style={{ fontSize: 'clamp(1.35rem, 3vw, 2.2rem)', fontWeight: 900, color: '#FFFFFF', margin: '0 0 10px', lineHeight: 1.12 }}>
-            Built for football markets, not a generic token page.
+            Market previews before the opening line.
           </h2>
           <p style={{ color: '#B3B3B3', fontSize: '0.95rem', lineHeight: 1.7, maxWidth: 560, marginBottom: 18 }}>
-            WCB combines match predictions, wallet-based credits, and on-chain token access in one clean matchday interface.
+            WCB shows pre-launch sentiment, indicative prices, wallet-based credits, and on-chain token access in one clean matchday interface.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10, maxWidth: 520 }}>
             {metrics.map((item) => (
@@ -182,7 +182,7 @@ export default function Home() {
           <section style={{ marginBottom: '24px' }}>
             <div className="section-header" style={{ marginBottom: '12px' }}>
               <h2 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#F0FDF4', margin: 0, flex: 1 }}>
-                Pick winners before the market moves
+                Pre-launch market board
               </h2>
               <Link href="/matches" style={{ fontSize: '0.75rem', fontWeight: 600, color: '#F2B544', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                 All matches
@@ -249,7 +249,7 @@ export default function Home() {
                   Early holders get priority access.
                 </h2>
                 <p style={{ fontSize: '0.85rem', color: '#B3B3B3', marginBottom: '16px', maxWidth: '32rem', lineHeight: 1.7 }}>
-                  Betting opens on June 11, 2026. Hold $WCB now for priority access, lower fees, and leaderboard tier badges before the rush.
+                  Betting opens on June 11, 2026. Lock $WCB now to reserve credits and prepare for the first market window.
                 </p>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <a

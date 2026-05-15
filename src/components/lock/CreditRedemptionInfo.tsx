@@ -1,5 +1,5 @@
 /**
- * CreditRedemptionInfo — explains how credits work and how to redeem them.
+ * CreditRedemptionInfo explains how credits work and how to redeem them.
  * Static informational component, no interactivity needed.
  */
 export function CreditRedemptionInfo() {
