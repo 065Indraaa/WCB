@@ -63,8 +63,8 @@ export default function MatchesPage() {
               Match Center
             </h1>
           </div>
-          <p style={{ color: '#8B949E', fontSize: '0.8rem', marginTop: 4 }}>
-            {all.length} matches · Predict any match and see community sentiment
+          <p style={{ color: '#B3B3B3', fontSize: '0.8rem', marginTop: 4 }}>
+            {all.length} matches / Predict fixtures and review community market sentiment.
           </p>
         </div>
 
@@ -84,7 +84,7 @@ export default function MatchesPage() {
           <ImagePlaceholder
             width="100%"
             height={90}
-            label="Leaderboard Banner 728×90"
+            label="Leaderboard Banner 728 x 90"
             rounded={6}
           />
         </div>
@@ -92,7 +92,6 @@ export default function MatchesPage() {
         {/* Match list */}
         {dateKeys.length === 0 ? (
           <div className="bet-card" style={{ padding: '3rem', textAlign: 'center' }}>
-            <p style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>⚽</p>
             <p style={{ fontWeight: 700, color: '#E6EDF3' }}>No matches found</p>
             <p style={{ color: '#8B949E', fontSize: '0.875rem' }}>Try a different filter.</p>
           </div>
@@ -132,13 +131,13 @@ export default function MatchesPage() {
             <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8B949E' }}>$WCB Token</span>
             <Link
               href="/lock"
-              style={{ fontSize: '0.65rem', fontWeight: 700, color: '#238636', textDecoration: 'none', padding: '2px 8px', borderRadius: 3, background: 'rgba(35,134,54,0.12)', border: '1px solid rgba(35,134,54,0.2)' }}
+              style={{ fontSize: '0.65rem', fontWeight: 700, color: '#FFD36B', textDecoration: 'none', padding: '2px 8px', borderRadius: 3, background: 'rgba(242,181,68,0.1)', border: '1px solid rgba(242,181,68,0.24)' }}
             >
-              Lock & Earn →
+              Lock & Earn
             </Link>
           </div>
           <p style={{ fontSize: '0.78rem', color: '#8B949E', lineHeight: 1.5, marginBottom: '10px' }}>
-            Lock $WCB to earn betting credits. Early lockers get 2× bonus.
+            Lock $WCB to earn betting credits. Early lockers receive a 2x credit multiplier.
           </p>
           <a
             href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
@@ -157,7 +156,7 @@ export default function MatchesPage() {
             <ImagePlaceholder
               width="100%"
               aspectRatio="6/5"
-              label={`Sponsor Ad ${i} 300×250`}
+              label={`Sponsor Ad ${i} 300 x 250`}
               rounded={0}
               style={{ border: 'none', borderRadius: 0 }}
             />
@@ -171,9 +170,9 @@ export default function MatchesPage() {
         <div className="bet-card" style={{ padding: '10px' }}>
           <p style={{ fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#484F58', marginBottom: '6px' }}>Navigate</p>
           {[
-            { href: '/groups',      label: '🌍 Group Stage' },
-            { href: '/bracket',     label: '🏆 Bracket' },
-            { href: '/leaderboard', label: '📊 Leaderboard' },
+            { href: '/groups',      label: 'Group Stage' },
+            { href: '/bracket',     label: 'Bracket' },
+            { href: '/leaderboard', label: 'Leaderboard' },
           ].map((l) => (
             <Link key={l.href} href={l.href} className="sidebar-nav-link">
               {l.label}

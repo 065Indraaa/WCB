@@ -10,7 +10,7 @@ const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
 const JUPITER = process.env.NEXT_PUBLIC_JUPITER_URL ?? 'https://jup.ag';
 const CONTRACT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? 'Coming soon';
 
-// Static mock data — replace with real API when token is live
+// Static market data placeholder. Replace with live API data when token feeds are available.
 const MOCK_METRICS = {
   price: 0.000042,
   priceChange24h: 4.2,
@@ -48,21 +48,6 @@ export default function TokenPage() {
     <div className="max-w-6xl mx-auto px-4 md:px-6 py-12">
       {/* Hero card */}
       <div className="card p-8 sm:p-12 mb-10 relative overflow-hidden">
-        {/* Decorative gradient blob */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            top: -80,
-            right: -80,
-            width: 320,
-            height: 320,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, #DCFCE7 0%, transparent 70%)',
-            opacity: 0.4,
-          }}
-          aria-hidden="true"
-        />
-
         <div className="relative">
           <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
             <div className="flex items-center gap-3">
@@ -71,9 +56,9 @@ export default function TokenPage() {
                 <p className="section-eyebrow mb-1">$WCB Token</p>
                 <h1
                   className="text-3xl sm:text-4xl font-black tracking-tight"
-                  style={{ color: '#0F172A' }}
+                  style={{ color: '#FFFFFF' }}
                 >
-                  A memecoin with a purpose.
+                  Token access for the WCB betting platform.
                 </h1>
               </div>
             </div>
@@ -82,9 +67,9 @@ export default function TokenPage() {
 
           <p
             className="text-lg max-w-2xl mb-8 leading-relaxed"
-            style={{ color: '#334155' }}
+            style={{ color: '#B3B3B3' }}
           >
-            Honest take: $WCB is a memecoin. But it&apos;s also the key to the platform. Hold it to unlock predictions, leaderboard tiers, and exclusive rewards when real betting opens June 11, 2026. The earlier you&apos;re in, the better your position.
+            $WCB is the access token for World Cup Bet. Holders unlock priority market access, leaderboard tiers, and credit-based betting features when World Cup markets open on June 11, 2026.
           </p>
 
           {/* Live metrics */}
@@ -93,26 +78,26 @@ export default function TokenPage() {
               <div
                 key={s.label}
                 className="rounded-xl px-4 py-4"
-                style={{ background: '#F1F5F0', border: '1px solid #E2E8F0' }}
+                style={{ background: '#111111', border: '1px solid #2A2A2A' }}
               >
                 <p
                   className="font-bold uppercase tracking-widest mb-1"
-                  style={{ fontSize: '10px', color: '#64748B' }}
+                  style={{ fontSize: '10px', color: '#6E6E6E' }}
                 >
                   {s.label}
                 </p>
                 <p
                   className="text-xl font-black tabular-nums"
-                  style={{ color: '#0F172A' }}
+                  style={{ color: '#FFFFFF' }}
                 >
                   {s.value}
                 </p>
                 {s.change !== undefined && (
                   <p
                     className="text-xs font-bold mt-1"
-                    style={{ color: s.change >= 0 ? '#15803D' : '#DC2626' }}
+                    style={{ color: s.change >= 0 ? '#14F195' : '#DC2626' }}
                   >
-                    {s.change >= 0 ? '▲' : '▼'} {Math.abs(s.change).toFixed(2)}%
+                    {s.change >= 0 ? '+' : '-'}{Math.abs(s.change).toFixed(2)}%
                   </p>
                 )}
               </div>
@@ -127,7 +112,7 @@ export default function TokenPage() {
               rel="noopener noreferrer"
               className="btn-primary flex-1"
             >
-              🚀 Buy $WCB on Pump.fun
+              Buy $WCB
             </a>
             <a
               href={JUPITER}
@@ -135,25 +120,25 @@ export default function TokenPage() {
               rel="noopener noreferrer"
               className="btn-secondary flex-1"
             >
-              ⚡ Swap on Jupiter
+              Swap on Jupiter
             </a>
           </div>
 
           {/* Contract address */}
           <div
             className="flex flex-wrap items-center gap-3 mt-6 pt-6"
-            style={{ borderTop: '1px solid #E2E8F0' }}
+            style={{ borderTop: '1px solid #2A2A2A' }}
           >
-            <span className="text-xs font-semibold" style={{ color: '#64748B' }}>
+            <span className="text-xs font-semibold" style={{ color: '#B3B3B3' }}>
               Contract Address:
             </span>
             <div
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg flex-1 min-w-0"
-              style={{ background: '#F1F5F0', border: '1px solid #E2E8F0' }}
+              style={{ background: '#111111', border: '1px solid #2A2A2A' }}
             >
               <code
                 className="font-mono text-xs truncate"
-                style={{ color: '#0F172A' }}
+                style={{ color: '#FFFFFF' }}
                 title={CONTRACT}
               >
                 {display}
@@ -161,10 +146,10 @@ export default function TokenPage() {
               <button
                 onClick={handleCopy}
                 className="text-xs font-semibold flex-shrink-0 transition-colors"
-                style={{ color: '#64748B' }}
+                style={{ color: '#B3B3B3' }}
                 aria-label={copied ? 'Copied' : 'Copy contract address'}
               >
-                {copied ? '✓ Copied' : 'Copy'}
+                {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
           </div>
@@ -176,56 +161,50 @@ export default function TokenPage() {
         <ImagePlaceholder
           width="100%"
           height={200}
-          label="Token Banner — 1200×400 (World Cup + Solana themed)"
+          label="Token Banner 1200 x 400"
           rounded={16}
-          style={{ border: '1px solid #E2E8F0' }}
+          style={{ border: '1px solid #2A2A2A' }}
         />
       </div>
 
       {/* Utility cards */}
       <section className="mb-10">
-        <h2 className="text-2xl font-black mb-6" style={{ color: '#0F172A' }}>
-          What you actually get
+        <h2 className="text-2xl font-black mb-6" style={{ color: '#FFFFFF' }}>
+          Token Utility
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {[
             {
-              icon: '🎯',
               title: 'Priority Predictions',
               desc: 'When real betting opens, $WCB holders get first access and lower fees.',
             },
             {
-              icon: '🏆',
               title: 'Exclusive Rewards',
-              desc: 'Tournament prize pools, community giveaways, and special holder perks.',
+              desc: 'Tournament prize pools, community allocations, and holder-only campaigns.',
             },
             {
-              icon: '🥇',
               title: 'Leaderboard Tiers',
               desc: 'Bronze, Silver, Gold, Platinum tiers based on your $WCB holdings.',
             },
             {
-              icon: '💎',
-              title: 'Diamond Hands Badge',
-              desc: 'Hold continuously for 30+ days to earn an exclusive badge.',
+              title: 'Holder Status',
+              desc: 'Holding duration and balance can qualify wallets for status badges.',
             },
             {
-              icon: '📈',
               title: 'Early Mover Advantage',
-              desc: 'Lock now for 2× credit multiplier. That bonus disappears at launch — no way to earn it retroactively.',
+              desc: 'Lock before launch for a 2x credit multiplier. The bonus ends when markets open.',
             },
             {
-              icon: '🔥',
               title: 'Token Burns',
               desc: 'Portion of platform revenue used to buy back and burn $WCB.',
             },
-          ].map((u) => (
+          ].map((u, i) => (
             <div key={u.title} className="card p-6">
-              <div className="text-3xl mb-3">{u.icon}</div>
-              <h3 className="font-bold mb-2" style={{ color: '#0F172A' }}>
+              <div style={{ color: '#F2B544', fontSize: '0.75rem', fontWeight: 900, marginBottom: 10 }}>0{i + 1}</div>
+              <h3 className="font-bold mb-2" style={{ color: '#FFFFFF' }}>
                 {u.title}
               </h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#64748B' }}>
+              <p className="text-sm leading-relaxed" style={{ color: '#B3B3B3' }}>
                 {u.desc}
               </p>
             </div>
@@ -235,24 +214,24 @@ export default function TokenPage() {
 
       {/* Roadmap */}
       <section>
-        <h2 className="text-2xl font-black mb-2" style={{ color: '#0F172A' }}>
-          Where we&apos;re at
+        <h2 className="text-2xl font-black mb-2" style={{ color: '#FFFFFF' }}>
+          Current Phase
         </h2>
-        <p className="text-sm mb-6" style={{ color: '#64748B' }}>
-          Two chapters. The first is already happening.
+        <p className="text-sm mb-6" style={{ color: '#B3B3B3' }}>
+          WCB is moving through two clear product phases.
         </p>
         <div className="space-y-3">
           {[
             {
               date: 'Right now',
-              title: 'Building the community',
-              desc: 'The platform is live. Predictions work as community polls. $WCB is trading on Pump.fun. Early lockers are stacking credits. This is the ground floor.',
+              title: 'Prediction markets and token access',
+              desc: 'The platform supports fixture predictions, leaderboard preparation, token access, and early credit allocation.',
               status: 'active',
             },
             {
               date: 'June 11, 2026',
-              title: 'The World Cup starts — and so does real betting',
-              desc: 'Opening match kicks off. Real predictions go live. Credits become real stakes. Leaderboard goes competitive. Everything we\'ve been building for.',
+              title: 'World Cup markets open',
+              desc: 'Match markets open, credits become usable betting balance, and leaderboard competition begins.',
               status: 'upcoming',
             },
           ].map((r, i) => (
@@ -261,7 +240,7 @@ export default function TokenPage() {
               className="card p-5 flex items-start gap-4"
               style={
                 r.status === 'active'
-                  ? { borderColor: '#15803D', background: 'rgba(220,252,231,0.2)' }
+                  ? { borderColor: 'rgba(242,181,68,0.38)', background: 'rgba(242,181,68,0.08)' }
                   : {}
               }
             >
@@ -269,15 +248,15 @@ export default function TokenPage() {
                 className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 font-bold"
                 style={
                   r.status === 'active'
-                    ? { background: '#15803D', color: '#ffffff' }
-                    : { background: '#F1F5F0', color: '#64748B' }
+                    ? { background: '#F2B544', color: '#070707' }
+                    : { background: '#111111', color: '#B3B3B3', border: '1px solid #2A2A2A' }
                 }
               >
                 {i + 1}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <h3 className="font-bold" style={{ color: '#0F172A' }}>
+                  <h3 className="font-bold" style={{ color: '#FFFFFF' }}>
                     {r.title}
                   </h3>
                   {r.status === 'active' && (
@@ -286,10 +265,10 @@ export default function TokenPage() {
                     </span>
                   )}
                 </div>
-                <p className="text-xs font-semibold mb-1" style={{ color: '#64748B' }}>
+                <p className="text-xs font-semibold mb-1" style={{ color: '#6E6E6E' }}>
                   {r.date}
                 </p>
-                <p className="text-sm" style={{ color: '#334155' }}>
+                <p className="text-sm" style={{ color: '#B3B3B3' }}>
                   {r.desc}
                 </p>
               </div>
