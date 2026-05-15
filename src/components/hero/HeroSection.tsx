@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CountdownTimer } from './CountdownTimer';
+import { WcbText } from '@/components/shared/WcbText';
 
 export function HeroSection() {
   const rm = useReducedMotion();
@@ -127,7 +128,7 @@ export function HeroSection() {
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
             }}>
-              Hold $WCB.
+              <WcbText>Hold $WCB.</WcbText>
             </span>
             {' '}
             <span style={{ color: '#FFD36B' }}>Own the board.</span>
@@ -148,7 +149,7 @@ export function HeroSection() {
             }}
           >
             A clean Solana football betting platform for World Cup 2026.
-            Predict fixtures, track market sentiment, and unlock priority betting access with $WCB.
+            <WcbText>Predict fixtures, track market sentiment, and unlock priority betting access with $WCB.</WcbText>
           </motion.p>
 
           {/* CTAs */}
@@ -173,7 +174,7 @@ export function HeroSection() {
               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 14px 36px rgba(242,181,68,0.38)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(242,181,68,0.28)'; }}
             >
-              Buy $WCB
+              <WcbText>Buy $WCB</WcbText>
             </a>
 
             <Link

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BrandLogo } from '@/components/shared/BrandLogo';
 import { MenuIcon, type MenuIconName } from '@/components/shared/MenuIcons';
+import { WcbText } from '@/components/shared/WcbText';
 import { WalletButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 
 type NavLink = {
@@ -184,7 +185,7 @@ export function Navbar() {
                 transition: 'opacity 0.15s',
               }}
             >
-              Buy $WCB
+              <WcbText>Buy $WCB</WcbText>
             </a>
 
             <WalletButtonDynamic className="hidden sm:inline-flex" />
@@ -318,7 +319,7 @@ export function Navbar() {
                   boxShadow: '0 8px 22px rgba(242,181,68,0.28)',
                 }}
               >
-                Buy $WCB
+                <WcbText>Buy $WCB</WcbText>
               </a>
             </div>
           </nav>

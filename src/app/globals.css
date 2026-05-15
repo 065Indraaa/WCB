@@ -89,6 +89,25 @@
     -webkit-text-fill-color: transparent;
   }
 
+  .wcb-mark {
+    display: inline;
+    color: #14F195;
+    font-weight: 950;
+    letter-spacing: 0;
+    text-shadow:
+      0 0 10px rgba(20,241,149,0.55),
+      0 0 24px rgba(20,241,149,0.32);
+    -webkit-text-fill-color: #14F195;
+  }
+
+  .wcb-mark-hero {
+    background: linear-gradient(135deg, #14F195 0%, #FFD36B 48%, #9945FF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 34px rgba(20,241,149,0.32);
+  }
+
   /* Buttons */
   .btn-primary {
     display: inline-flex;
