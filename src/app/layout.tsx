@@ -1,45 +1,32 @@
 import type { Metadata } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import { Navbar } from '@/components/layout/Navbar';
 import { TickerBar } from '@/components/layout/TickerBar';
 import { Footer } from '@/components/layout/Footer';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-space-grotesk',
-  display: 'swap',
-});
-
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://worldcupbet.live';
 
 export const metadata: Metadata = {
   title: {
-    default: '$WCB · WORLDCUPBET — World Cup 2026 Predictions on Solana',
-    template: '%s · WORLDCUPBET',
+    default: '$WCB | WORLDCUPBET - World Cup 2026 Betting on Solana',
+    template: '%s | WORLDCUPBET',
   },
   description:
-    'Predict every match of the 2026 FIFA World Cup. Hold $WCB on Solana, climb the leaderboard, and ride the hype. Real betting opens after launch.',
-  keywords: ['World Cup 2026', 'WCB token', 'Solana memecoin', 'football predictions', 'Pump.fun', 'WORLDCUPBET'],
+    'Predict every match of the 2026 World Cup, hold $WCB on Solana, climb the leaderboard, and unlock priority football betting access.',
+  keywords: ['World Cup 2026', 'WCB token', 'Solana betting', 'football predictions', 'crypto sportsbook', 'WORLDCUPBET'],
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: '/' },
   openGraph: {
-    title: '$WCB · WORLDCUPBET — World Cup 2026 Predictions',
-    description: 'The community prediction platform for World Cup 2026. Built on Solana, launched on Pump.fun.',
+    title: '$WCB | WORLDCUPBET - World Cup 2026 Betting',
+    description: 'The premium Solana football betting and prediction platform for World Cup 2026.',
     url: SITE_URL,
     siteName: 'WORLDCUPBET',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '$WCB · WORLDCUPBET — World Cup 2026',
+    title: '$WCB | WORLDCUPBET - World Cup 2026',
     description: 'Predict every match. Hold $WCB. Win the cup. Built on Solana.',
     creator: '@WCBLIVE',
   },
@@ -48,8 +35,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body style={{ background: '#080E08', color: '#F0FDF4' }} className="antialiased min-h-screen flex flex-col">
+    <html lang="en">
+      <body style={{ background: '#070707', color: '#FFFFFF' }} className="antialiased min-h-screen flex flex-col">
         <Providers>
           {/* Navbar is fixed — needs a spacer below it */}
           <Navbar />

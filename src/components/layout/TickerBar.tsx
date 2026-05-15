@@ -6,26 +6,25 @@ interface TickerBarProps {
 
 export function TickerBar({ price }: TickerBarProps) {
   const items = [
-    '⚽ $WCB',
+    '$WCB',
     'WORLDCUPBET',
-    '🌍 WORLD CUP 2026',
-    '48 TEAMS · 12 GROUPS',
-    '◎ BUILT ON SOLANA',
-    '🚀 LAUNCHED ON PUMP.FUN',
-    '📅 KICKOFF 11 JUNI 2026',
-    '🔒 LOCK & EARN CREDITS',
-    '🏆 104 MATCHES TO PREDICT',
+    'WORLD CUP 2026',
+    '48 TEAMS / 12 GROUPS',
+    'BUILT ON SOLANA',
+    'KICKOFF JUNE 11, 2026',
+    'LOCK & EARN CREDITS',
+    '104 MATCHES TO PREDICT',
   ];
   if (price) items.unshift(`$WCB ${price}`);
 
-  const text = items.join('   ·   ') + '   ·   ';
+  const text = items.join('   /   ') + '   /   ';
   const repeated = text + text;
 
   return (
     <div
       style={{
-        background: 'linear-gradient(90deg, #0A3D1A 0%, #0D4A20 50%, #0A3D1A 100%)',
-        borderBottom: '1px solid rgba(34,197,94,0.2)',
+        background: 'linear-gradient(90deg, #070707 0%, #111111 50%, #070707 100%)',
+        borderBottom: '1px solid rgba(242,181,68,0.18)',
         height: '30px',
         display: 'flex',
         alignItems: 'center',
@@ -43,7 +42,7 @@ export function TickerBar({ price }: TickerBarProps) {
           left: 0,
           width: 48,
           height: 30,
-          background: 'linear-gradient(to right, #0A3D1A, transparent)',
+          background: 'linear-gradient(to right, #070707, transparent)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -54,7 +53,7 @@ export function TickerBar({ price }: TickerBarProps) {
           fontSize: '0.68rem',
           fontWeight: 800,
           letterSpacing: '0.12em',
-          color: '#86EFAC',
+          color: '#FFD36B',
           animation: 'ticker-scroll 50s linear infinite',
           display: 'inline-block',
         }}
@@ -75,7 +74,7 @@ export function TickerBar({ price }: TickerBarProps) {
           right: 0,
           width: 48,
           height: 30,
-          background: 'linear-gradient(to left, #0A3D1A, transparent)',
+          background: 'linear-gradient(to left, #070707, transparent)',
           zIndex: 1,
           pointerEvents: 'none',
         }}

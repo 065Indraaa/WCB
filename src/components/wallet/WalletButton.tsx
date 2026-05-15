@@ -11,7 +11,7 @@ interface WalletButtonProps {
 
 /**
  * WalletButton — wraps WalletMultiButton from @solana/wallet-adapter-react-ui
- * with custom styling to match the $WCB light theme.
+ * with custom styling to match the $WCB premium theme.
  *
  * When connected, shows truncated address + disconnect option.
  * When disconnected, opens the standard wallet selection modal.
@@ -24,15 +24,16 @@ export function WalletButton({ className, style }: WalletButtonProps) {
       <WalletMultiButton
         className={className}
         style={{
-          background: '#DCFCE7',
-          border: '1.5px solid #BBF7D0',
-          color: '#15803D',
+          background: '#111111',
+          border: '1px solid rgba(20,241,149,0.35)',
+          color: '#14F195',
           borderRadius: 10,
           fontSize: '0.8rem',
           fontWeight: 700,
           height: 36,
           padding: '0 0.875rem',
           fontFamily: 'monospace',
+          boxShadow: '0 0 0 1px rgba(0,0,0,0.35)',
           ...style,
         }}
       >
@@ -45,14 +46,15 @@ export function WalletButton({ className, style }: WalletButtonProps) {
     <WalletMultiButton
       className={className}
       style={{
-        background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
+        background: '#F2B544',
         border: 'none',
         borderRadius: 10,
         fontSize: '0.85rem',
-        fontWeight: 700,
+        fontWeight: 800,
         height: 36,
         padding: '0 1rem',
-        boxShadow: '0 4px 14px -2px rgba(21,128,61,0.25)',
+        color: '#070707',
+        boxShadow: '0 6px 18px rgba(242,181,68,0.26)',
         ...style,
       }}
     >

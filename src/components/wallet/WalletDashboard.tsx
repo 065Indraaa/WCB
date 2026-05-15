@@ -13,19 +13,19 @@ function StatCard({ label, value, sub, color }: { label: string; value: string; 
       style={{
         padding: '1rem',
         borderRadius: 12,
-        background: '#F8FAFC',
-        border: '1px solid #E2E8F0',
+        background: '#111111',
+        border: '1px solid #2A2A2A',
         textAlign: 'center',
       }}
     >
-      <p style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94A3B8', marginBottom: '0.375rem' }}>
+      <p style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E', marginBottom: '0.375rem' }}>
         {label}
       </p>
-      <p style={{ fontSize: '1.4rem', fontWeight: 900, color: color ?? '#0F172A', lineHeight: 1 }}>
+      <p style={{ fontSize: '1.4rem', fontWeight: 900, color: color ?? '#FFFFFF', lineHeight: 1 }}>
         {value}
       </p>
       {sub && (
-        <p style={{ fontSize: '0.7rem', color: '#64748B', marginTop: '0.25rem' }}>
+        <p style={{ fontSize: '0.7rem', color: '#B3B3B3', marginTop: '0.25rem' }}>
           {sub}
         </p>
       )}
@@ -50,15 +50,15 @@ function LockRow({ lock }: { lock: ReturnType<typeof useWalletLocks>['locks'][0]
       style={{
         padding: '1rem',
         borderRadius: 12,
-        border: `1.5px solid ${lock.isActive ? '#DCFCE7' : '#E2E8F0'}`,
-        background: lock.isActive ? 'rgba(220,252,231,0.15)' : '#F8FAFC',
+        border: `1px solid ${lock.isActive ? 'rgba(242,181,68,0.34)' : '#2A2A2A'}`,
+        background: lock.isActive ? 'rgba(242,181,68,0.08)' : '#111111',
         marginBottom: '0.75rem',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-            <span style={{ fontSize: '1rem', fontWeight: 900, color: '#0F172A' }}>
+            <span style={{ fontSize: '1rem', fontWeight: 900, color: '#FFFFFF' }}>
               {formatTokenAmount(lock.amount)} $WCB
             </span>
             {tier && (
@@ -77,29 +77,29 @@ function LockRow({ lock }: { lock: ReturnType<typeof useWalletLocks>['locks'][0]
               </span>
             )}
           </div>
-          <p style={{ fontSize: '0.75rem', color: '#64748B' }}>
+          <p style={{ fontSize: '0.75rem', color: '#B3B3B3' }}>
             {lock.durationDays} days · Unlocks {unlockDate}
           </p>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <p style={{ fontSize: '1.1rem', fontWeight: 900, color: '#15803D' }}>
+          <p style={{ fontSize: '1.1rem', fontWeight: 900, color: '#F2B544' }}>
             {formatCredits(lock.credits)} credits
           </p>
-          <p style={{ fontSize: '0.7rem', color: '#64748B' }}>
+          <p style={{ fontSize: '0.7rem', color: '#B3B3B3' }}>
             {lock.isActive ? `${daysLeft} days left` : 'Completed'}
           </p>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 6, borderRadius: 9999, background: '#E2E8F0', overflow: 'hidden' }}>
+      <div style={{ height: 6, borderRadius: 9999, background: '#2A2A2A', overflow: 'hidden' }}>
         <div
           style={{
             height: '100%',
             width: `${pct}%`,
             background: lock.isActive
-              ? 'linear-gradient(90deg, #15803D 0%, #22C55E 100%)'
-              : '#94A3B8',
+              ? 'linear-gradient(90deg, #C8922E 0%, #F2B544 100%)'
+              : '#6E6E6E',
             borderRadius: 9999,
             transition: 'width 0.5s ease',
           }}
@@ -120,27 +120,28 @@ export function WalletDashboard() {
           padding: '3rem 2rem',
           textAlign: 'center',
           borderRadius: 16,
-          border: '2px dashed #E2E8F0',
-          background: '#FAFBF8',
+          border: '1px dashed #3A3A3A',
+          background: '#111111',
         }}
       >
-        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</div>
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#0F172A', marginBottom: '0.5rem' }}>
+        <div style={{ width: 44, height: 44, borderRadius: 12, margin: '0 auto 1rem', border: '1px solid rgba(242,181,68,0.38)', background: 'rgba(242,181,68,0.1)' }} />
+        <h3 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '0.5rem' }}>
           Connect your wallet
         </h3>
-        <p style={{ fontSize: '0.9rem', color: '#64748B', marginBottom: '1.5rem', maxWidth: 320, margin: '0 auto 1.5rem' }}>
-          Connect your Solana wallet to see your $WCB locks, credits, and lock history.
+        <p style={{ fontSize: '0.9rem', color: '#B3B3B3', marginBottom: '1.5rem', maxWidth: 320, margin: '0 auto 1.5rem' }}>
+          Connect a Solana wallet to review your $WCB locks, available credits, and on-chain history.
         </p>
         <WalletMultiButtonDynamic
           style={{
-            background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
+            background: '#F2B544',
             border: 'none',
             borderRadius: 12,
             fontSize: '0.95rem',
             fontWeight: 800,
             height: 44,
             padding: '0 2rem',
-            boxShadow: '0 4px 14px -2px rgba(21,128,61,0.3)',
+            color: '#070707',
+            boxShadow: '0 8px 22px rgba(242,181,68,0.24)',
           }}
         />
       </div>
@@ -161,8 +162,8 @@ export function WalletDashboard() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-          <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#22C55E', flexShrink: 0 }} aria-hidden="true" />
-          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0F172A', fontFamily: 'monospace' }}>
+          <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#14F195', flexShrink: 0, boxShadow: '0 0 10px rgba(20,241,149,0.45)' }} aria-hidden="true" />
+          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FFFFFF', fontFamily: 'monospace' }}>
             {truncateAddress(publicKey.toBase58(), 6)}
           </span>
         </div>
@@ -171,9 +172,9 @@ export function WalletDashboard() {
           style={{
             padding: '0.375rem 0.875rem',
             borderRadius: 8,
-            border: '1.5px solid #E2E8F0',
-            background: '#ffffff',
-            color: '#64748B',
+            border: '1px solid #2A2A2A',
+            background: '#171717',
+            color: '#B3B3B3',
             fontSize: '0.75rem',
             fontWeight: 700,
             cursor: 'pointer',
@@ -185,22 +186,22 @@ export function WalletDashboard() {
 
       {/* Stats grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem', marginBottom: '1.5rem' }}>
-        <StatCard label="Total Locked" value={formatTokenAmount(stats.totalLocked)} sub="$WCB tokens" color="#0F172A" />
-        <StatCard label="Total Credits" value={formatCredits(stats.totalCredits)} sub="available to bet" color="#15803D" />
+        <StatCard label="Total Locked" value={formatTokenAmount(stats.totalLocked)} sub="$WCB tokens" color="#FFFFFF" />
+        <StatCard label="Total Credits" value={formatCredits(stats.totalCredits)} sub="available to bet" color="#F2B544" />
         <StatCard label="Active Locks" value={stats.activeLocks.toString()} sub="on Streamflow" />
         <StatCard label="Longest Lock" value={stats.longestDays > 0 ? `${stats.longestDays}d` : '—'} sub="duration" />
       </div>
 
       {/* Locks list */}
       <div>
-        <p style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B', marginBottom: '0.875rem' }}>
+        <p style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E', marginBottom: '0.875rem' }}>
           Your Locks
         </p>
 
         {loading && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {[1, 2].map((i) => (
-              <div key={i} style={{ height: 100, borderRadius: 12, background: '#F1F5F0' }} />
+              <div key={i} style={{ height: 100, borderRadius: 12, background: '#171717' }} />
             ))}
           </div>
         )}
@@ -216,12 +217,12 @@ export function WalletDashboard() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              style={{ padding: '2rem', textAlign: 'center', borderRadius: 12, border: '1.5px dashed #E2E8F0' }}
+              style={{ padding: '2rem', textAlign: 'center', borderRadius: 12, border: '1px dashed #3A3A3A' }}
             >
-              <p style={{ fontSize: '0.9rem', color: '#64748B', marginBottom: '0.5rem' }}>
+              <p style={{ fontSize: '0.9rem', color: '#B3B3B3', marginBottom: '0.5rem' }}>
                 No $WCB locks found for this wallet.
               </p>
-              <p style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
+              <p style={{ fontSize: '0.8rem', color: '#6E6E6E' }}>
                 Use the calculator to lock your tokens and earn credits.
               </p>
             </motion.div>

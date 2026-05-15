@@ -26,8 +26,8 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
         style={{
           width: compact ? 40 : 64,
           height: compact ? 48 : 72,
-          background: 'rgba(0,0,0,0.4)',
-          border: '1px solid rgba(34,197,94,0.15)',
+          background: 'rgba(7,7,7,0.58)',
+          border: '1px solid rgba(242,181,68,0.18)',
           borderRadius: 12,
           display: 'flex',
           alignItems: 'center',
@@ -38,7 +38,7 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
       >
         {reducedMotion ? (
           <span
-            style={{ fontSize: compact ? '1.4rem' : '2.25rem', fontWeight: 900, color: '#4ADE80', fontVariantNumeric: 'tabular-nums' }}
+            style={{ fontSize: compact ? '1.4rem' : '2.25rem', fontWeight: 900, color: '#FFD36B', fontVariantNumeric: 'tabular-nums' }}
           >
             {value}
           </span>
@@ -46,7 +46,7 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
           <AnimatePresence mode="popLayout">
             <motion.span
               key={value}
-              style={{ fontSize: compact ? '1.4rem' : '2.25rem', fontWeight: 900, color: '#4ADE80', fontVariantNumeric: 'tabular-nums', position: 'absolute' }}
+              style={{ fontSize: compact ? '1.4rem' : '2.25rem', fontWeight: 900, color: '#FFD36B', fontVariantNumeric: 'tabular-nums', position: 'absolute' }}
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 20, opacity: 0 }}
@@ -103,7 +103,7 @@ export function CountdownTimer({ targetDate = DEFAULT_TARGET, compact = false }:
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: compact ? '0.25rem' : '0.5rem' }}>
             <Digit value={v} label={['Days', 'Hrs', 'Min', 'Sec'][i]} compact={compact} reducedMotion={true} />
             {i < 3 && (
-              <span style={{ color: '#15803D', fontWeight: 900, fontSize: compact ? '1.1rem' : '1.75rem', marginBottom: compact ? '1rem' : '1.5rem' }}>
+              <span style={{ color: '#C8922E', fontWeight: 900, fontSize: compact ? '1.1rem' : '1.75rem', marginBottom: compact ? '1rem' : '1.5rem' }}>
                 :
               </span>
             )}
@@ -117,7 +117,7 @@ export function CountdownTimer({ targetDate = DEFAULT_TARGET, compact = false }:
     return (
       <p
         className="font-black text-center"
-        style={{ fontSize: compact ? '1.1rem' : '1.75rem', color: '#86EFAC' }}
+        style={{ fontSize: compact ? '1.1rem' : '1.75rem', color: '#FFD36B' }}
       >
         Predictions are live! 🎉
       </p>
@@ -148,7 +148,7 @@ export function CountdownTimer({ targetDate = DEFAULT_TARGET, compact = false }:
           {i < 3 && (
             <span
               style={{
-                color: 'rgba(34,197,94,0.35)',
+                color: 'rgba(242,181,68,0.38)',
                 fontWeight: 900,
                 fontSize: compact ? '1.1rem' : '1.75rem',
                 marginBottom: compact ? '1rem' : '1.5rem',

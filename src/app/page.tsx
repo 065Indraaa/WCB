@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { HeroSection } from '@/components/hero/HeroSection';
 import { MatchCard } from '@/components/matches/MatchCard';
 import { GroupCard } from '@/components/groups/GroupCard';
@@ -12,19 +13,19 @@ function PromoBanner() {
   return (
     <div
       style={{
-        background: 'linear-gradient(90deg, #050F05 0%, #0A1F0A 50%, #050F05 100%)',
-        borderBottom: '1px solid rgba(34,197,94,0.15)',
+        background: 'linear-gradient(90deg, #070707 0%, #111111 50%, #070707 100%)',
+        borderBottom: '1px solid rgba(242,181,68,0.14)',
         padding: '7px 16px',
       }}
     >
       <div className="promo-banner-inner" style={{ maxWidth: '80rem', margin: '0 auto' }}>
         {[
-          '🎁 Early lockers dapat 2× credit bonus',
-          '⚽ 104 pertandingan untuk diprediksi',
-          '🔒 Lock $WCB → Dapatkan betting credits',
-          '🏆 Hadiah leaderboard untuk top predictor',
+          'Early lockers get 2x credit bonus',
+          '104 matches open for predictions',
+          'Lock $WCB to earn betting credits',
+          'Leaderboard rewards for top predictors',
         ].map((t) => (
-          <span key={t} style={{ fontSize: '0.72rem', fontWeight: 700, color: '#9CA3AF', whiteSpace: 'nowrap' }}>
+          <span key={t} style={{ fontSize: '0.72rem', fontWeight: 700, color: '#B3B3B3', whiteSpace: 'nowrap' }}>
             {t}
           </span>
         ))}
@@ -36,19 +37,19 @@ function PromoBanner() {
 // ── Quick Stats Bar ───────────────────────────────────────────────────────────
 function QuickStats() {
   const stats = [
-    { label: 'Teams',       value: '48',   icon: '🌍' },
-    { label: 'Groups',      value: '12',   icon: '📊' },
-    { label: 'Matches',     value: '104',  icon: '⚽' },
-    { label: 'Host Cities', value: '16',   icon: '🏟️' },
-    { label: 'Days Left',   value: '27',   icon: '⏱' },
-    { label: 'Prize Pool',  value: '$TBA', icon: '🏆' },
+    { label: 'Teams',       value: '48' },
+    { label: 'Groups',      value: '12' },
+    { label: 'Matches',     value: '104' },
+    { label: 'Host Cities', value: '16' },
+    { label: 'Days Left',   value: '27' },
+    { label: 'Prize Pool',  value: '$TBA' },
   ];
 
   return (
     <div
       style={{
-        background: '#0D1410',
-        borderBottom: '1px solid #1E2D1F',
+        background: '#111111',
+        borderBottom: '1px solid #2A2A2A',
         padding: '0',
         overflowX: 'auto',
       }}
@@ -70,14 +71,13 @@ function QuickStats() {
               alignItems: 'center',
               gap: '8px',
               padding: '10px 20px',
-              borderRight: i < stats.length - 1 ? '1px solid #1E2D1F' : 'none',
+              borderRight: i < stats.length - 1 ? '1px solid #2A2A2A' : 'none',
               whiteSpace: 'nowrap',
             }}
           >
-            <span style={{ fontSize: '1rem' }}>{s.icon}</span>
             <div>
-              <div style={{ fontSize: '1rem', fontWeight: 900, color: '#22C55E', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{s.value}</div>
-              <div style={{ fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#374151' }}>{s.label}</div>
+              <div style={{ fontSize: '1rem', fontWeight: 900, color: '#F2B544', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{s.value}</div>
+              <div style={{ fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E' }}>{s.label}</div>
             </div>
           </div>
         ))}
@@ -106,6 +106,60 @@ function SidebarAdSlot({ label }: { label: string }) {
   );
 }
 
+function SportsbookPreview() {
+  const metrics = [
+    { label: 'Markets', value: '104' },
+    { label: 'Credit Rate', value: '1:100' },
+    { label: 'Network', value: 'Solana' },
+  ];
+
+  return (
+    <section style={{ background: '#070707', borderBottom: '1px solid #2A2A2A' }}>
+      <div
+        style={{
+          maxWidth: '80rem',
+          margin: '0 auto',
+          padding: '32px 16px',
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 1fr) minmax(320px, 0.85fr)',
+          gap: '24px',
+          alignItems: 'center',
+        }}
+        className="sportsbook-preview-grid"
+      >
+        <div>
+          <p className="section-eyebrow" style={{ marginBottom: 8 }}>
+            Market Preview
+          </p>
+          <h2 style={{ fontSize: 'clamp(1.35rem, 3vw, 2.2rem)', fontWeight: 900, color: '#FFFFFF', margin: '0 0 10px', lineHeight: 1.12 }}>
+            Built for football markets, not a generic token page.
+          </h2>
+          <p style={{ color: '#B3B3B3', fontSize: '0.95rem', lineHeight: 1.7, maxWidth: 560, marginBottom: 18 }}>
+            WCB combines match predictions, wallet-based credits, and on-chain token access in one clean matchday interface.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10, maxWidth: 520 }}>
+            {metrics.map((item) => (
+              <div key={item.label} style={{ background: '#111111', border: '1px solid #2A2A2A', borderRadius: 12, padding: '14px 12px' }}>
+                <div style={{ color: '#F2B544', fontSize: '1.15rem', fontWeight: 900, lineHeight: 1 }}>{item.value}</div>
+                <div style={{ color: '#6E6E6E', fontSize: '0.64rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: 6 }}>{item.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ borderRadius: 18, overflow: 'hidden', border: '1px solid rgba(242,181,68,0.2)', background: '#111111', boxShadow: '0 24px 70px rgba(0,0,0,0.42)' }}>
+          <Image
+            src="/sportsbook-board.svg"
+            alt="WCB sportsbook market board preview"
+            width={1200}
+            height={520}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const featured = WC_2026_GROUP_MATCHES.slice(0, 6);
   const groups = buildAllGroups().slice(0, 4);
@@ -116,6 +170,7 @@ export default function Home() {
       <PromoBanner />
       <HeroSection />
       <QuickStats />
+      <SportsbookPreview />
 
       {/* Main content with sidebar */}
       <div className="page-layout">
@@ -127,10 +182,10 @@ export default function Home() {
           <section style={{ marginBottom: '24px' }}>
             <div className="section-header" style={{ marginBottom: '12px' }}>
               <h2 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#F0FDF4', margin: 0, flex: 1 }}>
-                Pilih pemenangmu sebelum yang lain
+                Pick winners before the market moves
               </h2>
-              <Link href="/matches" style={{ fontSize: '0.75rem', fontWeight: 600, color: '#22C55E', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-                Semua pertandingan →
+              <Link href="/matches" style={{ fontSize: '0.75rem', fontWeight: 600, color: '#F2B544', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                All matches
               </Link>
             </div>
 
@@ -155,10 +210,10 @@ export default function Home() {
           <section style={{ marginBottom: '24px' }}>
             <div className="section-header gold" style={{ marginBottom: '12px' }}>
               <h2 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#F0FDF4', margin: 0, flex: 1 }}>
-                12 grup · 48 negara · Satu juara
+                12 groups · 48 nations · One champion
               </h2>
               <Link href="/groups" style={{ fontSize: '0.75rem', fontWeight: 600, color: '#F59E0B', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-                Semua grup →
+                All groups
               </Link>
             </div>
 
@@ -181,20 +236,20 @@ export default function Home() {
               style={{
                 borderRadius: 10,
                 overflow: 'hidden',
-                background: 'linear-gradient(135deg, #080E08 0%, #0D1410 100%)',
-                border: '1px solid rgba(34,197,94,0.2)',
-                boxShadow: '0 0 40px rgba(34,197,94,0.04)',
+                background: 'linear-gradient(135deg, #111111 0%, #171717 100%)',
+                border: '1px solid rgba(242,181,68,0.22)',
+                boxShadow: '0 18px 50px rgba(0,0,0,0.22)',
               }}
             >
               <div style={{ padding: '24px' }}>
-                <p style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.16em', color: '#22C55E', marginBottom: '6px' }}>
-                  Kamu masuk lebih awal
+                <p style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.16em', color: '#F2B544', marginBottom: '6px' }}>
+                  Early access window
                 </p>
                 <h2 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 900, color: '#F0FDF4', marginBottom: '10px', lineHeight: 1.2 }}>
-                  Early holders dapat akses prioritas.
+                  Early holders get priority access.
                 </h2>
-                <p style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '16px', maxWidth: '32rem', lineHeight: 1.7 }}>
-                  Betting dibuka 11 Juni 2026. Hold $WCB sekarang untuk akses prioritas, fee lebih rendah, dan badge tier leaderboard yang tidak bisa didapat oleh yang terlambat.
+                <p style={{ fontSize: '0.85rem', color: '#B3B3B3', marginBottom: '16px', maxWidth: '32rem', lineHeight: 1.7 }}>
+                  Betting opens on June 11, 2026. Hold $WCB now for priority access, lower fees, and leaderboard tier badges before the rush.
                 </p>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <a
@@ -203,10 +258,10 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="btn-primary"
                   >
-                    🚀 Buy $WCB
+                    Buy $WCB
                   </a>
                   <Link href="/lock" className="btn-secondary">
-                    🔒 Lock &amp; Earn Credits
+                    Lock &amp; Earn Credits
                   </Link>
                 </div>
               </div>
@@ -244,7 +299,7 @@ export default function Home() {
               className="btn-primary"
               style={{ display: 'flex', justifyContent: 'center', fontSize: '0.8rem', padding: '8px 12px' }}
             >
-              Buy $WCB on Pump.fun
+              Buy $WCB
             </a>
           </div>
 
@@ -256,11 +311,11 @@ export default function Home() {
             <p style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#374151', marginBottom: '6px' }}>Quick Links</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
               {[
-                { href: '/matches',     label: '⚽ Semua Pertandingan', badge: '72' },
-                { href: '/groups',      label: '🌍 Fase Grup',          badge: '12' },
-                { href: '/bracket',     label: '🏆 Knockout Bracket',   badge: null },
-                { href: '/lock',        label: '🔒 Lock & Earn',        badge: 'NEW' },
-                { href: '/leaderboard', label: '📊 Leaderboard',        badge: null },
+                { href: '/matches',     label: 'All Matches',       badge: '72' },
+                { href: '/groups',      label: 'Group Stage',       badge: '12' },
+                { href: '/bracket',     label: 'Knockout Bracket',  badge: null },
+                { href: '/lock',        label: 'Lock & Earn',       badge: 'NEW' },
+                { href: '/leaderboard', label: 'Leaderboard',       badge: null },
               ].map((l) => (
                 <Link key={l.href} href={l.href} className="sidebar-nav-link">
                   {l.label}

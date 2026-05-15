@@ -7,60 +7,22 @@ import { BrandLogo } from '@/components/shared/BrandLogo';
 import { WalletButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 
 const NAV_LINKS = [
-  { label: 'Home',        href: '/',            icon: '🏠' },
-  { label: 'Matches',     href: '/matches',     icon: '⚽' },
-  { label: 'Groups',      href: '/groups',      icon: '🌍' },
-  { label: 'Bracket',     href: '/bracket',     icon: '🏆' },
-  { label: 'Token',       href: '/token',       icon: '💎' },
-  { label: 'Lock & Earn', href: '/lock',        icon: '🔒', dot: true },
-  { label: 'Leaderboard', href: '/leaderboard', icon: '📊' },
+  { label: 'Home',        href: '/',            icon: 'HOME' },
+  { label: 'Matches',     href: '/matches',     icon: 'MATCH' },
+  { label: 'Groups',      href: '/groups',      icon: 'GROUP' },
+  { label: 'Bracket',     href: '/bracket',     icon: 'CUP' },
+  { label: 'Token',       href: '/token',       icon: 'WCB' },
+  { label: 'Lock & Earn', href: '/lock',        icon: 'LOCK', dot: true },
+  { label: 'Leaderboard', href: '/leaderboard', icon: 'BOARD' },
 ];
 
-// Mobile bottom nav — 5 most important links
 const MOBILE_NAV = [
-  { label: 'Home',    href: '/',            icon: HomeIcon },
-  { label: 'Matches', href: '/matches',     icon: MatchIcon },
-  { label: 'Groups',  href: '/groups',      icon: GroupIcon },
-  { label: 'Lock',    href: '/lock',        icon: LockIcon },
-  { label: 'Board',   href: '/leaderboard', icon: BoardIcon },
+  { label: 'Home',    href: '/',            code: 'H' },
+  { label: 'Matches', href: '/matches',     code: 'M' },
+  { label: 'Groups',  href: '/groups',      code: 'G' },
+  { label: 'Lock',    href: '/lock',        code: 'L' },
+  { label: 'Board',   href: '/leaderboard', code: 'B' },
 ];
-
-function HomeIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h4a1 1 0 001-1v-3h2v3a1 1 0 001 1h4a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-    </svg>
-  );
-}
-function MatchIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-      <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" fill="none" />
-      <path d="M10 6l1.5 3h3l-2.5 2 1 3L10 12.5 7 14l1-3-2.5-2h3z" fill="currentColor" />
-    </svg>
-  );
-}
-function GroupIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-    </svg>
-  );
-}
-function LockIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-    </svg>
-  );
-}
-function BoardIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-      <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-    </svg>
-  );
-}
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -94,13 +56,13 @@ export function Navbar() {
           right: 0,
           zIndex: 40,
           background: scrolled
-            ? 'rgba(10,14,10,0.97)'
-            : 'rgba(10,14,10,0.92)',
+            ? 'rgba(7,7,7,0.97)'
+            : 'rgba(7,7,7,0.92)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           borderBottom: scrolled
-            ? '1px solid rgba(34,197,94,0.18)'
-            : '1px solid rgba(34,197,94,0.1)',
+            ? '1px solid rgba(242,181,68,0.2)'
+            : '1px solid rgba(242,181,68,0.12)',
           height: 56,
           transition: 'background 0.2s, border-color 0.2s, box-shadow 0.2s',
           boxShadow: scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none',
@@ -158,9 +120,9 @@ export function Navbar() {
                       fontWeight: 600,
                       textDecoration: 'none',
                       whiteSpace: 'nowrap',
-                      color: active ? '#ffffff' : '#9CA3AF',
-                      background: active ? 'rgba(34,197,94,0.12)' : 'transparent',
-                      borderBottom: active ? '2px solid #22C55E' : '2px solid transparent',
+                      color: active ? '#ffffff' : '#B3B3B3',
+                      background: active ? 'rgba(242,181,68,0.12)' : 'transparent',
+                      borderBottom: active ? '2px solid #F2B544' : '2px solid transparent',
                       transition: 'color 0.15s, background 0.15s',
                     }}
                   >
@@ -172,9 +134,9 @@ export function Navbar() {
                           width: 5,
                           height: 5,
                           borderRadius: '50%',
-                          background: '#22C55E',
+                          background: '#14F195',
                           flexShrink: 0,
-                          boxShadow: '0 0 6px #22C55E',
+                          boxShadow: '0 0 6px #14F195',
                         }}
                       />
                     )}
@@ -201,14 +163,14 @@ export function Navbar() {
                 fontSize: '0.78rem',
                 fontWeight: 700,
                 textDecoration: 'none',
-                background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
-                color: '#ffffff',
+                background: '#F2B544',
+                color: '#070707',
                 whiteSpace: 'nowrap',
-                boxShadow: '0 2px 10px rgba(21,128,61,0.35)',
+                boxShadow: '0 6px 18px rgba(242,181,68,0.26)',
                 transition: 'opacity 0.15s',
               }}
             >
-              🚀 Buy $WCB
+              Buy $WCB
             </a>
 
             <WalletButtonDynamic className="hidden sm:inline-flex" />
@@ -224,9 +186,9 @@ export function Navbar() {
                 height: 36,
                 gap: 5,
                 borderRadius: 6,
-                background: menuOpen ? 'rgba(34,197,94,0.1)' : 'transparent',
+                background: menuOpen ? 'rgba(242,181,68,0.12)' : 'transparent',
                 border: '1px solid',
-                borderColor: menuOpen ? 'rgba(34,197,94,0.3)' : 'rgba(255,255,255,0.1)',
+                borderColor: menuOpen ? 'rgba(242,181,68,0.32)' : 'rgba(255,255,255,0.1)',
                 cursor: 'pointer',
                 transition: 'background 0.15s, border-color 0.15s',
               }}
@@ -250,7 +212,7 @@ export function Navbar() {
             position: 'fixed',
             inset: 0,
             zIndex: 35,
-            background: 'rgba(8,12,8,0.98)',
+            background: 'rgba(7,7,7,0.98)',
             backdropFilter: 'blur(20px)',
             paddingTop: 56,
             overflowY: 'auto',
@@ -283,13 +245,13 @@ export function Navbar() {
                     fontSize: '1rem',
                     fontWeight: 600,
                     textDecoration: 'none',
-                    color: active ? '#ffffff' : '#9CA3AF',
-                    background: active ? 'rgba(34,197,94,0.1)' : 'transparent',
-                    borderLeft: active ? '3px solid #22C55E' : '3px solid transparent',
+                    color: active ? '#ffffff' : '#B3B3B3',
+                    background: active ? 'rgba(242,181,68,0.12)' : 'transparent',
+                    borderLeft: active ? '3px solid #F2B544' : '3px solid transparent',
                     transition: 'background 0.15s, color 0.15s',
                   }}
                 >
-                  <span style={{ fontSize: '1.1rem' }}>{link.icon}</span>
+                  <span style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.08em', color: active ? '#F2B544' : '#6E6E6E', width: 42 }}>{link.icon}</span>
                   {link.label}
                   {link.dot && (
                     <span
@@ -300,8 +262,8 @@ export function Navbar() {
                         width: 6,
                         height: 6,
                         borderRadius: '50%',
-                        background: '#22C55E',
-                        boxShadow: '0 0 8px #22C55E',
+                        background: '#14F195',
+                        boxShadow: '0 0 8px #14F195',
                       }}
                     />
                   )}
@@ -320,15 +282,15 @@ export function Navbar() {
                   width: '100%',
                   padding: '12px',
                   borderRadius: 8,
-                  background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
-                  color: '#ffffff',
-                  fontWeight: 700,
+                  background: '#F2B544',
+                  color: '#070707',
+                  fontWeight: 800,
                   fontSize: '0.95rem',
                   textDecoration: 'none',
-                  boxShadow: '0 4px 16px rgba(21,128,61,0.4)',
+                  boxShadow: '0 8px 22px rgba(242,181,68,0.28)',
                 }}
               >
-                🚀 Buy $WCB on Pump.fun
+                Buy $WCB
               </a>
             </div>
           </nav>
@@ -348,7 +310,6 @@ function MobileBottomNav({ pathname }: { pathname: string }) {
         const active =
           pathname === item.href ||
           (item.href !== '/' && pathname.startsWith(item.href));
-        const IconComp = item.icon;
         return (
           <Link
             key={item.href}
@@ -356,7 +317,23 @@ function MobileBottomNav({ pathname }: { pathname: string }) {
             className={`mobile-nav-item${active ? ' active' : ''}`}
             aria-label={item.label}
           >
-            <IconComp />
+            <span
+              aria-hidden="true"
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 6,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.62rem',
+                fontWeight: 900,
+                background: active ? 'rgba(242,181,68,0.16)' : 'transparent',
+                border: active ? '1px solid rgba(242,181,68,0.28)' : '1px solid transparent',
+              }}
+            >
+              {item.code}
+            </span>
             {item.label}
           </Link>
         );

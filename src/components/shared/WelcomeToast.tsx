@@ -34,11 +34,12 @@ export function WelcomeToast() {
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 60,
-            background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
+            background: '#111111',
             color: '#ffffff',
             padding: '0.875rem 1.5rem',
             borderRadius: 14,
-            boxShadow: '0 8px 32px rgba(21,128,61,0.35)',
+            border: '1px solid rgba(242,181,68,0.28)',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.42)',
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
@@ -48,13 +49,12 @@ export function WelcomeToast() {
           role="status"
           aria-live="polite"
         >
-          <span style={{ fontSize: '1.25rem' }}>🎉</span>
           <div>
             <p style={{ fontWeight: 800, fontSize: '0.95rem', margin: 0 }}>
-              Wallet connected! You&apos;re early.
+              Wallet connected.
             </p>
             <p style={{ fontSize: '0.78rem', opacity: 0.88, margin: 0 }}>
-              Lock $WCB now to secure your early adopter rewards before June 11.
+              Lock $WCB to review your credit position before June 11.
             </p>
           </div>
           <button
@@ -62,7 +62,7 @@ export function WelcomeToast() {
             style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.7)', cursor: 'pointer', fontSize: '1rem', padding: '0.25rem', marginLeft: '0.25rem' }}
             aria-label="Dismiss"
           >
-            ✕
+            x
           </button>
         </motion.div>
       )}

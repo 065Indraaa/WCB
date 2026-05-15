@@ -14,9 +14,9 @@ export interface PredictionModalProps {
 }
 
 const VARIANT_COLORS = {
-  home: { fill: '#DCFCE7', border: '#15803D', text: '#15803D', label: 'Home Win' },
-  draw: { fill: '#FEF3C7', border: '#D97706', text: '#D97706', label: 'Draw' },
-  away: { fill: '#EDE9FE', border: '#7C3AED', text: '#7C3AED', label: 'Away Win' },
+  home: { fill: 'rgba(242,181,68,0.16)', border: '#F2B544', text: '#FFD36B', label: 'Home Win' },
+  draw: { fill: 'rgba(200,146,46,0.14)', border: '#C8922E', text: '#F2B544', label: 'Draw' },
+  away: { fill: 'rgba(153,69,255,0.14)', border: '#9945FF', text: '#DCCBFF', label: 'Away Win' },
 };
 
 export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps) {
@@ -47,7 +47,7 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
   const kickoffUTC = (() => {
     const d = new Date(match.kickoff);
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()} · ${String(d.getUTCHours()).padStart(2,'0')}:${String(d.getUTCMinutes()).padStart(2,'0')} UTC`;
+    return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()} / ${String(d.getUTCHours()).padStart(2,'0')}:${String(d.getUTCMinutes()).padStart(2,'0')} UTC`;
   })();
 
   const options: { choice: PredictionChoice; label: string; pct: number }[] = [
@@ -63,7 +63,7 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
           {/* Backdrop */}
           <motion.div
             key="bd"
-            style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(15,23,42,0.5)', backdropFilter: 'blur(4px)' }}
+            style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -90,22 +90,22 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
+              <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #2A2A2A', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
                 <div>
                   <p className="section-eyebrow" style={{ marginBottom: '0.25rem' }}>
-                    🎯 Community Prediction
+                    Community Market
                   </p>
-                  <h2 id="pred-title" style={{ fontSize: '1.2rem', fontWeight: 900, color: '#0F172A', margin: 0 }}>
+                  <h2 id="pred-title" style={{ fontSize: '1.2rem', fontWeight: 900, color: '#FFFFFF', margin: 0 }}>
                     Who wins this match?
                   </h2>
-                  <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '0.25rem' }}>
-                    {match.group} · {kickoffUTC}
+                  <p style={{ fontSize: '0.8rem', color: '#B3B3B3', marginTop: '0.25rem' }}>
+                    {match.group} / {kickoffUTC}
                   </p>
                 </div>
                 <button
                   ref={closeBtnRef}
                   onClick={onClose}
-                  style={{ padding: '0.375rem', borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: '#64748B', flexShrink: 0 }}
+                  style={{ padding: '0.375rem', borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: '#B3B3B3', flexShrink: 0 }}
                   aria-label="Close"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -115,19 +115,19 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
               </div>
 
               {/* Teams */}
-              <div style={{ padding: '1.25rem 1.5rem', background: '#F8FAFC', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+              <div style={{ padding: '1.25rem 1.5rem', background: '#111111', borderBottom: '1px solid #2A2A2A', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: 0 }}>
                   <TeamFlag code={match.homeTeam.code} name={match.homeTeam.name} size="lg" />
-                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0F172A', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FFFFFF', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%' }}>
                     {match.homeTeam.name}
                   </span>
                 </div>
                 <div style={{ textAlign: 'center', flexShrink: 0 }}>
-                  <span style={{ fontSize: '1.5rem', fontWeight: 900, color: '#CBD5E1' }}>VS</span>
+                  <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#6E6E6E' }}>VS</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: 0 }}>
                   <TeamFlag code={match.awayTeam.code} name={match.awayTeam.name} size="lg" />
-                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0F172A', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FFFFFF', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%' }}>
                     {match.awayTeam.name}
                   </span>
                 </div>
@@ -135,7 +135,7 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
 
               {/* Vote options */}
               <div style={{ padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-                <p style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#94A3B8', marginBottom: '0.25rem' }}>
+                <p style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6E6E6E', marginBottom: '0.25rem' }}>
                   {loaded ? `${total.toLocaleString()} community votes` : 'Cast your vote'}
                 </p>
 
@@ -146,15 +146,15 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
                     <button
                       key={choice}
                       onClick={() => vote(choice)}
-                      aria-label={`Vote ${label} — ${p}%`}
+                      aria-label={`Vote ${label} - ${p}%`}
                       aria-pressed={isSelected}
                       style={{
                         position: 'relative',
                         width: '100%',
                         overflow: 'hidden',
                         borderRadius: 12,
-                        border: `2px solid ${isSelected ? c.border : '#E2E8F0'}`,
-                        background: '#ffffff',
+                        border: `1px solid ${isSelected ? c.border : '#2A2A2A'}`,
+                        background: '#171717',
                         cursor: 'pointer',
                         transition: 'border-color 0.2s, transform 0.1s',
                         transform: isSelected ? 'scale(1.01)' : 'scale(1)',
@@ -186,7 +186,7 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
                               aria-hidden="true"
                             />
                           )}
-                          <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0F172A' }}>
+                          <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#FFFFFF' }}>
                             {label}
                           </span>
                         </div>
@@ -213,13 +213,13 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
                     exit={{ opacity: 0, height: 0 }}
                     style={{ overflow: 'hidden' }}
                   >
-                    <div style={{ margin: '0 1.5rem', padding: '0.75rem 1rem', borderRadius: 10, background: '#DCFCE7', border: '1px solid #BBF7D0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span style={{ fontSize: '1rem' }}>✅</span>
-                      <p style={{ fontSize: '0.85rem', fontWeight: 600, color: '#15803D', margin: 0 }}>
+                    <div style={{ margin: '0 1.5rem', padding: '0.75rem 1rem', borderRadius: 10, background: 'rgba(20,241,149,0.08)', border: '1px solid rgba(20,241,149,0.24)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#14F195', flexShrink: 0 }} aria-hidden="true" />
+                      <p style={{ fontSize: '0.85rem', fontWeight: 600, color: '#D9FFF0', margin: 0 }}>
                         Your pick: <strong>
                           {myChoice === 'home' ? match.homeTeam.name : myChoice === 'away' ? match.awayTeam.name : 'Draw'}
                         </strong>
-                        {' '}— you can change it anytime
+                        {' '}- you can change it anytime
                       </p>
                     </div>
                   </motion.div>
@@ -227,9 +227,9 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
               </AnimatePresence>
 
               {/* Footer CTA */}
-              <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid #E2E8F0', marginTop: '0.75rem' }}>
-                <p style={{ fontSize: '0.75rem', color: '#94A3B8', textAlign: 'center', marginBottom: '0.75rem', lineHeight: 1.5 }}>
-                  🔒 <strong style={{ color: '#64748B' }}>Real betting opens June 11, 2026.</strong> Hold $WCB to unlock priority access and earn rewards on correct predictions.
+              <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid #2A2A2A', marginTop: '0.75rem' }}>
+                <p style={{ fontSize: '0.75rem', color: '#B3B3B3', textAlign: 'center', marginBottom: '0.75rem', lineHeight: 1.5 }}>
+                  <strong style={{ color: '#FFFFFF' }}>Betting opens June 11, 2026.</strong> Hold $WCB to unlock priority market access and betting credits.
                 </p>
                 <a
                   href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
@@ -238,7 +238,7 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
                   className="btn-primary w-full"
                   style={{ justifyContent: 'center' }}
                 >
-                  🚀 Get $WCB Early — Buy on Pump.fun
+                  Buy $WCB
                 </a>
               </div>
             </div>

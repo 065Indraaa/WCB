@@ -10,10 +10,10 @@ interface WalletModalProps {
 }
 
 const WALLET_ICONS: Record<string, string> = {
-  Phantom: '👻',
-  Solflare: '🔆',
-  Coinbase: '🔵',
-  Torus: '🔴',
+  Phantom: 'PH',
+  Solflare: 'SF',
+  Coinbase: 'CB',
+  Torus: 'TR',
 };
 
 export function WalletModal({ isOpen, onClose }: WalletModalProps) {
@@ -43,7 +43,7 @@ export function WalletModal({ isOpen, onClose }: WalletModalProps) {
         <>
           <motion.div
             key="bd"
-            style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(15,23,42,0.5)', backdropFilter: 'blur(4px)' }}
+            style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -66,14 +66,14 @@ export function WalletModal({ isOpen, onClose }: WalletModalProps) {
               style={{ maxWidth: 380, pointerEvents: 'auto', overflow: 'hidden' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <h2 id="wallet-modal-title" style={{ fontSize: '1.1rem', fontWeight: 900, color: '#0F172A', margin: 0 }}>
+              <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #2A2A2A', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h2 id="wallet-modal-title" style={{ fontSize: '1.1rem', fontWeight: 900, color: '#FFFFFF', margin: 0 }}>
                   Connect Wallet
                 </h2>
                 <button
                   ref={closeBtnRef}
                   onClick={onClose}
-                  style={{ padding: '0.375rem', borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: '#64748B' }}
+                  style={{ padding: '0.375rem', borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: '#B3B3B3' }}
                   aria-label="Close"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -85,7 +85,7 @@ export function WalletModal({ isOpen, onClose }: WalletModalProps) {
               <div style={{ padding: '1rem' }}>
                 {connecting ? (
                   <div style={{ textAlign: 'center', padding: '2rem' }}>
-                    <p style={{ color: '#64748B', fontSize: '0.9rem' }}>Connecting…</p>
+                    <p style={{ color: '#B3B3B3', fontSize: '0.9rem' }}>Connecting...</p>
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -99,35 +99,35 @@ export function WalletModal({ isOpen, onClose }: WalletModalProps) {
                           gap: '0.875rem',
                           padding: '0.875rem 1rem',
                           borderRadius: 12,
-                          border: '1.5px solid #E2E8F0',
-                          background: '#ffffff',
+                          border: '1px solid #2A2A2A',
+                          background: '#171717',
                           cursor: 'pointer',
                           transition: 'all 0.15s',
                           textAlign: 'left',
                           width: '100%',
                         }}
                         onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLElement).style.borderColor = '#15803D';
-                          (e.currentTarget as HTMLElement).style.background = '#F0FDF4';
+                          (e.currentTarget as HTMLElement).style.borderColor = 'rgba(242,181,68,0.42)';
+                          (e.currentTarget as HTMLElement).style.background = 'rgba(242,181,68,0.08)';
                         }}
                         onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLElement).style.borderColor = '#E2E8F0';
-                          (e.currentTarget as HTMLElement).style.background = '#ffffff';
+                          (e.currentTarget as HTMLElement).style.borderColor = '#2A2A2A';
+                          (e.currentTarget as HTMLElement).style.background = '#171717';
                         }}
                       >
                         {wallet.adapter.icon ? (
                           /* eslint-disable-next-line @next/next/no-img-element */
                           <img src={wallet.adapter.icon} alt={wallet.adapter.name} width={32} height={32} style={{ borderRadius: 8 }} />
                         ) : (
-                          <span style={{ fontSize: '1.5rem', width: 32, textAlign: 'center' }}>
-                            {WALLET_ICONS[wallet.adapter.name] ?? '💼'}
+                          <span style={{ fontSize: '0.7rem', width: 32, height: 32, borderRadius: 8, border: '1px solid rgba(242,181,68,0.28)', color: '#FFD36B', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>
+                            {WALLET_ICONS[wallet.adapter.name] ?? 'WA'}
                           </span>
                         )}
                         <div>
-                          <p style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
+                          <p style={{ fontSize: '0.9rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
                             {wallet.adapter.name}
                           </p>
-                          <p style={{ fontSize: '0.7rem', color: '#94A3B8', margin: 0 }}>
+                          <p style={{ fontSize: '0.7rem', color: '#6E6E6E', margin: 0 }}>
                             {wallet.readyState === 'Installed' ? 'Detected' : 'Not installed'}
                           </p>
                         </div>
@@ -137,8 +137,8 @@ export function WalletModal({ isOpen, onClose }: WalletModalProps) {
                 )}
               </div>
 
-              <div style={{ padding: '0.875rem 1.5rem', borderTop: '1px solid #E2E8F0', background: '#F8FAFC' }}>
-                <p style={{ fontSize: '0.72rem', color: '#94A3B8', textAlign: 'center' }}>
+              <div style={{ padding: '0.875rem 1.5rem', borderTop: '1px solid #2A2A2A', background: '#111111' }}>
+                <p style={{ fontSize: '0.72rem', color: '#6E6E6E', textAlign: 'center' }}>
                   By connecting, you agree to our terms. Your wallet is never stored on our servers.
                 </p>
               </div>

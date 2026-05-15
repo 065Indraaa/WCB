@@ -18,15 +18,15 @@ export function PumpFunBadge({ className = '', size = 'md' }: PumpFunBadgeProps)
       className={`inline-flex items-center gap-1.5 rounded-full font-bold ${className}`}
       style={{
         ...style,
-        background: 'rgba(21,128,61,0.18)',
-        color: '#4ADE80',
-        border: '1px solid rgba(34,197,94,0.3)',
+        background: 'rgba(242,181,68,0.12)',
+        color: '#FFD36B',
+        border: '1px solid rgba(242,181,68,0.28)',
         textDecoration: 'none',
         transition: 'background 0.15s, border-color 0.15s',
         backdropFilter: 'blur(8px)',
       }}
     >
-      🚀 Launched on Pump.fun
+      Buy $WCB
     </a>
   );
 }

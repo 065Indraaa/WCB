@@ -27,7 +27,8 @@ export default function LockPage() {
       {/* Urgency banner */}
       <div
         style={{
-          background: 'linear-gradient(90deg, #15803D 0%, #16a34a 100%)',
+          background: 'linear-gradient(90deg, #111111 0%, #171717 100%)',
+          border: '1px solid rgba(242,181,68,0.22)',
           borderRadius: 12,
           padding: '0.875rem 1.25rem',
           marginBottom: '2rem',
@@ -37,9 +38,8 @@ export default function LockPage() {
           flexWrap: 'wrap',
         }}
       >
-        <span style={{ fontSize: '1.1rem' }}>⏰</span>
         <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>
-          Betting goes live <strong>June 11, 2026</strong> — early lockers get a <strong>2× credit multiplier bonus</strong>. Lock now while it still counts.
+          Betting opens on <strong>June 11, 2026</strong>. Early locks receive a <strong>2x credit multiplier</strong> before launch.
         </p>
       </div>
 
@@ -52,9 +52,9 @@ export default function LockPage() {
               borderRadius: 9999,
               fontSize: '0.7rem',
               fontWeight: 800,
-              background: '#DCFCE7',
-              color: '#15803D',
-              border: '1px solid #BBF7D0',
+              background: 'rgba(20,241,149,0.12)',
+              color: '#14F195',
+              border: '1px solid rgba(20,241,149,0.28)',
             }}
           >
             LIVE NOW
@@ -64,12 +64,12 @@ export default function LockPage() {
           <div>
             <h1
               className="text-4xl sm:text-5xl font-black tracking-tight"
-              style={{ color: '#0F172A', marginBottom: '0.75rem' }}
+              style={{ color: '#FFFFFF', marginBottom: '0.75rem' }}
             >
               Lock early. Bet first.
             </h1>
-            <p className="text-lg max-w-2xl" style={{ color: '#64748B' }}>
-              Here&apos;s how it works: you lock your $WCB tokens through Streamflow Finance, and in return you earn betting credits. The longer you lock, the more credits you stack up. Those credits become your bankroll when real predictions open on June 11, 2026 — and early lockers get a 2× bonus on top.
+            <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
+              Lock $WCB through Streamflow Finance to receive betting credits. Longer lock periods earn higher multipliers, and credits become available for match markets when betting opens on June 11, 2026.
             </p>
           </div>
           <WalletButtonDynamic />
@@ -82,21 +82,20 @@ export default function LockPage() {
         style={{ marginBottom: '2.5rem' }}
       >
         {[
-          { label: 'Total Locked', value: formatTokenAmount(totalLocked) + ' $WCB', icon: '🔒', sub: 'by the community so far' },
-          { label: 'Credits Issued', value: formatCredits(totalCredits), icon: '💳', sub: 'ready to bet with' },
-          { label: 'People Locking', value: totalLockers.toString(), icon: '👥', sub: 'and counting' },
+          { label: 'Total Locked', value: formatTokenAmount(totalLocked) + ' $WCB', sub: 'community allocation' },
+          { label: 'Credits Issued', value: formatCredits(totalCredits), sub: 'reserved for launch' },
+          { label: 'People Locking', value: totalLockers.toString(), sub: 'tracked wallets' },
         ].map((s) => (
           <div
             key={s.label}
             className="card"
             style={{ padding: '1.25rem', textAlign: 'center' }}
           >
-            <div style={{ fontSize: '1.5rem', marginBottom: '0.375rem' }}>{s.icon}</div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0F172A' }}>{s.value}</div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B', marginTop: '0.25rem' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#F2B544' }}>{s.value}</div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#B3B3B3', marginTop: '0.25rem' }}>
               {s.label}
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '0.15rem' }}>{s.sub}</div>
+            <div style={{ fontSize: '0.7rem', color: '#6E6E6E', marginTop: '0.15rem' }}>{s.sub}</div>
           </div>
         ))}
       </div>
@@ -111,7 +110,7 @@ export default function LockPage() {
 
         {/* Col 2: Wallet Dashboard */}
         <div className="card" style={{ padding: '1.5rem' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 900, color: '#0F172A', marginBottom: '1.25rem' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '1.25rem' }}>
             My Locks & Credits
           </h2>
           <WalletDashboardDynamic />
@@ -123,26 +122,23 @@ export default function LockPage() {
 
       {/* Why lock now? */}
       <div style={{ marginBottom: '2.5rem' }}>
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0F172A', marginBottom: '1.25rem' }}>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '1.25rem' }}>
           Why lock now?
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
           {[
             {
-              icon: '⏳',
-              title: 'The 2× bonus disappears at launch',
-              desc: 'Early lockers get double credits. Once June 11 hits, that multiplier is gone. There\'s no way to retroactively earn it.',
+              title: 'Launch multiplier',
+              desc: 'Early lockers receive double credits before the June 11 launch window closes.',
               img: 'Countdown Visual',
             },
             {
-              icon: '🎯',
-              title: 'Credits = your betting power',
-              desc: 'When real predictions open, credits are what you bet with. More credits means more bets, more chances to climb the leaderboard.',
+              title: 'Betting credits',
+              desc: 'Credits determine the amount you can deploy across match markets once betting opens.',
               img: 'Betting Credits Visual',
             },
             {
-              icon: '🔐',
-              title: 'Your tokens stay yours',
+              title: 'Non-custodial lock',
               desc: 'Locking is non-custodial via Streamflow. You set the unlock date. Nobody else touches your $WCB.',
               img: 'Security Visual',
             },
@@ -150,7 +146,7 @@ export default function LockPage() {
             <div
               key={r.title}
               className="card"
-              style={{ padding: 0, overflow: 'hidden', borderLeft: '3px solid #15803D' }}
+              style={{ padding: 0, overflow: 'hidden', borderLeft: '3px solid #F2B544' }}
             >
               <ImagePlaceholder
                 width="100%"
@@ -160,9 +156,8 @@ export default function LockPage() {
                 style={{ border: 'none', borderRadius: 0 }}
               />
               <div style={{ padding: '1rem' }}>
-                <div style={{ fontSize: '1.25rem', marginBottom: '0.375rem' }}>{r.icon}</div>
-                <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.375rem' }}>{r.title}</h3>
-                <p style={{ fontSize: '0.82rem', color: '#64748B', lineHeight: 1.6, margin: 0 }}>{r.desc}</p>
+                <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.375rem' }}>{r.title}</h3>
+                <p style={{ fontSize: '0.82rem', color: '#B3B3B3', lineHeight: 1.6, margin: 0 }}>{r.desc}</p>
               </div>
             </div>
           ))}

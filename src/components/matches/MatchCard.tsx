@@ -72,11 +72,11 @@ export function MatchCard({ match }: MatchCardProps) {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '5px 10px',
-            background: '#080E08',
-            borderBottom: '1px solid #1E2D1F',
+            background: '#0B0B0B',
+            borderBottom: '1px solid #2A2A2A',
           }}
         >
-          <span style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#374151', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '65%' }}>
+          <span style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#6E6E6E', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '65%' }}>
             {match.group}
           </span>
           <span className={statusBadgeClass(match.displayStatus)}>
@@ -98,7 +98,7 @@ export function MatchCard({ match }: MatchCardProps) {
           {/* Home team */}
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
             <TeamFlag code={match.homeTeam.code} name={match.homeTeam.name} size="sm" />
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#F0FDF4', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#FFFFFF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {match.homeTeam.name}
             </span>
           </div>
@@ -110,27 +110,27 @@ export function MatchCard({ match }: MatchCardProps) {
                 <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#F0FDF4', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
                   {match.score.home ?? 0}
                 </span>
-                <span style={{ color: '#374151', fontWeight: 700, fontSize: '0.9rem' }}>–</span>
+                <span style={{ color: '#6E6E6E', fontWeight: 700, fontSize: '0.9rem' }}>-</span>
                 <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#F0FDF4', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
                   {match.score.away ?? 0}
                 </span>
               </div>
             ) : (
               <>
-                <span style={{ fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#374151' }}>
+                <span style={{ fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#6E6E6E' }}>
                   {date}
                 </span>
-                <span style={{ fontSize: '0.88rem', fontWeight: 900, color: '#6B7280', fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ fontSize: '0.88rem', fontWeight: 900, color: '#B3B3B3', fontVariantNumeric: 'tabular-nums' }}>
                   {time}
                 </span>
-                <span style={{ fontSize: '0.55rem', color: '#374151', fontWeight: 600 }}>UTC</span>
+                <span style={{ fontSize: '0.55rem', color: '#6E6E6E', fontWeight: 600 }}>UTC</span>
               </>
             )}
           </div>
 
           {/* Away team */}
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 7, minWidth: 0, justifyContent: 'flex-end' }}>
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#F0FDF4', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'right' }}>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#FFFFFF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'right' }}>
               {match.awayTeam.name}
             </span>
             <TeamFlag code={match.awayTeam.code} name={match.awayTeam.name} size="sm" />
@@ -145,39 +145,39 @@ export function MatchCard({ match }: MatchCardProps) {
           >
             <span className="odds-label">{myChoice ? 'Voted' : 'Predict'}</span>
             <span style={{ fontSize: '0.82rem', fontVariantNumeric: 'tabular-nums' }}>
-              {myChoice ? '✓' : `${pct.home}%`}
+              {myChoice ? 'OK' : `${pct.home}%`}
             </span>
           </button>
         </div>
 
         {/* Community prediction bar */}
         <div style={{ padding: '0 10px 8px' }}>
-          <div style={{ display: 'flex', height: 4, borderRadius: 9999, overflow: 'hidden', background: '#1E2D1F' }}>
+          <div style={{ display: 'flex', height: 4, borderRadius: 9999, overflow: 'hidden', background: '#2A2A2A' }}>
             <motion.div
-              style={{ background: '#22C55E', height: '100%' }}
+              style={{ background: '#F2B544', height: '100%' }}
               initial={false}
               animate={{ width: `${pct.home}%` }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
             />
             <motion.div
-              style={{ background: '#F59E0B', height: '100%' }}
+              style={{ background: '#C8922E', height: '100%' }}
               initial={false}
               animate={{ width: `${pct.draw}%` }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
             />
             <motion.div
-              style={{ background: '#7C3AED', height: '100%' }}
+              style={{ background: '#9945FF', height: '100%' }}
               initial={false}
               animate={{ width: `${pct.away}%` }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
             />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
-            <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#22C55E', fontVariantNumeric: 'tabular-nums' }}>{pct.home}%</span>
-            <span style={{ fontSize: '0.6rem', fontWeight: 600, color: '#374151', fontVariantNumeric: 'tabular-nums' }}>
-              {loaded ? `${total.toLocaleString()} votes` : '…'} · {pct.draw}% draw
+            <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#F2B544', fontVariantNumeric: 'tabular-nums' }}>{pct.home}%</span>
+            <span style={{ fontSize: '0.6rem', fontWeight: 600, color: '#6E6E6E', fontVariantNumeric: 'tabular-nums' }}>
+              {loaded ? `${total.toLocaleString()} votes` : '...'} / {pct.draw}% draw
             </span>
-            <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#7C3AED', fontVariantNumeric: 'tabular-nums' }}>{pct.away}%</span>
+            <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#9945FF', fontVariantNumeric: 'tabular-nums' }}>{pct.away}%</span>
           </div>
         </div>
 
@@ -186,8 +186,8 @@ export function MatchCard({ match }: MatchCardProps) {
           style={{ padding: '0 10px 7px', display: 'none' }}
           className="md:block"
         >
-          <p style={{ fontSize: '0.62rem', color: '#374151', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={match.venue}>
-            📍 {match.venue}
+          <p style={{ fontSize: '0.62rem', color: '#6E6E6E', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={match.venue}>
+            {match.venue}
           </p>
         </div>
       </article>

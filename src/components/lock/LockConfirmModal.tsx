@@ -40,7 +40,7 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
         <>
           <motion.div
             key="bd"
-            style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(15,23,42,0.5)', backdropFilter: 'blur(4px)' }}
+            style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -64,14 +64,14 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <h2 id="lock-confirm-title" style={{ fontSize: '1.1rem', fontWeight: 900, color: '#0F172A', margin: 0 }}>
+              <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #2A2A2A', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h2 id="lock-confirm-title" style={{ fontSize: '1.1rem', fontWeight: 900, color: '#FFFFFF', margin: 0 }}>
                   Confirm Lock
                 </h2>
                 <button
                   ref={closeBtnRef}
                   onClick={onClose}
-                  style={{ padding: '0.375rem', borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: '#64748B' }}
+                  style={{ padding: '0.375rem', borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', color: '#B3B3B3' }}
                   aria-label="Close"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -82,7 +82,7 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
 
               {/* Summary */}
               <div style={{ padding: '1.5rem' }}>
-                <div style={{ borderRadius: 12, background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '1.25rem', marginBottom: '1.25rem' }}>
+                <div style={{ borderRadius: 12, background: '#111111', border: '1px solid #2A2A2A', padding: '1.25rem', marginBottom: '1.25rem' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     {[
                       { label: 'Locking', value: formatTokenAmount(amount) + ' $WCB', big: true },
@@ -91,13 +91,13 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
                       { label: 'Credits Earned', value: formatCredits(credits), big: true, green: true },
                     ].map((item) => (
                       <div key={item.label}>
-                        <p style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94A3B8', marginBottom: '0.25rem' }}>
+                        <p style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E', marginBottom: '0.25rem' }}>
                           {item.label}
                         </p>
                         <p style={{
                           fontSize: item.big ? '1.25rem' : '0.95rem',
                           fontWeight: 900,
-                          color: item.green ? '#15803D' : '#0F172A',
+                          color: item.green ? '#FFD36B' : '#FFFFFF',
                         }}>
                           {item.value}
                         </p>
@@ -107,9 +107,8 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
                 </div>
 
                 {/* Warning */}
-                <div style={{ borderRadius: 10, background: '#FEF3C7', border: '1px solid #FDE68A', padding: '0.875rem', marginBottom: '1.25rem', display: 'flex', gap: '0.625rem' }}>
-                  <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>⚠️</span>
-                  <p style={{ fontSize: '0.8rem', color: '#92400E', margin: 0, lineHeight: 1.5 }}>
+                <div style={{ borderRadius: 10, background: 'rgba(242,181,68,0.08)', border: '1px solid rgba(242,181,68,0.26)', padding: '0.875rem', marginBottom: '1.25rem', display: 'flex', gap: '0.625rem' }}>
+                  <p style={{ fontSize: '0.8rem', color: '#B3B3B3', margin: 0, lineHeight: 1.5 }}>
                     <strong>No early withdrawal.</strong> Your tokens will be locked until {unlockDate}. This action cannot be undone.
                   </p>
                 </div>
@@ -122,9 +121,9 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
                       flex: 1,
                       padding: '0.75rem',
                       borderRadius: 10,
-                      border: '1.5px solid #E2E8F0',
-                      background: '#ffffff',
-                      color: '#334155',
+                      border: '1px solid #2A2A2A',
+                      background: '#171717',
+                      color: '#B3B3B3',
                       fontSize: '0.9rem',
                       fontWeight: 700,
                       cursor: 'pointer',
@@ -141,8 +140,8 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
                       padding: '0.75rem',
                       borderRadius: 10,
                       border: 'none',
-                      background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
-                      color: '#ffffff',
+                      background: '#F2B544',
+                      color: '#070707',
                       fontSize: '0.9rem',
                       fontWeight: 800,
                       cursor: 'pointer',
@@ -151,14 +150,14 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '0.5rem',
-                      boxShadow: '0 4px 14px -2px rgba(21,128,61,0.3)',
+                      boxShadow: '0 8px 22px rgba(242,181,68,0.24)',
                     }}
                   >
-                    🔒 Lock via Streamflow
+                    Lock via Streamflow
                   </a>
                 </div>
 
-                <p style={{ fontSize: '0.7rem', color: '#94A3B8', textAlign: 'center', marginTop: '0.875rem' }}>
+                <p style={{ fontSize: '0.7rem', color: '#6E6E6E', textAlign: 'center', marginTop: '0.875rem' }}>
                   You will be redirected to Streamflow Finance to complete the lock on-chain
                 </p>
               </div>

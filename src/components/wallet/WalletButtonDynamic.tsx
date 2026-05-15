@@ -18,7 +18,8 @@ export const WalletButtonDynamic = dynamic(
           height: 36,
           width: 130,
           borderRadius: 10,
-          background: '#E2E8F0',
+          background: '#171717',
+          border: '1px solid #2A2A2A',
           display: 'inline-block',
         }}
         aria-hidden="true"
@@ -41,7 +42,8 @@ export const WalletMultiButtonDynamic = dynamic(
           height: 36,
           width: 130,
           borderRadius: 10,
-          background: '#E2E8F0',
+          background: '#171717',
+          border: '1px solid #2A2A2A',
           display: 'inline-block',
         }}
         aria-hidden="true"
@@ -61,12 +63,11 @@ export const WalletDashboardDynamic = dynamic(
           padding: '3rem 2rem',
           textAlign: 'center',
           borderRadius: 16,
-          border: '2px dashed #E2E8F0',
-          background: '#FAFBF8',
+          border: '1px dashed #3A3A3A',
+          background: '#111111',
         }}
       >
-        <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🔒</div>
-        <p style={{ color: '#94A3B8', fontSize: '0.85rem' }}>Loading wallet…</p>
+        <p style={{ color: '#B3B3B3', fontSize: '0.85rem' }}>Loading wallet...</p>
       </div>
     ),
   },

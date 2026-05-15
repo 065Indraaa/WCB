@@ -56,12 +56,12 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
   return (
     <div className="card overflow-hidden">
       {/* Header */}
-      <div style={{ padding: '1.5rem', borderBottom: '1px solid #E2E8F0', background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)' }}>
+      <div style={{ padding: '1.5rem', borderBottom: '1px solid #2A2A2A', background: 'linear-gradient(135deg, #111111 0%, #171717 100%)' }}>
         <p style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.8)', marginBottom: '0.25rem' }}>
-          Early Stage · Lock & Earn
+          Early Stage / Lock & Earn
         </p>
         <h2 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>
-          Lock $WCB → Get Credits
+          Lock $WCB for Credits
         </h2>
         <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.85)', marginTop: '0.375rem' }}>
           Lock your tokens via Streamflow. Earn credits to use when betting goes live.
@@ -72,7 +72,7 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
 
         {/* Amount input */}
         <div>
-          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '0.5rem' }}>
+          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#B3B3B3', marginBottom: '0.5rem' }}>
             Amount to Lock
           </label>
           <div style={{ position: 'relative' }}>
@@ -85,16 +85,16 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
                 width: '100%',
                 padding: '0.75rem 4rem 0.75rem 1rem',
                 borderRadius: 12,
-                border: '1.5px solid #E2E8F0',
+                border: '1px solid #2A2A2A',
                 fontSize: '1rem',
                 fontWeight: 700,
-                color: '#0F172A',
-                background: '#FAFBF8',
+                color: '#FFFFFF',
+                background: '#111111',
                 outline: 'none',
                 boxSizing: 'border-box',
               }}
             />
-            <span style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '0.8rem', fontWeight: 700, color: '#64748B' }}>
+            <span style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '0.8rem', fontWeight: 700, color: '#B3B3B3' }}>
               $WCB
             </span>
           </div>
@@ -108,9 +108,9 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
                 style={{
                   padding: '0.25rem 0.75rem',
                   borderRadius: 8,
-                  border: `1.5px solid ${numAmount === p ? '#15803D' : '#E2E8F0'}`,
-                  background: numAmount === p ? '#DCFCE7' : '#ffffff',
-                  color: numAmount === p ? '#15803D' : '#64748B',
+                  border: `1px solid ${numAmount === p ? '#F2B544' : '#2A2A2A'}`,
+                  background: numAmount === p ? 'rgba(242,181,68,0.12)' : '#111111',
+                  color: numAmount === p ? '#FFD36B' : '#B3B3B3',
                   fontSize: '0.75rem',
                   fontWeight: 700,
                   cursor: 'pointer',
@@ -130,7 +130,7 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
 
         {/* Duration selector */}
         <div>
-          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '0.5rem' }}>
+          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#B3B3B3', marginBottom: '0.5rem' }}>
             Lock Duration
           </label>
 
@@ -145,8 +145,8 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
                   style={{
                     padding: '0.625rem 0.5rem',
                     borderRadius: 10,
-                    border: `2px solid ${active ? t.color : '#E2E8F0'}`,
-                    background: active ? `${t.color}15` : '#ffffff',
+                    border: `1px solid ${active ? '#F2B544' : '#2A2A2A'}`,
+                    background: active ? 'rgba(242,181,68,0.12)' : '#111111',
                     cursor: 'pointer',
                     textAlign: 'center',
                     transition: 'all 0.15s',
@@ -156,17 +156,17 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
                   {t.highlight && (
                     <span style={{
                       position: 'absolute', top: -8, left: '50%', transform: 'translateX(-50%)',
-                      background: t.color, color: '#fff', fontSize: '9px', fontWeight: 800,
+                      background: '#F2B544', color: '#070707', fontSize: '9px', fontWeight: 800,
                       padding: '1px 6px', borderRadius: 9999, whiteSpace: 'nowrap',
                     }}>
                       POPULAR
                     </span>
                   )}
-                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: active ? t.color : '#0F172A' }}>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: active ? '#FFD36B' : '#FFFFFF' }}>
                     {t.label}
                   </div>
-                  <div style={{ fontSize: '0.7rem', fontWeight: 600, color: active ? t.color : '#94A3B8', marginTop: '0.125rem' }}>
-                    {t.multiplier}x · {t.badge}
+                  <div style={{ fontSize: '0.7rem', fontWeight: 600, color: active ? '#FFD36B' : '#6E6E6E', marginTop: '0.125rem' }}>
+                    {t.multiplier}x / {t.badge}
                   </div>
                 </button>
               );
@@ -180,9 +180,9 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
               style={{
                 padding: '0.5rem 1rem',
                 borderRadius: 8,
-                border: `1.5px solid ${useCustom ? '#15803D' : '#E2E8F0'}`,
-                background: useCustom ? '#DCFCE7' : '#ffffff',
-                color: useCustom ? '#15803D' : '#64748B',
+                border: `1px solid ${useCustom ? '#F2B544' : '#2A2A2A'}`,
+                background: useCustom ? 'rgba(242,181,68,0.12)' : '#111111',
+                color: useCustom ? '#FFD36B' : '#B3B3B3',
                 fontSize: '0.8rem',
                 fontWeight: 700,
                 cursor: 'pointer',
@@ -203,17 +203,17 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
                   flex: 1,
                   padding: '0.5rem 0.75rem',
                   borderRadius: 8,
-                  border: '1.5px solid #E2E8F0',
+                  border: '1px solid #2A2A2A',
                   fontSize: '0.9rem',
                   fontWeight: 700,
-                  color: '#0F172A',
-                  background: '#FAFBF8',
+                  color: '#FFFFFF',
+                  background: '#111111',
                   outline: 'none',
                 }}
               />
             )}
             {useCustom && customDays && (
-              <span style={{ fontSize: '0.8rem', color: '#64748B', whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: '0.8rem', color: '#B3B3B3', whiteSpace: 'nowrap' }}>
                 {multiplier.toFixed(2)}x multiplier
               </span>
             )}
@@ -230,19 +230,19 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
               exit={{ opacity: 0, y: -8 }}
               style={{
                 borderRadius: 14,
-                border: '2px solid #DCFCE7',
-                background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
+                border: '1px solid rgba(242,181,68,0.28)',
+                background: 'linear-gradient(135deg, #111111 0%, #171717 100%)',
                 padding: '1.25rem',
               }}
             >
-              <p style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#15803D', marginBottom: '0.75rem' }}>
+              <p style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#F2B544', marginBottom: '0.75rem' }}>
                 You will receive
               </p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '2.5rem', fontWeight: 900, color: '#15803D', lineHeight: 1 }}>
+                <span style={{ fontSize: '2.5rem', fontWeight: 900, color: '#FFD36B', lineHeight: 1 }}>
                   {formatCredits(credits)}
                 </span>
-                <span style={{ fontSize: '1rem', fontWeight: 700, color: '#22C55E' }}>Credits</span>
+                <span style={{ fontSize: '1rem', fontWeight: 700, color: '#B3B3B3' }}>Credits</span>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem', marginTop: '1rem' }}>
@@ -252,10 +252,10 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
                   { label: 'Multiplier', value: multiplier.toFixed(2) + 'x' },
                 ].map((item) => (
                   <div key={item.label} style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B' }}>
+                    <div style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E' }}>
                       {item.label}
                     </div>
-                    <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0F172A', marginTop: '0.125rem' }}>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FFFFFF', marginTop: '0.125rem' }}>
                       {item.value}
                     </div>
                   </div>
@@ -263,10 +263,9 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
               </div>
 
               {unlockDate && (
-                <div style={{ marginTop: '0.875rem', padding: '0.625rem 0.875rem', borderRadius: 8, background: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '0.9rem' }}>🔒</span>
-                  <p style={{ fontSize: '0.8rem', color: '#334155', margin: 0 }}>
-                    <strong>Locked until {unlockDate}</strong> — no early withdrawal
+                <div style={{ marginTop: '0.875rem', padding: '0.625rem 0.875rem', borderRadius: 8, background: '#0B0B0B', border: '1px solid #2A2A2A', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <p style={{ fontSize: '0.8rem', color: '#B3B3B3', margin: 0 }}>
+                    <strong style={{ color: '#FFFFFF' }}>Locked until {unlockDate}</strong> - no early withdrawal
                   </p>
                 </div>
               )}
@@ -286,7 +285,7 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
                   >
                     {tier.badge} Tier
                   </span>
-                  <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#B3B3B3' }}>
                     1 credit = 100 $WCB when redeemed
                   </span>
                 </div>
@@ -300,13 +299,13 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
               exit={{ opacity: 0 }}
               style={{
                 borderRadius: 14,
-                border: '1.5px dashed #E2E8F0',
+                border: '1px dashed #3A3A3A',
                 padding: '1.5rem',
                 textAlign: 'center',
               }}
             >
-              <p style={{ fontSize: '0.85rem', color: '#94A3B8' }}>
-                Enter an amount ≥ {MIN_LOCK_AMOUNT.toLocaleString()} $WCB and select a duration to see your credits
+              <p style={{ fontSize: '0.85rem', color: '#B3B3B3' }}>
+                Enter at least {MIN_LOCK_AMOUNT.toLocaleString()} $WCB and select a duration to preview credits.
               </p>
             </motion.div>
           )}
@@ -321,20 +320,20 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
             padding: '0.875rem',
             borderRadius: 12,
             border: 'none',
-            background: isValid ? 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)' : '#E2E8F0',
-            color: isValid ? '#ffffff' : '#94A3B8',
+            background: isValid ? '#F2B544' : '#2A2A2A',
+            color: isValid ? '#070707' : '#6E6E6E',
             fontSize: '1rem',
             fontWeight: 800,
             cursor: isValid ? 'pointer' : 'not-allowed',
             transition: 'all 0.2s',
-            boxShadow: isValid ? '0 4px 14px -2px rgba(21,128,61,0.3)' : 'none',
+            boxShadow: isValid ? '0 8px 22px rgba(242,181,68,0.24)' : 'none',
           }}
         >
-          {isValid ? `🔒 Lock ${formatTokenAmount(numAmount)} $WCB via Streamflow` : 'Enter amount & duration to continue'}
+          {isValid ? `Lock ${formatTokenAmount(numAmount)} $WCB via Streamflow` : 'Enter amount and duration to continue'}
         </button>
 
-        <p style={{ fontSize: '0.72rem', color: '#94A3B8', textAlign: 'center', lineHeight: 1.5 }}>
-          Powered by <strong style={{ color: '#64748B' }}>Streamflow Finance</strong> · Tokens locked on-chain · No early withdrawal · Early stage only
+        <p style={{ fontSize: '0.72rem', color: '#6E6E6E', textAlign: 'center', lineHeight: 1.5 }}>
+          Powered by <strong style={{ color: '#B3B3B3' }}>Streamflow Finance</strong> / Tokens locked on-chain / No early withdrawal / Early stage only
         </p>
       </div>
     </div>
