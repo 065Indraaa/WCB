@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { PublicKey } from '@solana/web3.js';
+import { WCB_MINT } from '@/lib/tokenConfig';
+import { buildHeliusRpcUrl, hasHeliusCredentials } from '@/lib/server/helius';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const DEFAULT_WCB_MINT = 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
 const SOL_MINT = 'So11111111111111111111111111111111111111112';
 const PUMP_PROGRAM_ID = new PublicKey('6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P');
 const LAMPORTS_PER_SOL = 1_000_000_000;
@@ -79,17 +80,8 @@ function numberOrNull(value: unknown): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-function buildRpcUrl() {
-  const apiKey = process.env.HELIUS_API_KEY;
-  const baseUrl = process.env.HELIUS_RPC_URL ?? 'https://mainnet.helius-rpc.com';
-  if (!apiKey || apiKey === 'your_helius_api_key_here') return 'https://api.mainnet-beta.solana.com';
-  if (baseUrl.includes('api-key=')) return baseUrl;
-  const separator = baseUrl.includes('?') ? '&' : baseUrl.endsWith('/') ? '?' : '/?';
-  return `${baseUrl}${separator}api-key=${apiKey}`;
-}
-
 async function rpc<T>(method: string, params: unknown[] | Record<string, unknown>): Promise<T> {
-  const res = await fetch(buildRpcUrl(), {
+  const res = await fetch(buildHeliusRpcUrl(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
@@ -132,11 +124,10 @@ async function detectPumpCreatorWallet() {
   const explicitWallet = process.env.PUMPFUN_CREATOR_WALLET;
   if (explicitWallet) return explicitWallet;
 
-  const apiKey = process.env.HELIUS_API_KEY;
-  if (!apiKey || apiKey === 'your_helius_api_key_here') return null;
+  if (!hasHeliusCredentials()) return null;
 
   try {
-    const asset = await rpc<{ creators?: AssetCreator[] }>('getAsset', { id: process.env.NEXT_PUBLIC_TOKEN_ADDRESS || DEFAULT_WCB_MINT });
+    const asset = await rpc<{ creators?: AssetCreator[] }>('getAsset', { id: WCB_MINT });
     const creators = asset.creators ?? [];
     return creators.find((creator) => creator.verified && creator.address)?.address
       ?? creators.find((creator) => creator.address)?.address
@@ -163,23 +154,9 @@ async function fetchJupiterToken(query: string, apiKey?: string): Promise<Jupite
 }
 
 export async function GET() {
-  const tokenAddress = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || DEFAULT_WCB_MINT;
+  const tokenAddress = WCB_MINT;
   const apiKey = process.env.JUPITER_API_KEY;
   const allocationBps = Number(process.env.PRIZE_POOL_ALLOCATION_BPS ?? 10_000);
-
-  if (!tokenAddress || tokenAddress === 'your_token_contract_address_here') {
-    return NextResponse.json({
-      available: false,
-      source: 'not-configured',
-      message: 'NEXT_PUBLIC_TOKEN_ADDRESS is not configured',
-      volume24hUsd: 0,
-      creatorFeeRate: 0,
-      creatorFee24hUsd: 0,
-      prizePoolCredit24hUsd: 0,
-      allocationRate: 0,
-      lastUpdated: new Date().toISOString(),
-    });
-  }
 
   try {
     const [token, sol] = await Promise.all([

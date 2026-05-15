@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/shared/BrandLogo';
+import { WCB_MINT } from '@/lib/tokenConfig';
 
-const CONTRACT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? 'Coming soon';
+const CONTRACT = WCB_MINT;
 const PUMPFUN  = process.env.NEXT_PUBLIC_PUMPFUN_URL  ?? 'https://pump.fun';
 const TWITTER  = process.env.NEXT_PUBLIC_TWITTER_URL  ?? 'https://twitter.com/WCBLIVE';
 const TELEGRAM = process.env.NEXT_PUBLIC_TELEGRAM_URL ?? 'https://t.me/wcblive';
@@ -23,7 +24,6 @@ export function Footer() {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    if (CONTRACT === 'Coming soon') return;
     try {
       await navigator.clipboard.writeText(CONTRACT);
       setCopied(true);

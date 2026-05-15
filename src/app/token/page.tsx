@@ -6,10 +6,11 @@ import { useTokenMetrics } from '@/lib/hooks/useTokenMetrics';
 import { PumpFunBadge } from '@/components/shared/PumpFunBadge';
 import { BrandLogo } from '@/components/shared/BrandLogo';
 import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
+import { WCB_MINT } from '@/lib/tokenConfig';
 
 const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
 const JUPITER = process.env.NEXT_PUBLIC_JUPITER_URL ?? 'https://jup.ag';
-const CONTRACT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? 'Coming soon';
+const CONTRACT = WCB_MINT;
 
 export default function TokenPage() {
   const { data: metrics, isLoading, error, refetch } = useTokenMetrics();
@@ -17,7 +18,6 @@ export default function TokenPage() {
   const errorMessage = error instanceof Error ? error.message : error ? String(error) : null;
 
   const handleCopy = async () => {
-    if (CONTRACT === 'Coming soon') return;
     try {
       await navigator.clipboard.writeText(CONTRACT);
       setCopied(true);

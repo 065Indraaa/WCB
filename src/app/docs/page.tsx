@@ -4,9 +4,9 @@ import { BrandLogo } from '@/components/shared/BrandLogo';
 import { WCB_MINT } from '@/lib/wallet';
 
 export const metadata = {
-  title: 'Docs & Whitepaper | WORLDCUPBET Protocol',
+  title: 'Documentation & Whitepaper | WORLDCUPBET',
   description:
-    'Clear WORLDCUPBET docs and whitepaper for the Solana World Cup 2026 app, holder ranking, Streamflow lock credits, and prize pool credit.',
+    'WORLDCUPBET documentation for the World Cup 2026 app, $WCB holder ranking, Streamflow lock credits, and prize pool credit calculation.',
 };
 
 const GOLD = '#F2B544';
@@ -24,11 +24,11 @@ const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
 const JUPITER = process.env.NEXT_PUBLIC_JUPITER_URL ?? 'https://jup.ag';
 
 const NAV_ITEMS = [
-  { href: '#start', label: 'Start Here' },
-  { href: '#how-it-works', label: 'How It Works' },
+  { href: '#start', label: 'Overview' },
+  { href: '#how-it-works', label: 'Mechanism' },
   { href: '#lock-credits', label: 'Lock & Credits' },
-  { href: '#betting', label: 'Betting Soon' },
-  { href: '#benefits', label: 'Benefits' },
+  { href: '#betting', label: 'Betting Status' },
+  { href: '#benefits', label: 'User Categories' },
   { href: '#leaderboards', label: 'Leaderboards' },
   { href: '#prize-pool', label: 'Prize Pool' },
   { href: '#whitepaper', label: 'Whitepaper' },
@@ -40,21 +40,21 @@ const USER_ACTIONS = [
   {
     step: '01',
     title: 'Hold $WCB',
-    body: 'Your wallet balance gives you a holder rank. This is the simplest status layer in the app.',
-    action: 'View holder board',
+    body: 'A wallet that holds $WCB can be included in the holder leaderboard based on its token balance.',
+    action: 'View holder leaderboard',
     href: '/leaderboard',
   },
   {
     step: '02',
     title: 'Lock $WCB',
-    body: 'Locking through Streamflow turns commitment into credits. Credits are shown separately from normal holdings.',
+    body: 'A wallet can lock $WCB through Streamflow. The app records the locked amount and calculates credits separately from liquid holdings.',
     action: 'Open lock page',
     href: '/lock',
   },
   {
     step: '03',
-    title: 'Use the app during the tournament',
-    body: 'When match windows go live, holder rank, lock credits, and activity can be used for campaign eligibility.',
+    title: 'Participate during the tournament',
+    body: 'When tournament features are active, holder balance, lock credits, and eligible activity can be used for reward or access rules.',
     action: 'View matches',
     href: '/matches',
   },
@@ -64,113 +64,113 @@ const SYSTEM_ROWS = [
   {
     layer: 'Holder Leaderboard',
     source: 'Live token accounts for the $WCB mint',
-    means: 'Who owns the most $WCB right now.',
-    live: 'Live when token address and RPC are configured',
+    means: 'Ranks wallets by current $WCB balance.',
+    live: 'Live when the token address and RPC provider are configured',
   },
   {
     layer: 'Lock Leaderboard',
     source: 'Active Streamflow locks for the same $WCB mint',
-    means: 'Who has locked tokens and built the strongest credit position.',
-    live: 'Live from Streamflow lock accounts',
+    means: 'Ranks wallets by active locked amount and calculated credits.',
+    live: 'Read from Streamflow lock accounts',
   },
   {
     layer: 'Prize Pool Credit',
     source: 'Estimated creator fee from token volume',
-    means: 'A transparent reward-capacity counter, not a fixed payout promise.',
-    live: 'Estimated from Jupiter volume and fee settings',
+    means: 'Shows estimated reward capacity. It is not a guaranteed payout.',
+    live: 'Estimated from market volume and configured fee settings',
   },
 ];
 
 const LOCK_MECHANISM = [
   {
     title: 'Connect wallet',
-    body: 'The app reads your Solana wallet so it can verify $WCB balance and future lock status.',
+    body: 'The app reads the connected Solana wallet to check $WCB balance and lock records.',
   },
   {
     title: 'Choose amount and duration',
-    body: 'The lock page estimates credits before the user commits. More tokens and longer duration can create a stronger credit position.',
+    body: 'The lock page estimates credits from the selected token amount and lock duration before the transaction is submitted.',
   },
   {
     title: 'Lock through Streamflow',
-    body: 'The lock action uses Streamflow as the on-chain lock layer, so the commitment can be verified from an external source.',
+    body: 'The lock transaction is created through Streamflow, allowing the lock record to be verified on an external platform.',
   },
   {
     title: 'Receive credit position',
-    body: 'Credits are wallet-bound app credits used for ranking, launch preparation, and future campaign eligibility.',
+    body: 'Credits are assigned to the wallet inside the app and used for ranking and eligibility calculations.',
   },
 ];
 
 const CREDIT_RULES = [
   {
-    label: 'Base logic',
+    label: 'Base rule',
     value: 'Credits are calculated from locked amount and lock duration.',
   },
   {
     label: 'Wallet-bound',
-    value: 'Credits belong to the connected wallet and are not shown as transferable tokens.',
+    value: 'Credits are associated with the wallet and are not transferable tokens.',
   },
   {
     label: 'Ranking use',
-    value: 'Credits decide lock leaderboard position and prepared launch status.',
+    value: 'Credits determine the wallet position on the lock leaderboard.',
   },
   {
     label: 'Future use',
-    value: 'Credits can be used by betting access, campaigns, and tournament reward rules once activated.',
+    value: 'Credits may be referenced by future access, reward, or tournament rules.',
   },
 ];
 
 const BETTING_FLOW = [
   {
     phase: 'Preview',
-    title: 'Match board before launch',
-    body: 'Users can explore fixtures, groups, and pre-launch market context before betting opens.',
+    title: 'Match information before launch',
+    body: 'Users can review fixtures, groups, and match information before betting functionality is activated.',
   },
   {
     phase: 'Access',
-    title: 'Wallet-gated product layer',
-    body: '$WCB balance, holder rank, and lock credits can be used to shape access and campaign eligibility.',
+    title: 'Wallet-based access rules',
+    body: '$WCB balance, holder rank, and lock credits may be used for access or eligibility rules.',
   },
   {
     phase: 'Market',
     title: 'Betting layer coming soon',
-    body: 'The betting product is planned for the World Cup window. Final behavior depends on launch configuration and jurisdiction rules.',
+    body: 'Betting functionality is planned for the World Cup period. Final availability depends on product configuration and applicable rules.',
   },
   {
     phase: 'Reward',
-    title: 'Campaign settlement',
-    body: 'Campaigns can use match activity, holder status, lock credits, and prize pool credit when reward windows close.',
+    title: 'Reward calculation',
+    body: 'Reward rules may reference match activity, holder balance, lock credits, and prize pool credit.',
   },
 ];
 
 const BENEFITS = [
   {
-    title: 'For Holders',
+    title: 'Holders',
     accent: GOLD,
     items: [
       'Appear on the holder leaderboard by wallet balance.',
-      'Build visible status through tiers and badges.',
-      'Qualify for holder snapshots and campaign access.',
-      'Stay eligible without needing to lock, depending on campaign rules.',
+      'Be grouped into tiers based on balance thresholds.',
+      'Be included in holder snapshots when applicable.',
+      'Remain separate from the lock leaderboard.',
     ],
   },
   {
-    title: 'For Lockers',
+    title: 'Lock Participants',
     accent: PURPLE,
     items: [
-      'Turn $WCB commitment into wallet-bound credits.',
+      'Convert active $WCB locks into wallet-bound credits.',
       'Compete on the lock leaderboard using locked amount and duration.',
-      'Prepare betting-credit capacity before live markets open.',
-      'Show stronger long-term commitment than holding alone.',
+      'Keep locked balances separate from liquid holdings.',
+      'Use Streamflow records as the lock data source.',
     ],
   },
   {
-    title: 'For Active Players',
+    title: 'Tournament Participants',
     accent: GREEN,
     items: [
-      'Use the match app during tournament windows.',
-      'Join campaigns tied to fixtures, predictions, or market activity.',
-      'Combine holder rank, lock credits, and activity for eligibility.',
-      'Compete for rewards funded by transparent prize pool credit.',
+      'Use match pages during tournament windows.',
+      'Take part in eligible prediction or match activities when available.',
+      'Have holder balance, lock credits, and activity evaluated separately.',
+      'Receive rewards only under published product rules.',
     ],
   },
 ];
@@ -179,13 +179,13 @@ const LEADERBOARD_CARDS = [
   {
     title: 'Holder Board',
     accent: GOLD,
-    body: 'Ranks wallets by $WCB balance. This is the ownership layer.',
-    bullets: ['Shows holder rank', 'Uses token account balances', 'Good for holder snapshots'],
+    body: 'Ranks wallets by $WCB balance.',
+    bullets: ['Shows holder rank', 'Uses token account balances', 'Supports holder snapshots'],
   },
   {
     title: 'Lock Board',
     accent: PURPLE,
-    body: 'Ranks wallets by active locked amount and credits. This is the commitment layer.',
+    body: 'Ranks wallets by active locked amount and calculated credits.',
     bullets: ['Uses Streamflow locks', 'Shows locked $WCB and credits', 'Keeps lock rank separate from holdings'],
   },
 ];
@@ -193,65 +193,65 @@ const LEADERBOARD_CARDS = [
 const PRIZE_POOL_STEPS = [
   {
     title: 'Volume is tracked',
-    body: 'The app reads token volume from the configured market data source.',
+    body: 'The app reads token volume from the configured market data provider.',
   },
   {
     title: 'Creator fee is estimated',
-    body: 'The fee rate follows the configured creator-fee setting or the Pump.fun tier model.',
+    body: 'The fee rate uses the configured creator-fee setting or the selected fee model.',
   },
   {
     title: 'Credit is displayed',
-    body: 'The app displays estimated prize pool credit so users can understand reward capacity.',
+    body: 'The app displays estimated prize pool credit for transparency.',
   },
   {
-    title: 'Campaigns can allocate it',
-    body: 'Future campaigns can use holder rank, lock credits, and match activity for eligibility.',
+    title: 'Rules can reference it',
+    body: 'Future reward rules can reference holder rank, lock credits, and match activity.',
   },
 ];
 
 const WHITEPAPER_SECTIONS = [
   {
     title: '1. The Problem',
-    body: 'World Cup attention is huge but short. Most crypto sports pages do not give users a clear reason to keep returning before matches start. They show a token and a promise, but not a real product loop.',
+    body: 'World Cup activity is concentrated around a limited event period. Many token-based sports pages do not provide clear pre-tournament functions beyond basic token promotion.',
   },
   {
     title: '2. The Product',
-    body: 'WORLDCUPBET is a Solana-native World Cup app. Users can explore matches, connect a wallet, hold $WCB, lock $WCB for credits, and track their rank before and during the tournament.',
+    body: 'WORLDCUPBET is a Solana-based World Cup application. Users can review matches, connect a wallet, hold $WCB, lock $WCB for credits, and view leaderboard positions.',
   },
   {
-    title: '3. The Utility Loop',
-    body: 'The loop is simple: hold for status, lock for credits, prepare for betting access, use the app during match windows, and qualify for campaigns based on visible wallet behavior.',
+    title: '3. The Participation Model',
+    body: 'The model has separate functions for holding, locking, and tournament activity. Each function has its own data source and display area.',
   },
   {
     title: '4. The Reward Model',
-    body: 'Prize pool credit is designed to be backed by creator-fee activity. It is shown as a live estimate so future campaign rewards can be connected to real usage instead of arbitrary emissions.',
+    body: 'Prize pool credit is estimated from market activity and fee assumptions. It is an informational metric and does not create a guaranteed payout.',
   },
   {
     title: '5. The Trust Model',
-    body: 'Holder rank comes from token accounts. Lock rank comes from Streamflow. Prize pool credit comes from market volume and transparent fee assumptions. Each layer has a separate source.',
+    body: 'Holder rank is based on token accounts. Lock rank is based on Streamflow lock records. Prize pool credit is based on market volume and configured fee assumptions.',
   },
 ];
 
 const ROADMAP = [
   {
     phase: 'Phase 1',
-    title: 'Pre-launch App',
+    title: 'Pre-Launch Application',
     window: 'Now - May 2026',
     status: 'In progress',
-    items: ['Docs and whitepaper', 'Match and group pages', 'Token and wallet surfaces'],
+    items: ['Documentation and whitepaper', 'Match and group pages', 'Token and wallet pages'],
   },
   {
     phase: 'Phase 2',
     title: 'Holder Layer',
     window: 'May - June 2026',
     status: 'Activation',
-    items: ['Live holder leaderboard', 'Holder tiers and badges', 'Snapshot-ready wallet ranking'],
+    items: ['Live holder leaderboard', 'Holder tiers', 'Wallet ranking for snapshots'],
   },
   {
     phase: 'Phase 3',
     title: 'Lock Credit Layer',
     window: 'Before kickoff',
-    status: 'Utility',
+    status: 'Implementation',
     items: ['Streamflow lock tracking', 'Credit leaderboard', 'Wallet lock dashboard'],
   },
   {
@@ -259,26 +259,26 @@ const ROADMAP = [
     title: 'Tournament Layer',
     window: 'June 11, 2026+',
     status: 'Live event',
-    items: ['Betting layer activation', 'Matchday campaign windows', 'Prize pool credit tracking', 'Holder and locker rewards'],
+    items: ['Betting layer activation', 'Matchday reward windows', 'Prize pool credit tracking', 'Holder and lock participant rewards'],
   },
 ];
 
 const FAQS = [
   {
-    q: 'Is $WCB only a meme token?',
-    a: '$WCB is positioned as the access and status token for the WORLDCUPBET app. The app gives it visible utility through holder rank, lock credits, and campaign eligibility.',
+    q: 'What is $WCB used for?',
+    a: '$WCB is used by the app for holder ranking, lock credit calculation, and eligibility checks where applicable.',
   },
   {
     q: 'Why are there two leaderboards?',
-    a: 'Because holding and locking are different behaviors. Holder board shows ownership. Lock board shows commitment and prepared credits.',
+    a: 'Holding and locking are different actions. The holder leaderboard ranks liquid token balances. The lock leaderboard ranks active Streamflow locks and calculated credits.',
   },
   {
     q: 'Is prize pool credit guaranteed payout?',
-    a: 'No. It is a transparent credit estimate for reward capacity. Actual campaign rules, eligibility, and distribution windows should be announced per campaign.',
+    a: 'No. Prize pool credit is an estimate. Actual rewards depend on published rules, eligibility criteria, and distribution windows.',
   },
   {
     q: 'What is live now?',
-    a: 'The app can show tournament pages, token access, wallet connection, holder data, Streamflow lock data, and estimated prize pool credit when the required API keys and token address are configured.',
+    a: 'The app can show tournament pages, token access, wallet connection, holder data, Streamflow lock data, and estimated prize pool credit when the required configuration is available.',
   },
 ];
 
@@ -438,7 +438,7 @@ export default function DocsPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.1rem' }}>
                 <BrandLogo size="lg" showText={false} />
                 <span style={{ padding: '0.28rem 0.72rem', borderRadius: 9999, background: 'rgba(20,241,149,0.1)', border: '1px solid rgba(20,241,149,0.25)', color: GREEN, fontSize: '0.68rem', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                  Simple Docs
+                  Documentation
                 </span>
                 <span style={{ padding: '0.28rem 0.72rem', borderRadius: 9999, background: 'rgba(242,181,68,0.1)', border: '1px solid rgba(242,181,68,0.25)', color: GOLD_SOFT, fontSize: '0.68rem', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                   Whitepaper v1
@@ -446,10 +446,10 @@ export default function DocsPage() {
               </div>
 
               <h1 className="text-4xl md:text-7xl" style={{ color: TEXT, lineHeight: 1, fontWeight: 900, marginBottom: '1rem', maxWidth: 900 }}>
-                WORLDCUPBET is a World Cup app powered by $WCB.
+                WORLDCUPBET Documentation
               </h1>
               <p style={{ color: TEXT_SOFT, fontSize: '1.05rem', lineHeight: 1.75, maxWidth: 780, marginBottom: '1.35rem' }}>
-                The idea is simple: hold $WCB for status, lock $WCB for credits, and use those visible wallet signals inside World Cup 2026 match campaigns.
+                WORLDCUPBET is a World Cup 2026 application that uses $WCB for holder ranking, Streamflow lock credits, and eligibility calculations.
               </p>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3" style={{ marginBottom: '1.35rem' }}>
@@ -485,14 +485,14 @@ export default function DocsPage() {
 
             <div className="card" style={{ padding: '1.2rem', background: SURFACE, boxShadow: '0 28px 80px rgba(0,0,0,0.36)' }}>
               <p className="section-eyebrow" style={{ marginBottom: 10 }}>
-                One-Minute Summary
+                Summary
               </p>
               <div style={{ display: 'grid', gap: '0.8rem' }}>
                 {[
-                  ['Hold', 'Build holder rank from wallet balance.'],
-                  ['Lock', 'Turn locked $WCB into wallet-bound credits.'],
-                  ['Betting', 'Coming soon for World Cup match windows.'],
-                  ['Benefits', 'Use holder, locker, and activity status for campaigns.'],
+                  ['Hold', 'Holder ranking is based on wallet balance.'],
+                  ['Lock', 'Lock credits are calculated from active Streamflow locks.'],
+                  ['Betting', 'Betting functionality is marked as coming soon.'],
+                  ['Rewards', 'Rewards depend on published eligibility rules.'],
                 ].map(([label, value]) => (
                   <div key={label} style={{ padding: '0.9rem', borderRadius: 8, background: CARD, border: `1px solid ${BORDER}` }}>
                     <p style={{ color: GOLD, fontSize: '0.7rem', fontWeight: 900, marginBottom: 4 }}>{label}</p>
@@ -510,30 +510,30 @@ export default function DocsPage() {
           <main>
             <Section
               id="start"
-              eyebrow="Start Here"
-              title="What is WORLDCUPBET?"
-              intro="WORLDCUPBET is a Solana-native app built around the 2026 World Cup. It gives $WCB holders a visible role inside the product instead of leaving the token as a standalone chart."
+              eyebrow="Overview"
+              title="Application overview."
+              intro="WORLDCUPBET is a Solana-based application for World Cup 2026. It connects match pages, wallet balances, token locks, and leaderboard data in one interface."
             >
               <div className="card" style={{ padding: '1.35rem', background: CARD }}>
                 <p style={{ color: TEXT_SOFT, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1rem' }}>
-                  The app has three clear layers:
+                  The application has three primary data areas:
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <StatusCard label="Ownership" value="Holder rank" />
-                  <StatusCard label="Commitment" value="Lock credits" accent={PURPLE} />
+                  <StatusCard label="Locking" value="Lock credits" accent={PURPLE} />
                   <StatusCard label="Rewards" value="Prize pool credit" accent={GREEN} />
                 </div>
                 <p style={{ color: TEXT_SOFT, fontSize: '0.92rem', lineHeight: 1.75, marginTop: '1rem', marginBottom: 0 }}>
-                  A user should understand the app without reading a complex whitepaper: buy or hold $WCB, lock if they want credits, then participate when tournament campaigns open.
+                  These areas are displayed separately so users can distinguish liquid holdings, locked positions, and estimated reward capacity.
                 </p>
               </div>
             </Section>
 
             <Section
               id="how-it-works"
-              eyebrow="How It Works"
-              title="Three user actions."
-              intro="The product loop is intentionally simple. Every important action has a visible output in the app."
+              eyebrow="Mechanism"
+              title="Primary user actions."
+              intro="Each user action has a separate output and data source."
             >
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {USER_ACTIONS.map((item) => (
@@ -570,7 +570,7 @@ export default function DocsPage() {
               id="lock-credits"
               eyebrow="Lock & Credits"
               title="How locking works."
-              intro="Locking is the commitment layer of WORLDCUPBET. It is designed for users who want to prepare a stronger launch position before the betting layer opens."
+              intro="Locking is used to calculate wallet-bound credits from Streamflow lock records."
             >
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3" style={{ marginBottom: '1rem' }}>
                 {LOCK_MECHANISM.map((item, index) => (
@@ -590,7 +590,7 @@ export default function DocsPage() {
 
               <div className="card" style={{ padding: '1.2rem', background: CARD }}>
                 <h3 style={{ color: TEXT, fontSize: '1rem', fontWeight: 900, marginBottom: '0.85rem' }}>
-                  What credits mean inside the app
+                  Credit rules
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {CREDIT_RULES.map((rule) => (
@@ -618,9 +618,9 @@ export default function DocsPage() {
 
             <Section
               id="betting"
-              eyebrow="Betting Coming Soon"
-              title="How the betting layer is intended to work."
-              intro="The current app prepares users before World Cup betting opens. The betting layer is presented as coming soon, so users understand what is planned without confusing previews with live wagering."
+              eyebrow="Betting Status"
+              title="Betting functionality status."
+              intro="The current documentation treats betting as a planned feature. It should not be read as live wagering functionality."
             >
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                 {BETTING_FLOW.map((item) => (
@@ -640,19 +640,19 @@ export default function DocsPage() {
 
               <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: 10, background: 'rgba(242,181,68,0.07)', border: '1px solid rgba(242,181,68,0.22)' }}>
                 <h3 style={{ color: GOLD_SOFT, fontSize: '1rem', fontWeight: 900, marginBottom: 8 }}>
-                  Important status note
+                  Status note
                 </h3>
                 <p style={{ color: TEXT_SOFT, fontSize: '0.9rem', lineHeight: 1.7, margin: 0 }}>
-                  Betting is not presented as live in the docs. The app currently uses match pages, leaderboards, locks, and prize pool credit to prepare the launch experience. Live betting functionality should be activated only when the final market layer is configured.
+                  Betting is not presented as live in this documentation. The current product surfaces match pages, leaderboards, locks, and prize pool credit. Betting functionality should only be activated when the required product and compliance configuration is complete.
                 </p>
               </div>
             </Section>
 
             <Section
               id="benefits"
-              eyebrow="Benefits"
-              title="What users get from each role."
-              intro="The app should make the value of holding, locking, and participating easy to understand before users connect a wallet."
+              eyebrow="User Categories"
+              title="User categories."
+              intro="The app separates users by measurable actions: holding, locking, and tournament participation."
             >
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {BENEFITS.map((benefit) => (
@@ -675,8 +675,8 @@ export default function DocsPage() {
             <Section
               id="leaderboards"
               eyebrow="Leaderboards"
-              title="Two boards, two meanings."
-              intro="This is the most important distinction in the app: holding and locking are not the same action."
+              title="Two leaderboard types."
+              intro="Holding and locking are separate actions and are ranked separately."
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {LEADERBOARD_CARDS.map((card) => (
@@ -710,8 +710,8 @@ export default function DocsPage() {
             <Section
               id="prize-pool"
               eyebrow="Prize Pool"
-              title="Prize pool credit, explained clearly."
-              intro="Prize pool credit is not shown as a guaranteed payout. It is a live estimate of reward capacity based on creator-fee assumptions and market volume."
+              title="Prize pool credit."
+              intro="Prize pool credit is an estimate of reward capacity based on token volume and fee assumptions. It is not a guaranteed payout."
             >
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                 {PRIZE_POOL_STEPS.map((step, index) => (
@@ -731,7 +731,7 @@ export default function DocsPage() {
 
               <div className="card" style={{ padding: '1.15rem', background: 'rgba(20,241,149,0.07)', border: '1px solid rgba(20,241,149,0.24)', marginTop: '1rem' }}>
                 <h3 style={{ color: GREEN, fontSize: '1rem', fontWeight: 900, marginBottom: 8 }}>
-                  Simple formula
+                  Formula
                 </h3>
                 <p style={{ color: TEXT_SOFT, lineHeight: 1.7, margin: 0 }}>
                   Prize Pool Credit = Token Volume x Estimated Creator Fee Rate x Prize Allocation.
@@ -742,8 +742,8 @@ export default function DocsPage() {
             <Section
               id="whitepaper"
               eyebrow="Whitepaper"
-              title="The full thesis, without unnecessary jargon."
-              intro="This section gives the longer explanation for users, partners, and community members who want to understand the product model."
+              title="Product rationale."
+              intro="This section explains the product model in formal terms."
             >
               <div style={{ display: 'grid', gap: '0.75rem' }}>
                 {WHITEPAPER_SECTIONS.map((item) => (
@@ -763,7 +763,7 @@ export default function DocsPage() {
               id="roadmap"
               eyebrow="Roadmap"
               title="Roadmap to the tournament."
-              intro="The roadmap is grouped by product layer so users can see what each stage adds to the app."
+              intro="The roadmap is grouped by product area."
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {ROADMAP.map((item) => (
@@ -797,8 +797,8 @@ export default function DocsPage() {
             <Section
               id="faq"
               eyebrow="FAQ"
-              title="Clear answers."
-              intro="Short answers for the parts users are most likely to question."
+              title="Frequently asked questions."
+              intro="Concise answers to common product questions."
             >
               <div style={{ display: 'grid', gap: '0.75rem' }}>
                 {FAQS.map((faq) => (
@@ -832,7 +832,7 @@ export default function DocsPage() {
 
             <div className="card" style={{ padding: '1.15rem', background: SURFACE, marginBottom: '1rem' }}>
               <p className="section-eyebrow" style={{ marginBottom: 8 }}>
-                Protocol Facts
+                System Facts
               </p>
               <SpecRow label="Token" value="$WCB" />
               <SpecRow label="Mint" value={mintDisplay} />
@@ -844,14 +844,14 @@ export default function DocsPage() {
 
             <div className="card" style={{ padding: '1.15rem', background: SURFACE }}>
               <p className="section-eyebrow" style={{ marginBottom: 10 }}>
-                Quick Actions
+                Actions
               </p>
               <div style={{ display: 'grid', gap: '0.65rem' }}>
                 <AppButton href="/leaderboard" primary>
                   Leaderboards
                 </AppButton>
                 <AppButton href="/lock">
-                  Lock & Earn
+                  Lock $WCB
                 </AppButton>
                 <AppButton href="/matches">
                   Matches

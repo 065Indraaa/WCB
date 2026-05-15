@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { assignTier, assignBadges } from '@/lib/utils/tiers';
 import { formatWallet } from '@/lib/utils/formatters';
+import { WCB_MINT, WCB_TOKEN_DECIMALS } from '@/lib/tokenConfig';
+import { buildHeliusRpcUrl, hasHeliusCredentials } from '@/lib/server/helius';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const DEFAULT_WCB_MINT = 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
 const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111';
 const TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
-const DEFAULT_DECIMALS = Number(process.env.NEXT_PUBLIC_TOKEN_DECIMALS ?? 6);
 const MAX_HELIUS_PAGES = Number(process.env.HOLDER_HELIUS_MAX_PAGES ?? 12);
 
 type Holder = {
@@ -52,23 +52,15 @@ async function rpc(rpcUrl: string, method: string, params: unknown) {
   return json.result;
 }
 
-function buildHeliusRpcUrl(apiKey?: string) {
-  const baseUrl = process.env.HELIUS_RPC_URL ?? 'https://mainnet.helius-rpc.com';
-  if (!apiKey || apiKey === 'your_helius_api_key_here') return 'https://api.mainnet-beta.solana.com';
-  if (baseUrl.includes('api-key=')) return baseUrl;
-  const separator = baseUrl.includes('?') ? '&' : baseUrl.endsWith('/') ? '?' : '/?';
-  return `${baseUrl}${separator}api-key=${apiKey}`;
-}
-
 async function getTokenDecimals(rpcUrl: string, mint: string) {
   try {
     const result = await rpc(rpcUrl, 'getTokenSupply', [mint]) as {
       value?: { decimals?: number };
     };
     const decimals = result.value?.decimals;
-    return Number.isFinite(decimals) ? decimals ?? DEFAULT_DECIMALS : DEFAULT_DECIMALS;
+    return Number.isFinite(decimals) ? decimals ?? WCB_TOKEN_DECIMALS : WCB_TOKEN_DECIMALS;
   } catch {
-    return DEFAULT_DECIMALS;
+    return WCB_TOKEN_DECIMALS;
   }
 }
 
@@ -161,7 +153,7 @@ async function fetchAggregatedHoldersViaRpc(rpcUrl: string, mint: string) {
 
   for (const item of accounts ?? []) {
     const info = item.account?.data?.parsed?.info;
-    const decimals = info?.tokenAmount?.decimals ?? DEFAULT_DECIMALS;
+    const decimals = info?.tokenAmount?.decimals ?? WCB_TOKEN_DECIMALS;
     addHolderAmount(byOwner, info?.owner, info?.tokenAmount?.amount, decimals);
   }
 
@@ -187,7 +179,7 @@ async function fetchLargestAccountsFallback(rpcUrl: string, mint: string) {
         if (!owner) return;
 
         const raw = Number(account.amount ?? 0);
-        const holdings = raw / Math.pow(10, account.decimals ?? DEFAULT_DECIMALS);
+        const holdings = raw / Math.pow(10, account.decimals ?? WCB_TOKEN_DECIMALS);
 
         if (Number.isFinite(holdings) && holdings > 0) {
           holders.push({ address: owner, holdings });
@@ -239,9 +231,8 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10));
   const limit = Math.min(500, Math.max(1, parseInt(searchParams.get('limit') ?? '100', 10)));
-  const apiKey = process.env.HELIUS_API_KEY;
-  const tokenAddress = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || DEFAULT_WCB_MINT;
-  const resolvedRpcUrl = buildHeliusRpcUrl(apiKey);
+  const tokenAddress = WCB_MINT;
+  const resolvedRpcUrl = buildHeliusRpcUrl();
 
   try {
     const decimals = await getTokenDecimals(resolvedRpcUrl, tokenAddress);
@@ -251,8 +242,8 @@ export async function GET(request: NextRequest) {
     let lastIndexedSlot: number | undefined;
 
     try {
-      if (!apiKey || apiKey === 'your_helius_api_key_here') {
-        throw new Error('HELIUS_API_KEY is required for getTokenAccounts');
+      if (!hasHeliusCredentials()) {
+        throw new Error('HELIUS_API_KEY or HELIUS_RPC_URL with api-key is required for getTokenAccounts');
       }
       const das = await fetchHoldersViaHeliusDas(resolvedRpcUrl, tokenAddress, decimals);
       holders = das.holders;

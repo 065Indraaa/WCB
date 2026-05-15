@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 import type { TokenMetrics } from '@/types/token';
+import { WCB_MINT, WCB_TOKEN_DECIMALS } from '@/lib/tokenConfig';
+import { buildHeliusRpcUrl } from '@/lib/server/helius';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-const DEFAULT_WCB_MINT = 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
-const DEFAULT_DECIMALS = Number(process.env.NEXT_PUBLIC_TOKEN_DECIMALS ?? 6);
 
 type JupiterToken = {
   id?: string;
@@ -31,15 +30,6 @@ type JupiterToken = {
 function numberOrNull(value: unknown): number | null {
   const n = Number(value);
   return Number.isFinite(n) ? n : null;
-}
-
-function buildHeliusRpcUrl() {
-  const apiKey = process.env.HELIUS_API_KEY;
-  const baseUrl = process.env.HELIUS_RPC_URL ?? 'https://mainnet.helius-rpc.com';
-  if (!apiKey || apiKey === 'your_helius_api_key_here') return 'https://api.mainnet-beta.solana.com';
-  if (baseUrl.includes('api-key=')) return baseUrl;
-  const separator = baseUrl.includes('?') ? '&' : baseUrl.endsWith('/') ? '?' : '/?';
-  return `${baseUrl}${separator}api-key=${apiKey}`;
 }
 
 async function rpc<T>(rpcUrl: string, method: string, params: unknown[] | Record<string, unknown>): Promise<T> {
@@ -98,7 +88,7 @@ async function getTokenSupply(mint: string) {
     if (uiAmount !== null) return uiAmount;
 
     const raw = numberOrNull(result.value?.amount);
-    const decimals = result.value?.decimals ?? DEFAULT_DECIMALS;
+    const decimals = result.value?.decimals ?? WCB_TOKEN_DECIMALS;
     return raw !== null ? raw / Math.pow(10, decimals) : 0;
   } catch {
     return 0;
@@ -106,11 +96,7 @@ async function getTokenSupply(mint: string) {
 }
 
 export async function GET() {
-  const tokenAddress = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || DEFAULT_WCB_MINT;
-
-  if (!tokenAddress || tokenAddress === 'your_token_contract_address_here') {
-    return NextResponse.json({ error: 'NEXT_PUBLIC_TOKEN_ADDRESS is not configured' }, { status: 500 });
-  }
+  const tokenAddress = WCB_MINT;
 
   try {
     const [token, holders, supply] = await Promise.all([

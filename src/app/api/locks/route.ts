@@ -11,31 +11,17 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { SolanaStreamClient, StreamType, getNumberFromBN, type Stream } from '@streamflow/stream';
 import { calculateCredits } from '@/lib/lock';
-
-const DEFAULT_WCB_MINT = 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
-const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || DEFAULT_WCB_MINT;
-const HELIUS_KEY = process.env.HELIUS_API_KEY ?? '';
-const HELIUS_RPC_URL = process.env.HELIUS_RPC_URL ?? 'https://mainnet.helius-rpc.com';
-const TOKEN_DECIMALS = Number(process.env.NEXT_PUBLIC_TOKEN_DECIMALS ?? 6);
-
-function buildRpcUrl() {
-  if (!HELIUS_KEY || HELIUS_KEY === 'your_helius_api_key_here') {
-    return 'https://api.mainnet-beta.solana.com';
-  }
-
-  if (HELIUS_RPC_URL.includes('api-key=')) return HELIUS_RPC_URL;
-  const separator = HELIUS_RPC_URL.includes('?') ? '&' : HELIUS_RPC_URL.endsWith('/') ? '?' : '/?';
-  return `${HELIUS_RPC_URL}${separator}api-key=${HELIUS_KEY}`;
-}
+import { WCB_MINT, WCB_TOKEN_DECIMALS } from '@/lib/tokenConfig';
+import { buildHeliusRpcUrl } from '@/lib/server/helius';
 
 function streamUrl(id: string) {
   return `https://app.streamflow.finance/stream/solana/mainnet/${id}`;
 }
 
 function tokenAmount(stream: Stream) {
-  const remaining = stream.remaining(TOKEN_DECIMALS);
+  const remaining = stream.remaining(WCB_TOKEN_DECIMALS);
   if (Number.isFinite(remaining) && remaining > 0) return remaining;
-  return getNumberFromBN(stream.depositedAmount, TOKEN_DECIMALS);
+  return getNumberFromBN(stream.depositedAmount, WCB_TOKEN_DECIMALS);
 }
 
 function isWalletTokenLock(stream: Stream, wallet: string, now: number) {
@@ -70,12 +56,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'wallet parameter required', locks: [], total: 0 }, { status: 400 });
   }
 
-  if (!WCB_MINT || WCB_MINT === 'your_token_contract_address_here') {
-    return NextResponse.json({ locks: [], total: 0, source: 'not-configured' });
-  }
-
   try {
-    const client = new SolanaStreamClient(buildRpcUrl());
+    const client = new SolanaStreamClient(buildHeliusRpcUrl());
     const streams = await fetchWalletStreams(client, wallet);
     const now = Math.floor(Date.now() / 1000);
     const locks: Array<{

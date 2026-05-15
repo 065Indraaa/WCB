@@ -12,12 +12,8 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { SolanaStreamClient, StreamType, getNumberFromBN, type Stream } from '@streamflow/stream';
 import { calculateCredits } from '@/lib/lock';
-
-const DEFAULT_WCB_MINT = 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
-const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || DEFAULT_WCB_MINT;
-const HELIUS_KEY = process.env.HELIUS_API_KEY ?? '';
-const HELIUS_RPC_URL = process.env.HELIUS_RPC_URL ?? 'https://mainnet.helius-rpc.com';
-const TOKEN_DECIMALS = Number(process.env.NEXT_PUBLIC_TOKEN_DECIMALS ?? 6);
+import { WCB_MINT, WCB_STREAMFLOW_LOCK_DASHBOARD_URL, WCB_TOKEN_DECIMALS } from '@/lib/tokenConfig';
+import { buildHeliusRpcUrl } from '@/lib/server/helius';
 
 type StreamflowLock = {
   id: string;
@@ -38,18 +34,8 @@ type WalletLocks = {
   locks: StreamflowLock[];
 };
 
-function buildRpcUrl() {
-  if (!HELIUS_KEY || HELIUS_KEY === 'your_helius_api_key_here') {
-    return 'https://api.mainnet-beta.solana.com';
-  }
-
-  if (HELIUS_RPC_URL.includes('api-key=')) return HELIUS_RPC_URL;
-  const separator = HELIUS_RPC_URL.includes('?') ? '&' : HELIUS_RPC_URL.endsWith('/') ? '?' : '/?';
-  return `${HELIUS_RPC_URL}${separator}api-key=${HELIUS_KEY}`;
-}
-
 function dashboardUrl() {
-  return `https://app.streamflow.finance/token-dashboard/solana/mainnet/${WCB_MINT}?type=lock`;
+  return WCB_STREAMFLOW_LOCK_DASHBOARD_URL;
 }
 
 function streamUrl(id: string) {
@@ -57,9 +43,9 @@ function streamUrl(id: string) {
 }
 
 function tokenAmount(stream: Stream) {
-  const remaining = stream.remaining(TOKEN_DECIMALS);
+  const remaining = stream.remaining(WCB_TOKEN_DECIMALS);
   if (Number.isFinite(remaining) && remaining > 0) return remaining;
-  return getNumberFromBN(stream.depositedAmount, TOKEN_DECIMALS);
+  return getNumberFromBN(stream.depositedAmount, WCB_TOKEN_DECIMALS);
 }
 
 function isActiveTokenLock(stream: Stream, now: number) {
@@ -73,16 +59,8 @@ function isActiveTokenLock(stream: Stream, now: number) {
 }
 
 export async function GET() {
-  if (!WCB_MINT || WCB_MINT === 'your_token_contract_address_here') {
-    return NextResponse.json({
-      leaderboard: [],
-      totals: { totalLocked: 0, totalCredits: 0, totalLockers: 0 },
-      source: 'not-configured',
-    });
-  }
-
   try {
-    const client = new SolanaStreamClient(buildRpcUrl());
+    const client = new SolanaStreamClient(buildHeliusRpcUrl());
     const streams = await client.searchStreams({ mint: WCB_MINT, closed: false });
     const now = Math.floor(Date.now() / 1000);
     const byWallet = new Map<string, WalletLocks>();
