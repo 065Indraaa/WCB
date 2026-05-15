@@ -64,6 +64,7 @@ function BoardIcon() {
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
   // Close menu on route change
@@ -75,6 +76,13 @@ export function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
+  // Detect scroll for navbar shadow
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <>
       {/* ── Top header ── */}
@@ -85,9 +93,17 @@ export function Navbar() {
           left: 0,
           right: 0,
           zIndex: 40,
-          background: '#0D1117',
-          borderBottom: '1px solid #21262D',
+          background: scrolled
+            ? 'rgba(10,14,10,0.97)'
+            : 'rgba(10,14,10,0.92)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: scrolled
+            ? '1px solid rgba(34,197,94,0.18)'
+            : '1px solid rgba(34,197,94,0.1)',
           height: 56,
+          transition: 'background 0.2s, border-color 0.2s, box-shadow 0.2s',
+          boxShadow: scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none',
         }}
       >
         <nav
@@ -136,16 +152,16 @@ export function Navbar() {
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: 5,
-                      padding: '6px 12px',
+                      padding: '6px 11px',
                       borderRadius: 6,
                       fontSize: '0.82rem',
                       fontWeight: 600,
                       textDecoration: 'none',
                       whiteSpace: 'nowrap',
-                      color: active ? '#E6EDF3' : '#8B949E',
-                      background: active ? '#21262D' : 'transparent',
-                      borderBottom: active ? '2px solid #238636' : '2px solid transparent',
-                      transition: 'color 0.1s, background 0.1s',
+                      color: active ? '#ffffff' : '#9CA3AF',
+                      background: active ? 'rgba(34,197,94,0.12)' : 'transparent',
+                      borderBottom: active ? '2px solid #22C55E' : '2px solid transparent',
+                      transition: 'color 0.15s, background 0.15s',
                     }}
                   >
                     {link.dot && (
@@ -156,8 +172,9 @@ export function Navbar() {
                           width: 5,
                           height: 5,
                           borderRadius: '50%',
-                          background: '#238636',
+                          background: '#22C55E',
                           flexShrink: 0,
+                          boxShadow: '0 0 6px #22C55E',
                         }}
                       />
                     )}
@@ -170,6 +187,30 @@ export function Navbar() {
 
           {/* Right side */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+            {/* Buy button — desktop */}
+            <a
+              href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden lg:inline-flex"
+              style={{
+                alignItems: 'center',
+                gap: 5,
+                padding: '5px 12px',
+                borderRadius: 6,
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
+                color: '#ffffff',
+                whiteSpace: 'nowrap',
+                boxShadow: '0 2px 10px rgba(21,128,61,0.35)',
+                transition: 'opacity 0.15s',
+              }}
+            >
+              🚀 Buy $WCB
+            </a>
+
             <WalletButtonDynamic className="hidden sm:inline-flex" />
 
             {/* Hamburger — mobile only */}
@@ -183,10 +224,11 @@ export function Navbar() {
                 height: 36,
                 gap: 5,
                 borderRadius: 6,
-                background: menuOpen ? '#21262D' : 'transparent',
+                background: menuOpen ? 'rgba(34,197,94,0.1)' : 'transparent',
                 border: '1px solid',
-                borderColor: menuOpen ? '#30363D' : 'transparent',
+                borderColor: menuOpen ? 'rgba(34,197,94,0.3)' : 'rgba(255,255,255,0.1)',
                 cursor: 'pointer',
+                transition: 'background 0.15s, border-color 0.15s',
               }}
               className="lg:hidden"
               onClick={() => setMenuOpen((p) => !p)}
@@ -208,7 +250,8 @@ export function Navbar() {
             position: 'fixed',
             inset: 0,
             zIndex: 35,
-            background: '#0D1117',
+            background: 'rgba(8,12,8,0.98)',
+            backdropFilter: 'blur(20px)',
             paddingTop: 56,
             overflowY: 'auto',
           }}
@@ -240,9 +283,10 @@ export function Navbar() {
                     fontSize: '1rem',
                     fontWeight: 600,
                     textDecoration: 'none',
-                    color: active ? '#E6EDF3' : '#8B949E',
-                    background: active ? '#21262D' : 'transparent',
-                    borderLeft: active ? '3px solid #238636' : '3px solid transparent',
+                    color: active ? '#ffffff' : '#9CA3AF',
+                    background: active ? 'rgba(34,197,94,0.1)' : 'transparent',
+                    borderLeft: active ? '3px solid #22C55E' : '3px solid transparent',
+                    transition: 'background 0.15s, color 0.15s',
                   }}
                 >
                   <span style={{ fontSize: '1.1rem' }}>{link.icon}</span>
@@ -256,7 +300,8 @@ export function Navbar() {
                         width: 6,
                         height: 6,
                         borderRadius: '50%',
-                        background: '#238636',
+                        background: '#22C55E',
+                        boxShadow: '0 0 8px #22C55E',
                       }}
                     />
                   )}
@@ -264,13 +309,24 @@ export function Navbar() {
               );
             })}
 
-            <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #21262D' }}>
+            <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
               <a
                 href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary"
-                style={{ display: 'flex', justifyContent: 'center', width: '100%' }}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: 8,
+                  background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 16px rgba(21,128,61,0.4)',
+                }}
               >
                 🚀 Buy $WCB on Pump.fun
               </a>

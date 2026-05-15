@@ -26,8 +26,8 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
         style={{
           width: compact ? 40 : 64,
           height: compact ? 48 : 72,
-          background: 'rgba(255,255,255,0.1)',
-          border: '1px solid rgba(255,255,255,0.15)',
+          background: 'rgba(0,0,0,0.4)',
+          border: '1px solid rgba(34,197,94,0.15)',
           borderRadius: 12,
           display: 'flex',
           alignItems: 'center',
@@ -38,7 +38,7 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
       >
         {reducedMotion ? (
           <span
-            style={{ fontSize: compact ? '1.4rem' : '2.25rem', fontWeight: 900, color: '#86EFAC', fontVariantNumeric: 'tabular-nums' }}
+            style={{ fontSize: compact ? '1.4rem' : '2.25rem', fontWeight: 900, color: '#4ADE80', fontVariantNumeric: 'tabular-nums' }}
           >
             {value}
           </span>
@@ -46,7 +46,7 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
           <AnimatePresence mode="popLayout">
             <motion.span
               key={value}
-              style={{ fontSize: compact ? '1.4rem' : '2.25rem', fontWeight: 900, color: '#86EFAC', fontVariantNumeric: 'tabular-nums', position: 'absolute' }}
+              style={{ fontSize: compact ? '1.4rem' : '2.25rem', fontWeight: 900, color: '#4ADE80', fontVariantNumeric: 'tabular-nums', position: 'absolute' }}
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 20, opacity: 0 }}
@@ -63,7 +63,7 @@ function Digit({ value, label, compact, reducedMotion }: DigitProps) {
           fontWeight: 700,
           textTransform: 'uppercase',
           letterSpacing: '0.12em',
-          color: 'rgba(255,255,255,0.5)',
+          color: 'rgba(255,255,255,0.4)',
         }}
       >
         {label}
@@ -148,7 +148,7 @@ export function CountdownTimer({ targetDate = DEFAULT_TARGET, compact = false }:
           {i < 3 && (
             <span
               style={{
-                color: 'rgba(255,255,255,0.4)',
+                color: 'rgba(34,197,94,0.35)',
                 fontWeight: 900,
                 fontSize: compact ? '1.1rem' : '1.75rem',
                 marginBottom: compact ? '1rem' : '1.5rem',
