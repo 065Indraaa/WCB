@@ -95,7 +95,7 @@ function MyPositionBanner() {
       >
         {/* Blurred preview */}
         <div style={{ position: 'relative', padding: '1.5rem', background: 'linear-gradient(135deg, #111111 0%, #171717 100%)' }}>
-          {/* Fake blurred stats */}
+          {/* Locked preview stats */}
           <div className="stats-grid-4" style={{ filter: 'blur(6px)', userSelect: 'none', pointerEvents: 'none' }} aria-hidden="true">
             {['My Locked', 'My Credits', 'Active Locks', 'Longest Lock'].map((l) => (
               <div key={l} style={{ textAlign: 'center' }}>
@@ -446,7 +446,7 @@ function HolderLeaderboardPanel({
 
 // Main page
 export default function LeaderboardPage() {
-  const { leaderboard, totals, loading, error, refetch } = useCommunityLocks();
+  const { leaderboard, totals, meta, loading, error, refetch } = useCommunityLocks();
   const holderQuery = useLeaderboard(1, 100);
   const prizePoolQuery = usePrizePoolMetrics();
   const lockLeaderboard = [...leaderboard].sort((a, b) => {
@@ -456,6 +456,7 @@ export default function LeaderboardPage() {
   });
   const holderEntries = holderQuery.data?.entries ?? [];
   const holderTotal = holderQuery.data?.total ?? holderEntries.length;
+  const holderSource = holderQuery.data?.source ?? 'token accounts';
   const holderError = holderQuery.error instanceof Error ? holderQuery.error.message : holderQuery.error ? 'Failed to load holder leaderboard' : null;
   const prizePoolError = prizePoolQuery.error instanceof Error ? prizePoolQuery.error.message : prizePoolQuery.error ? 'Failed to load prize pool metrics' : null;
   const refreshAll = () => {
@@ -476,6 +477,9 @@ export default function LeaderboardPage() {
           </h1>
           <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
             Holder rank shows ownership. Lock rank shows credit depth. Prize pool credit is funded from live creator fee once markets are active.
+          </p>
+          <p style={{ marginTop: 8, fontSize: '0.76rem', fontWeight: 700, color: '#6E6E6E' }}>
+            Holder source: {holderSource} / Lock source: {meta.source ?? 'Streamflow'} / Mint: {WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'N/A'}
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
@@ -542,12 +546,24 @@ export default function LeaderboardPage() {
 
       {/* Lock leaderboard table */}
       <div style={{ marginBottom: '0.75rem' }}>
-        <p className="section-eyebrow" style={{ marginBottom: 6 }}>
-          Lock Leaderboard
-        </p>
-        <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#FFFFFF' }}>
-          Top wallets by prepared credit position
-        </h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
+          <div>
+            <p className="section-eyebrow" style={{ marginBottom: 6 }}>
+              Lock Leaderboard
+            </p>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#FFFFFF' }}>
+              Top wallets by Streamflow lock credits
+            </h2>
+          </div>
+          <a
+            href={meta.streamflowDashboardUrl ?? `https://app.streamflow.finance/token-dashboard/solana/mainnet/${WCB_MINT}?type=lock`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#F2B544', fontSize: '0.78rem', fontWeight: 800, textDecoration: 'none' }}
+          >
+            Verify on Streamflow
+          </a>
+        </div>
       </div>
 
       <AnimatePresence mode="wait">

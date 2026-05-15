@@ -7,21 +7,18 @@ import { LockConfirmModal } from '@/components/lock/LockConfirmModal';
 import { CreditRedemptionInfo } from '@/components/lock/CreditRedemptionInfo';
 import { WalletDashboardDynamic, WalletButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
-import { MOCK_ACTIVE_LOCKS, formatCredits, formatTokenAmount } from '@/lib/lock';
+import { formatCredits, formatTokenAmount } from '@/lib/lock';
+import { useCommunityLocks } from '@/lib/hooks/useCommunityLocks';
 
 export default function LockPage() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingLock, setPendingLock] = useState<{ amount: number; days: number; credits: number } | null>(null);
+  const { totals, loading: totalsLoading, meta, refetch } = useCommunityLocks();
 
   const handleLockIntent = (amount: number, days: number, credits: number) => {
     setPendingLock({ amount, days, credits });
     setConfirmOpen(true);
   };
-
-  // Community aggregate stats from mock (will be replaced with on-chain query)
-  const totalLocked = MOCK_ACTIVE_LOCKS.reduce((s, l) => s + l.amount, 0);
-  const totalCredits = MOCK_ACTIVE_LOCKS.reduce((s, l) => s + l.credits, 0);
-  const totalLockers = MOCK_ACTIVE_LOCKS.length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
@@ -91,9 +88,9 @@ export default function LockPage() {
         style={{ marginBottom: '2.5rem' }}
       >
         {[
-          { label: 'Total Locked', value: formatTokenAmount(totalLocked) + ' $WCB', sub: 'community allocation' },
-          { label: 'Credits Issued', value: formatCredits(totalCredits), sub: 'reserved for launch' },
-          { label: 'People Locking', value: totalLockers.toString(), sub: 'tracked wallets' },
+          { label: 'Total Locked', value: totalsLoading ? 'Syncing' : formatTokenAmount(totals.totalLocked) + ' $WCB', sub: meta.source ?? 'Streamflow locks' },
+          { label: 'Credits Issued', value: totalsLoading ? 'Syncing' : formatCredits(totals.totalCredits), sub: 'reserved for launch' },
+          { label: 'People Locking', value: totalsLoading ? 'Syncing' : totals.totalLockers.toString(), sub: 'tracked wallets' },
         ].map((s) => (
           <div
             key={s.label}
@@ -107,6 +104,14 @@ export default function LockPage() {
             <div style={{ fontSize: '0.7rem', color: '#6E6E6E', marginTop: '0.15rem' }}>{s.sub}</div>
           </div>
         ))}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-1.75rem', marginBottom: '2rem' }}>
+        <button
+          onClick={() => void refetch()}
+          style={{ padding: '0.45rem 0.8rem', borderRadius: 8, border: '1px solid #2A2A2A', background: '#111111', color: '#B3B3B3', fontSize: '0.75rem', fontWeight: 800, cursor: 'pointer' }}
+        >
+          Refresh Streamflow Totals
+        </button>
       </div>
 
       {/* Main 3-column layout */}

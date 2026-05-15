@@ -1,53 +1,149 @@
 import { NextResponse } from 'next/server';
 import type { TokenMetrics } from '@/types/token';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+const DEFAULT_WCB_MINT = 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
+const DEFAULT_DECIMALS = Number(process.env.NEXT_PUBLIC_TOKEN_DECIMALS ?? 6);
+
+type JupiterToken = {
+  id?: string;
+  address?: string;
+  mint?: string;
+  symbol?: string;
+  usdPrice?: number;
+  price?: number;
+  mcap?: number;
+  fdv?: number;
+  marketCap?: number;
+  stats24h?: {
+    buyVolume?: number;
+    sellVolume?: number;
+    volume?: number;
+    volumeUsd?: number;
+    priceChange?: number;
+    priceChangePct?: number;
+  };
+  updatedAt?: string;
+};
+
+function numberOrNull(value: unknown): number | null {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+function buildHeliusRpcUrl() {
+  const apiKey = process.env.HELIUS_API_KEY;
+  const baseUrl = process.env.HELIUS_RPC_URL ?? 'https://mainnet.helius-rpc.com';
+  if (!apiKey || apiKey === 'your_helius_api_key_here') return 'https://api.mainnet-beta.solana.com';
+  if (baseUrl.includes('api-key=')) return baseUrl;
+  const separator = baseUrl.includes('?') ? '&' : baseUrl.endsWith('/') ? '?' : '/?';
+  return `${baseUrl}${separator}api-key=${apiKey}`;
+}
+
+async function rpc<T>(rpcUrl: string, method: string, params: unknown[] | Record<string, unknown>): Promise<T> {
+  const res = await fetch(rpcUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
+    signal: AbortSignal.timeout(20_000),
+  });
+
+  if (!res.ok) throw new Error(`RPC HTTP ${res.status}`);
+  const json = await res.json() as { result?: T; error?: { message?: string } };
+  if (json.error) throw new Error(json.error.message ?? 'RPC error');
+  if (json.result === undefined) throw new Error('Missing RPC result');
+  return json.result;
+}
+
+async function fetchJupiterToken(query: string): Promise<JupiterToken | null> {
+  const baseUrl = process.env.JUPITER_TOKEN_API_URL ?? 'https://api.jup.ag/tokens/v2/search';
+  const headers: Record<string, string> = {};
+  if (process.env.JUPITER_API_KEY) headers['x-api-key'] = process.env.JUPITER_API_KEY;
+
+  const res = await fetch(`${baseUrl}?query=${encodeURIComponent(query)}`, {
+    headers,
+    signal: AbortSignal.timeout(15_000),
+  });
+
+  if (!res.ok) throw new Error(`Jupiter token API ${res.status}`);
+  const data = await res.json() as JupiterToken[];
+  if (!Array.isArray(data)) return null;
+  return data.find((item) => item.id === query || item.address === query || item.mint === query) ?? data[0] ?? null;
+}
+
+async function fetchHolderCount(mint: string) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '');
+  if (!baseUrl) return 0;
+
+  const res = await fetch(`${baseUrl.replace(/\/$/, '')}/api/leaderboard?limit=1`, {
+    signal: AbortSignal.timeout(20_000),
+  });
+  if (!res.ok) return 0;
+
+  const data = await res.json() as { total?: number; mint?: string };
+  if (data.mint && data.mint !== mint) return 0;
+  return Number.isFinite(data.total) ? data.total ?? 0 : 0;
+}
+
+async function getTokenSupply(mint: string) {
+  try {
+    const result = await rpc<{ value?: { uiAmount?: number | null; amount?: string; decimals?: number } }>(
+      buildHeliusRpcUrl(),
+      'getTokenSupply',
+      [mint],
+    );
+    const uiAmount = numberOrNull(result.value?.uiAmount);
+    if (uiAmount !== null) return uiAmount;
+
+    const raw = numberOrNull(result.value?.amount);
+    const decimals = result.value?.decimals ?? DEFAULT_DECIMALS;
+    return raw !== null ? raw / Math.pow(10, decimals) : 0;
+  } catch {
+    return 0;
+  }
+}
 
 export async function GET() {
-  const apiKey = process.env.COINGECKO_API_KEY;
-  const baseUrl = process.env.COINGECKO_BASE_URL ?? 'https://api.coingecko.com/api/v3';
-  const tokenAddress = process.env.NEXT_PUBLIC_TOKEN_ADDRESS;
+  const tokenAddress = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || DEFAULT_WCB_MINT;
 
-  if (
-    !apiKey ||
-    apiKey === 'your_coingecko_api_key_here' ||
-    !tokenAddress ||
-    tokenAddress === 'your_token_contract_address_here'
-  ) {
-    // Return stub data when not configured
+  if (!tokenAddress || tokenAddress === 'your_token_contract_address_here') {
+    return NextResponse.json({ error: 'NEXT_PUBLIC_TOKEN_ADDRESS is not configured' }, { status: 500 });
+  }
+
+  try {
+    const [token, holders, supply] = await Promise.all([
+      fetchJupiterToken(tokenAddress),
+      fetchHolderCount(tokenAddress).catch(() => 0),
+      getTokenSupply(tokenAddress),
+    ]);
+
+    const price = numberOrNull(token?.usdPrice) ?? numberOrNull(token?.price) ?? 0;
+    const priceChange24h =
+      numberOrNull(token?.stats24h?.priceChange) ??
+      numberOrNull(token?.stats24h?.priceChangePct) ??
+      0;
+    const apiMarketCap = numberOrNull(token?.mcap) ?? numberOrNull(token?.marketCap);
+    const marketCap = apiMarketCap ?? (price > 0 && supply > 0 ? price * supply : numberOrNull(token?.fdv) ?? 0);
+    const volume24hUsd =
+      numberOrNull(token?.stats24h?.buyVolume) !== null && numberOrNull(token?.stats24h?.sellVolume) !== null
+        ? (numberOrNull(token?.stats24h?.buyVolume) ?? 0) + (numberOrNull(token?.stats24h?.sellVolume) ?? 0)
+        : numberOrNull(token?.stats24h?.volume) ?? numberOrNull(token?.stats24h?.volumeUsd) ?? 0;
+
     return NextResponse.json({
-      price: 0.000042,
-      priceChange24h: 4.2,
-      marketCap: 420000,
-      holders: 1250,
-      burned: 2100000000,
-      lastUpdated: new Date().toISOString(),
+      price,
+      priceChange24h,
+      marketCap,
+      holders,
+      burned: 0,
+      volume24hUsd,
+      source: 'jupiter-token-api+helius-das',
+      available: true,
+      lastUpdated: token?.updatedAt ?? new Date().toISOString(),
     } satisfies TokenMetrics);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to fetch token metrics';
+    return NextResponse.json({ error: message }, { status: 502 });
   }
-
-  // Proxy to CoinGecko API
-  const res = await fetch(
-    `${baseUrl}/simple/price?ids=${tokenAddress}&vs_currencies=usd&include_market_cap=true&include_24hr_change=true`,
-    {
-      headers: {
-        'x-cg-demo-api-key': apiKey,
-      },
-    }
-  );
-
-  if (!res.ok) {
-    return NextResponse.json({ error: 'CoinGecko API error' }, { status: res.status });
-  }
-
-  const data = await res.json();
-  const tokenData = data[tokenAddress] ?? {};
-
-  return NextResponse.json({
-    price: tokenData.usd ?? 0,
-    priceChange24h: tokenData.usd_24h_change ?? 0,
-    marketCap: tokenData.usd_market_cap ?? 0,
-    holders: 0, // CoinGecko doesn't provide holder count directly
-    burned: 0,
-    lastUpdated: new Date().toISOString(),
-  } satisfies TokenMetrics);
 }

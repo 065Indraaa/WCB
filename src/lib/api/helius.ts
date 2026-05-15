@@ -3,8 +3,13 @@ import type { WalletEntry } from '@/types/leaderboard';
 export interface TokenHoldersResponse {
   entries: WalletEntry[];
   total: number;
+  totalTokenAccounts?: number;
   page: number;
   limit: number;
+  decimals?: number;
+  source?: string;
+  lastIndexedSlot?: number;
+  mint?: string;
 }
 
 /**

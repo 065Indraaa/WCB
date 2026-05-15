@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { formatPrice, formatMarketCap } from '@/lib/utils/formatters';
+import { useTokenMetrics } from '@/lib/hooks/useTokenMetrics';
 import { PumpFunBadge } from '@/components/shared/PumpFunBadge';
 import { BrandLogo } from '@/components/shared/BrandLogo';
 import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
@@ -10,18 +11,10 @@ const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
 const JUPITER = process.env.NEXT_PUBLIC_JUPITER_URL ?? 'https://jup.ag';
 const CONTRACT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? 'Coming soon';
 
-// Static market data placeholder. Replace with live API data when token feeds are available.
-const MOCK_METRICS = {
-  price: 0.000042,
-  priceChange24h: 4.2,
-  marketCap: 420000,
-  holders: 1250,
-  burned: 2100000000,
-};
-
 export default function TokenPage() {
-  const metrics = MOCK_METRICS;
+  const { data: metrics, isLoading, error, refetch } = useTokenMetrics();
   const [copied, setCopied] = useState(false);
+  const errorMessage = error instanceof Error ? error.message : error ? String(error) : null;
 
   const handleCopy = async () => {
     if (CONTRACT === 'Coming soon') return;
@@ -38,10 +31,10 @@ export default function TokenPage() {
     CONTRACT.length > 20 ? `${CONTRACT.slice(0, 8)}...${CONTRACT.slice(-8)}` : CONTRACT;
 
   const stats = [
-    { label: 'Price', value: formatPrice(metrics.price), change: metrics.priceChange24h },
-    { label: 'Market Cap', value: formatMarketCap(metrics.marketCap) },
-    { label: 'Holders', value: metrics.holders.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') },
-    { label: 'Burned', value: formatMarketCap(metrics.burned).replace('$', '') },
+    { label: 'Price', value: isLoading ? 'Syncing' : formatPrice(metrics?.price ?? 0), change: metrics?.priceChange24h },
+    { label: 'Market Cap', value: isLoading ? 'Syncing' : formatMarketCap(metrics?.marketCap ?? 0) },
+    { label: 'Holders', value: isLoading ? 'Syncing' : (metrics?.holders ?? 0).toLocaleString('en-US') },
+    { label: '24h Volume', value: isLoading ? 'Syncing' : formatMarketCap(metrics?.volume24hUsd ?? 0) },
   ];
 
   return (
@@ -71,6 +64,19 @@ export default function TokenPage() {
           >
             $WCB is the access token for World Cup Bet. Holders unlock priority market access, leaderboard tiers, and credit-based betting features when World Cup markets open on June 11, 2026.
           </p>
+
+          {(errorMessage || metrics?.source || metrics?.lastUpdated) && (
+            <div className="mb-4 text-xs font-semibold" style={{ color: '#6E6E6E' }}>
+              {errorMessage ? (
+                <span style={{ color: '#EF4444' }}>{errorMessage}</span>
+              ) : (
+                <>
+                  Source: {metrics?.source ?? 'live'}
+                  {metrics?.lastUpdated ? ` / Updated ${new Date(metrics.lastUpdated).toLocaleString('en-US')}` : ''}
+                </>
+              )}
+            </div>
+          )}
 
           {/* Live metrics */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
@@ -122,6 +128,9 @@ export default function TokenPage() {
             >
               Swap on Jupiter
             </a>
+            <button onClick={() => void refetch()} className="btn-secondary flex-1">
+              Refresh Metrics
+            </button>
           </div>
 
           {/* Contract address */}

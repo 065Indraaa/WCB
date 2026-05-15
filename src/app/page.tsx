@@ -7,6 +7,7 @@ import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 import { WC_2026_GROUP_MATCHES } from '@/lib/constants/matches2026';
 import { buildAllGroups } from '@/lib/groupHelpers';
 import { WalletRedirectHandler } from '@/components/shared/WalletRedirectHandler';
+import { TokenPriceWidget } from '@/components/token/TokenPriceWidget';
 
 // Promo banner
 function PromoBanner() {
@@ -221,34 +222,7 @@ export default function Home() {
         <aside className="page-sidebar">
 
           {/* Token price widget */}
-          <div className="bet-card" style={{ padding: '14px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <span style={{ fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6B7280' }}>$WCB Token</span>
-              <span className="live-badge" style={{ fontSize: '0.58rem' }}>LIVE</span>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '12px' }}>
-              {[
-                { label: 'Price',   value: '$0.000042' },
-                { label: '24h',     value: '+4.2%',  green: true },
-                { label: 'Holders', value: '1,250' },
-                { label: 'Mkt Cap', value: '$420K' },
-              ].map((s) => (
-                <div key={s.label} style={{ padding: '8px', background: '#111111', borderRadius: 6, border: '1px solid #2A2A2A' }}>
-                  <div style={{ fontSize: '0.56rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#6E6E6E' }}>{s.label}</div>
-                  <div style={{ fontSize: '0.88rem', fontWeight: 900, color: s.green ? '#14F195' : '#FFFFFF', marginTop: '2px', fontVariantNumeric: 'tabular-nums' }}>{s.value}</div>
-                </div>
-              ))}
-            </div>
-            <a
-              href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-              style={{ display: 'flex', justifyContent: 'center', fontSize: '0.8rem', padding: '8px 12px' }}
-            >
-              Buy $WCB
-            </a>
-          </div>
+          <TokenPriceWidget />
 
           {/* Ad slot 1 */}
           <SidebarAdSlot label="Sponsor Ad 300 x 250" />

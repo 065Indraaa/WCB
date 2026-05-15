@@ -208,16 +208,13 @@ async function fetchLargestAccountsFallback(rpcUrl: string, mint: string) {
     .sort((a, b) => b.holdings - a.holdings);
 }
 
-async function filterLikelyUserWallets(rpcUrl: string, holders: Holder[], minimumCount: number) {
+async function filterLikelyUserWallets(rpcUrl: string, holders: Holder[]) {
   if (process.env.HOLDER_EXCLUDE_PROGRAM_OWNERS === 'false') return holders;
-
-  const candidates = holders.slice(0, Math.max(minimumCount * 3, minimumCount));
-  const batches: Holder[][] = [];
-  for (let i = 0; i < candidates.length; i += 100) batches.push(candidates.slice(i, i + 100));
 
   const accepted: Holder[] = [];
 
-  for (const batch of batches) {
+  for (let i = 0; i < holders.length; i += 100) {
+    const batch = holders.slice(i, i + 100);
     try {
       const result = await rpc(rpcUrl, 'getMultipleAccounts', [
         batch.map((holder) => holder.address),
@@ -233,11 +230,9 @@ async function filterLikelyUserWallets(rpcUrl: string, holders: Holder[], minimu
     } catch {
       accepted.push(...batch);
     }
-
-    if (accepted.length >= minimumCount) break;
   }
 
-  return accepted.length >= minimumCount ? accepted : holders;
+  return accepted.length > 0 ? accepted : holders;
 }
 
 export async function GET(request: NextRequest) {
@@ -273,7 +268,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    holders = await filterLikelyUserWallets(resolvedRpcUrl, holders, page * limit);
+    holders = await filterLikelyUserWallets(resolvedRpcUrl, holders);
 
     const entries = holders
       .slice((page - 1) * limit, page * limit)

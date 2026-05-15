@@ -4,6 +4,10 @@ export interface TokenMetrics {
   marketCap: number;
   holders: number;
   burned: number;
+  volume24hUsd?: number;
+  source?: string;
+  available?: boolean;
+  error?: string;
   lastUpdated: string;
 }
 

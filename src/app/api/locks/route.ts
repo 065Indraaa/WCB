@@ -1,96 +1,65 @@
 /**
  * GET /api/locks?wallet=<address>
  *
- * Fetches $WCB locks for a wallet by querying Streamflow accounts
- * directly via Helius RPC. No Streamflow SDK needed.
- *
- * Streamflow stores each lock as a Solana account owned by the
- * Streamflow program. We use getProgramAccounts with a memcmp filter
- * on the sender field to find locks belonging to a wallet.
- *
- * Streamflow Solana program: strmRqUCoQUgGUan5YhzUZa6KqdzwX5L6FpUxfmKg5m
+ * Wallet lock lookup for the configured $WCB mint.
+ * Uses Streamflow's SDK search filters instead of manual account offsets.
  */
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
+import { SolanaStreamClient, StreamType, getNumberFromBN, type Stream } from '@streamflow/stream';
 import { calculateCredits } from '@/lib/lock';
 
-const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS ?? '';
+const DEFAULT_WCB_MINT = 'a3W4qutoEJA4232T2gwZUfgYJTetr96pU4SJMwppump';
+const WCB_MINT = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || DEFAULT_WCB_MINT;
 const HELIUS_KEY = process.env.HELIUS_API_KEY ?? '';
-const RPC_URL = HELIUS_KEY
-  ? `https://mainnet.helius-rpc.com/?api-key=${HELIUS_KEY}`
-  : 'https://api.mainnet-beta.solana.com';
+const HELIUS_RPC_URL = process.env.HELIUS_RPC_URL ?? 'https://mainnet.helius-rpc.com';
+const TOKEN_DECIMALS = Number(process.env.NEXT_PUBLIC_TOKEN_DECIMALS ?? 6);
 
-// Streamflow program ID on Solana mainnet
-const STREAMFLOW_PROGRAM = 'strmRqUCoQUgGUan5YhzUZa6KqdzwX5L6FpUxfmKg5m';
+function buildRpcUrl() {
+  if (!HELIUS_KEY || HELIUS_KEY === 'your_helius_api_key_here') {
+    return 'https://api.mainnet-beta.solana.com';
+  }
 
-async function rpc(method: string, params: unknown[]) {
-  const res = await fetch(RPC_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
-  });
-  const json = await res.json() as { result?: unknown; error?: { message: string } };
-  if (json.error) throw new Error(json.error.message);
-  return json.result;
+  if (HELIUS_RPC_URL.includes('api-key=')) return HELIUS_RPC_URL;
+  const separator = HELIUS_RPC_URL.includes('?') ? '&' : HELIUS_RPC_URL.endsWith('/') ? '?' : '/?';
+  return `${HELIUS_RPC_URL}${separator}api-key=${HELIUS_KEY}`;
 }
 
-/** Decode a base64 Streamflow account to extract key fields */
-function decodeStreamflowAccount(data: string): {
-  mint: string;
-  sender: string;
-  depositedAmount: bigint;
-  start: bigint;
-  end: bigint;
-} | null {
-  try {
-    const buf = Buffer.from(data, 'base64');
-    // Streamflow account layout with simplified key offsets:
-    // [0..8]   discriminator
-    // [8..40]  sender pubkey (32 bytes)
-    // [40..72] recipient pubkey (32 bytes)
-    // [72..80] start timestamp (u64 LE)
-    // [80..88] end timestamp (u64 LE)
-    // [88..96] deposited amount (u64 LE)
-    // [96..128] mint pubkey (32 bytes)
-    // Note: actual layout may vary by Streamflow version.
-    // We use a best-effort decode; if it fails we skip the account.
+function streamUrl(id: string) {
+  return `https://app.streamflow.finance/stream/solana/mainnet/${id}`;
+}
 
-    if (buf.length < 128) return null;
+function tokenAmount(stream: Stream) {
+  const remaining = stream.remaining(TOKEN_DECIMALS);
+  if (Number.isFinite(remaining) && remaining > 0) return remaining;
+  return getNumberFromBN(stream.depositedAmount, TOKEN_DECIMALS);
+}
 
-    const readPubkey = (offset: number) => {
-      const bytes = buf.slice(offset, offset + 32);
-      // Base58 encode
-      const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-      let num = BigInt('0x' + bytes.toString('hex'));
-      let result = '';
-      const base = BigInt(58);
-      while (num > 0n) {
-        result = ALPHABET[Number(num % base)] + result;
-        num = num / base;
-      }
-      for (const byte of bytes) {
-        if (byte === 0) result = '1' + result;
-        else break;
-      }
-      return result;
-    };
+function isWalletTokenLock(stream: Stream, wallet: string, now: number) {
+  return (
+    stream.mint === WCB_MINT &&
+    stream.type === StreamType.Lock &&
+    !stream.closed &&
+    stream.canceledAt === 0 &&
+    stream.end > now &&
+    (stream.recipient === wallet || stream.sender === wallet)
+  );
+}
 
-    const readU64LE = (offset: number) =>
-      buf.readBigUInt64LE(offset);
+async function fetchWalletStreams(client: SolanaStreamClient, wallet: string) {
+  const [asRecipient, asSender] = await Promise.all([
+    client.searchStreams({ mint: WCB_MINT, recipient: wallet, closed: false }),
+    client.searchStreams({ mint: WCB_MINT, sender: wallet, closed: false }),
+  ]);
 
-    return {
-      sender: readPubkey(8),
-      mint: readPubkey(96),
-      start: readU64LE(72),
-      end: readU64LE(80),
-      depositedAmount: readU64LE(88),
-    };
-  } catch {
-    return null;
+  const byId = new Map<string, (typeof asRecipient)[number]>();
+  for (const item of [...asRecipient, ...asSender]) {
+    byId.set(item.publicKey.toBase58(), item);
   }
+  return Array.from(byId.values());
 }
 
 export async function GET(request: NextRequest) {
@@ -98,76 +67,70 @@ export async function GET(request: NextRequest) {
   const wallet = searchParams.get('wallet');
 
   if (!wallet) {
-    return NextResponse.json({ error: 'wallet parameter required' }, { status: 400 });
+    return NextResponse.json({ error: 'wallet parameter required', locks: [], total: 0 }, { status: 400 });
+  }
+
+  if (!WCB_MINT || WCB_MINT === 'your_token_contract_address_here') {
+    return NextResponse.json({ locks: [], total: 0, source: 'not-configured' });
   }
 
   try {
-    // Query Streamflow program accounts filtered by sender = wallet
-    // Offset 8 = start of sender pubkey field
-    const walletBytes = Buffer.from(
-      // Decode base58 wallet address to bytes
-      (() => {
-        const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-        const bytes = new Uint8Array(32);
-        let n = 0n;
-        for (const char of wallet) {
-          const idx = ALPHABET.indexOf(char);
-          if (idx < 0) throw new Error('Invalid base58');
-          n = n * 58n + BigInt(idx);
-        }
-        const hex = n.toString(16).padStart(64, '0');
-        for (let i = 0; i < 32; i++) {
-          bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
-        }
-        return bytes;
-      })()
-    );
-
-    const result = await rpc('getProgramAccounts', [
-      STREAMFLOW_PROGRAM,
-      {
-        encoding: 'base64',
-        filters: [
-          { memcmp: { offset: 8, bytes: wallet } }, // sender = wallet
-        ],
-      },
-    ]) as Array<{ pubkey: string; account: { data: [string, string] } }>;
-
+    const client = new SolanaStreamClient(buildRpcUrl());
+    const streams = await fetchWalletStreams(client, wallet);
     const now = Math.floor(Date.now() / 1000);
-    const locks = [];
+    const locks: Array<{
+      id: string;
+      wallet: string;
+      sender: string;
+      recipient: string;
+      amount: number;
+      startTs: number;
+      endTs: number;
+      durationDays: number;
+      credits: number;
+      isActive: boolean;
+      mint: string;
+      streamflowUrl: string;
+    }> = [];
 
-    for (const item of result ?? []) {
-      const [data] = item.account.data;
-      const decoded = decodeStreamflowAccount(data);
-      if (!decoded) continue;
-      if (decoded.mint !== WCB_MINT) continue;
+    for (const item of streams) {
+      const stream = item.account;
+      if (!isWalletTokenLock(stream, wallet, now)) continue;
 
-      const decimals = 6;
-      const amount = Number(decoded.depositedAmount) / Math.pow(10, decimals);
-      const startTs = Number(decoded.start);
-      const endTs = Number(decoded.end);
-      const durationDays = Math.max(1, Math.round((endTs - startTs) / 86400));
-      const isActive = endTs > now;
+      const amount = tokenAmount(stream);
+      if (!Number.isFinite(amount) || amount <= 0) continue;
+
+      const startTs = stream.start;
+      const endTs = stream.end;
+      const durationDays = Math.max(1, Math.ceil((endTs - startTs) / 86_400));
+      const id = item.publicKey.toBase58();
 
       locks.push({
-        id: item.pubkey,
-        wallet,
+        id,
+        wallet: stream.sender,
+        sender: stream.sender,
+        recipient: stream.recipient,
         amount,
         startTs,
         endTs,
         durationDays,
         credits: calculateCredits(amount, durationDays),
-        isActive,
-        mint: decoded.mint,
-        streamflowUrl: `https://app.streamflow.finance/stream/solana/mainnet/${item.pubkey}`,
+        isActive: true,
+        mint: stream.mint,
+        streamflowUrl: streamUrl(id),
       });
     }
 
     locks.sort((a, b) => b.credits - a.credits);
-    return NextResponse.json({ locks, total: locks.length });
-
+    return NextResponse.json({
+      locks,
+      total: locks.length,
+      mint: WCB_MINT,
+      source: 'streamflow-sdk-searchStreams',
+    });
   } catch (err) {
-    console.error('[/api/locks] Error:', err);
-    return NextResponse.json({ error: 'Failed to fetch locks', locks: [], total: 0 }, { status: 500 });
+    const message = err instanceof Error ? err.message : 'Failed to fetch locks';
+    console.error('[/api/locks]', message);
+    return NextResponse.json({ error: message, locks: [], total: 0 }, { status: 500 });
   }
 }
