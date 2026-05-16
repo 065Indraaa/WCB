@@ -131,7 +131,7 @@ export function HeroSection() {
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
             }}>
-              <WcbText>Hold $WCB.</WcbText>
+              <WcbText tone="hero">Hold $WCB.</WcbText>
             </span>
             {' '}
             <span style={{ color: '#FFD36B' }}>Own the board.</span>
@@ -177,7 +177,7 @@ export function HeroSection() {
               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 14px 36px rgba(242,181,68,0.38)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(242,181,68,0.28)'; }}
             >
-              <WcbText>Buy $WCB</WcbText>
+              <WcbText tone="inherit">Buy $WCB</WcbText>
             </a>
 
             <Link

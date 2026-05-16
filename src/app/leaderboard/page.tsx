@@ -637,7 +637,7 @@ export default function LeaderboardPage() {
           <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="card p-16 text-center">
             <p style={{ fontSize: '1.1rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.5rem' }}>No data yet</p>
             <p style={{ color: '#B3B3B3', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Lock <WcbMark /> to establish a leaderboard position.</p>
-            <a href="/lock" className="btn-primary" style={{ display: 'inline-flex' }}>Lock <WcbMark /> Now</a>
+            <a href="/lock" className="btn-primary" style={{ display: 'inline-flex' }}>Lock <WcbMark tone="inherit" /> Now</a>
           </motion.div>
         ) : (
           <motion.div key="table" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card overflow-hidden">
@@ -745,7 +745,7 @@ export default function LeaderboardPage() {
           Lock more <WcbMark /> for longer to earn more credits and secure your tier.
         </p>
         <a href="/lock" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.875rem 2rem', borderRadius: 12, background: '#F2B544', color: '#070707', fontWeight: 800, fontSize: '0.95rem', textDecoration: 'none', boxShadow: '0 8px 22px rgba(242,181,68,0.24)' }}>
-          Lock <WcbMark /> Now
+          Lock <WcbMark tone="inherit" /> Now
         </a>
       </div>
     </div>

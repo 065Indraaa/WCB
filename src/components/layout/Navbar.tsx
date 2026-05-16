@@ -185,7 +185,7 @@ export function Navbar() {
                 transition: 'opacity 0.15s',
               }}
             >
-              <WcbText>Buy $WCB</WcbText>
+              <WcbText tone="inherit">Buy $WCB</WcbText>
             </a>
 
             <WalletButtonDynamic className="hidden sm:inline-flex" />
@@ -319,7 +319,7 @@ export function Navbar() {
                   boxShadow: '0 8px 22px rgba(242,181,68,0.28)',
                 }}
               >
-                <WcbText>Buy $WCB</WcbText>
+                <WcbText tone="inherit">Buy $WCB</WcbText>
               </a>
             </div>
           </nav>
