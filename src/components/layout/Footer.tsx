@@ -212,28 +212,9 @@ export function Footer() {
           }}
           className="sm:flex-row sm:items-center sm:justify-between"
         >
-          {/* Token launch status */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.68rem', fontWeight: 600, color: '#374151' }}>Contract:</span>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '5px 11px',
-                borderRadius: 6,
-                background: 'rgba(242,181,68,0.08)',
-                border: '1px solid rgba(242,181,68,0.18)',
-              }}
-            >
-              <span style={{ fontSize: '0.7rem', color: '#FFD36B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                Coming Soon
-              </span>
-            </div>
-          </div>
-
+          {/* Copyright */}
           <p style={{ fontSize: '0.68rem', color: '#374151', margin: 0 }}>
-            (c) 2026 WORLDCUPBET - All rights reserved
+            © 2026 WORLDCUPBET. All rights reserved.
           </p>
         </div>
       </div>

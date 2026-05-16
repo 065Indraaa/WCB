@@ -841,7 +841,6 @@ export default function DocsPage() {
                 System Facts
               </p>
               <SpecRow label="Token" value="$WCB" />
-              <SpecRow label="Mint" value="Coming Soon" />
               <SpecRow label="Network" value="Solana" />
               <SpecRow label="Holder data" value="Token accounts" />
               <SpecRow label="Lock data" value="Streamflow" />
