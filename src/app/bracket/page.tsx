@@ -6,6 +6,7 @@ const BASE_GAP = 18;
 const BASE_MATCH_COUNT = 16;
 const BASE_STEP = SLOT_HEIGHT + BASE_GAP;
 const BRACKET_HEIGHT = BASE_MATCH_COUNT * SLOT_HEIGHT + (BASE_MATCH_COUNT - 1) * BASE_GAP;
+const ROUND_HEADER_HEIGHT = 55;
 const CONNECTOR_WIDTH = 64;
 const CONNECTOR_JOIN_X = 28;
 
@@ -30,12 +31,18 @@ function MatchSlot({ position }: { position: number }) {
   return (
     <div
       className="bracket-slot card overflow-hidden transition-colors"
-      style={{ width: 190, minHeight: 104, padding: '0.75rem', background: '#111111' }}
+      style={{
+        width: SLOT_WIDTH,
+        height: SLOT_HEIGHT,
+        padding: '0.6rem',
+        background: '#111111',
+        boxSizing: 'border-box',
+      }}
     >
-      <div className="space-y-2">
+      <div style={{ display: 'grid', gap: 6 }}>
         <div
           className="flex items-center gap-2 px-2 py-1.5 rounded"
-          style={{ background: '#171717', border: '1px solid #2A2A2A' }}
+          style={{ background: '#171717', border: '1px solid #2A2A2A', padding: '5px 8px' }}
         >
           <span
             className="flex items-center justify-center font-bold rounded"
@@ -55,7 +62,7 @@ function MatchSlot({ position }: { position: number }) {
         </div>
         <div
           className="flex items-center gap-2 px-2 py-1.5 rounded"
-          style={{ background: '#171717', border: '1px solid #2A2A2A' }}
+          style={{ background: '#171717', border: '1px solid #2A2A2A', padding: '5px 8px' }}
         >
           <span
             className="flex items-center justify-center font-bold rounded"
@@ -75,8 +82,8 @@ function MatchSlot({ position }: { position: number }) {
         </div>
       </div>
       <p
-        className="font-bold uppercase tracking-wider mt-2 text-center"
-        style={{ fontSize: '10px', color: '#6E6E6E' }}
+        className="font-bold uppercase tracking-wider text-center"
+        style={{ fontSize: '10px', color: '#6E6E6E', lineHeight: 1, marginTop: 6 }}
       >
         Match {position}
       </p>
@@ -88,14 +95,13 @@ function BracketConnectors({ matchCount }: { matchCount: number }) {
   if (matchCount <= 1) return null;
   const roundIndex = Math.log2(BASE_MATCH_COUNT / matchCount);
   const { paddingTop, centerStep } = getRoundLayout(roundIndex);
-  const nextLayout = getRoundLayout(roundIndex + 1);
 
   return (
     <div className="bracket-connectors" aria-hidden="true">
       {Array.from({ length: matchCount / 2 }).map((_, i) => {
         const topCenter = paddingTop + SLOT_HEIGHT / 2 + (i * 2) * centerStep;
         const bottomCenter = paddingTop + SLOT_HEIGHT / 2 + (i * 2 + 1) * centerStep;
-        const targetCenter = nextLayout.paddingTop + SLOT_HEIGHT / 2 + i * nextLayout.centerStep;
+        const targetCenter = topCenter + (bottomCenter - topCenter) / 2;
 
         return (
           <div key={i} className="bracket-connector">
@@ -150,7 +156,16 @@ export default function BracketPage() {
               <div key={round.id} className="bracket-round-wrap">
                 <div className="bracket-round">
                   {/* Round header */}
-                  <div className="text-center mb-4">
+                  <div
+                    className="text-center"
+                    style={{
+                      height: ROUND_HEADER_HEIGHT,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'flex-start',
+                    }}
+                  >
                     <p
                       className="text-xs font-bold uppercase tracking-widest"
                       style={{ color: '#F2B544' }}
@@ -216,7 +231,7 @@ export default function BracketPage() {
           position: relative;
           width: ${CONNECTOR_WIDTH}px;
           height: ${BRACKET_HEIGHT}px;
-          margin-top: 55px;
+          margin-top: ${ROUND_HEADER_HEIGHT}px;
           flex: 0 0 ${CONNECTOR_WIDTH}px;
         }
 
