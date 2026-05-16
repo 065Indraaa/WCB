@@ -1,18 +1,18 @@
 export const metadata = { title: 'Bracket | World Cup 2026' };
 
 const ROUNDS = [
-  { id: 'R32', label: 'Round of 32', count: 32 },
-  { id: 'R16', label: 'Round of 16', count: 16 },
-  { id: 'QF', label: 'Quarter-Finals', count: 8 },
-  { id: 'SF', label: 'Semi-Finals', count: 4 },
-  { id: 'F', label: 'Final', count: 2 },
+  { id: 'R32', label: 'Round of 32', count: 32, gap: 18 },
+  { id: 'R16', label: 'Round of 16', count: 16, gap: 152 },
+  { id: 'QF', label: 'Quarter-Finals', count: 8, gap: 420 },
+  { id: 'SF', label: 'Semi-Finals', count: 4, gap: 956 },
+  { id: 'F', label: 'Final', count: 2, gap: 0 },
 ];
 
 function MatchSlot({ position }: { position: number }) {
   return (
     <div
-      className="card overflow-hidden mb-3 transition-colors"
-      style={{ minWidth: 180, padding: '0.75rem', background: '#111111' }}
+      className="bracket-slot card overflow-hidden transition-colors"
+      style={{ width: 190, minHeight: 104, padding: '0.75rem', background: '#111111' }}
     >
       <div className="space-y-2">
         <div
@@ -66,6 +66,23 @@ function MatchSlot({ position }: { position: number }) {
   );
 }
 
+function BracketConnectors({ matchCount }: { matchCount: number }) {
+  if (matchCount <= 1) return null;
+
+  return (
+    <div className="bracket-connectors" aria-hidden="true">
+      {Array.from({ length: matchCount / 2 }).map((_, i) => (
+        <div key={i} className="bracket-connector">
+          <span className="bracket-line bracket-line-top" />
+          <span className="bracket-line bracket-line-bottom" />
+          <span className="bracket-line bracket-line-join" />
+          <span className="bracket-line bracket-line-out" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function BracketPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
@@ -85,37 +102,152 @@ export default function BracketPage() {
 
       {/* Bracket, horizontally scrollable */}
       <div className="card p-6 overflow-x-auto" style={{ background: '#111111' }}>
-        <div className="flex gap-6" style={{ minWidth: 'fit-content' }}>
-          {ROUNDS.map((round) => {
+        <div className="bracket-board">
+          {ROUNDS.map((round, roundIndex) => {
             const matchCount = round.count / 2;
             return (
-              <div key={round.id} className="flex flex-col">
-                {/* Round header */}
-                <div className="text-center mb-4">
-                  <p
-                    className="text-xs font-bold uppercase tracking-widest"
-                    style={{ color: '#F2B544' }}
+              <div key={round.id} className="bracket-round-wrap">
+                <div className="bracket-round">
+                  {/* Round header */}
+                  <div className="text-center mb-4">
+                    <p
+                      className="text-xs font-bold uppercase tracking-widest"
+                      style={{ color: '#F2B544' }}
+                    >
+                      {round.label}
+                    </p>
+                    <p className="text-xs" style={{ color: '#6E6E6E' }}>
+                      {matchCount} match{matchCount !== 1 ? 'es' : ''}
+                    </p>
+                  </div>
+                  {/* Slots */}
+                  <div
+                    className="bracket-slots"
+                    style={{
+                      gap: round.gap,
+                      paddingTop: roundIndex === 0 ? 0 : Math.max(0, round.gap / 2),
+                    }}
                   >
-                    {round.label}
-                  </p>
-                  <p className="text-xs" style={{ color: '#6E6E6E' }}>
-                    {matchCount} match{matchCount !== 1 ? 'es' : ''}
-                  </p>
+                    {Array.from({ length: matchCount }).map((_, i) => (
+                      <MatchSlot key={i} position={i + 1} />
+                    ))}
+                  </div>
                 </div>
-                {/* Slots */}
-                <div
-                  className="flex flex-col justify-around"
-                  style={{ minHeight: matchCount * 120 }}
-                >
-                  {Array.from({ length: matchCount }).map((_, i) => (
-                    <MatchSlot key={i} position={i + 1} />
-                  ))}
-                </div>
+                <BracketConnectors matchCount={matchCount} />
               </div>
             );
           })}
         </div>
       </div>
+
+      <style>{`
+        .bracket-board {
+          --slot-h: 104px;
+          --gap-r32: 18px;
+          display: flex;
+          align-items: flex-start;
+          gap: 38px;
+          min-width: max-content;
+          padding: 2px 12px 4px 2px;
+        }
+
+        .bracket-round-wrap {
+          display: flex;
+          align-items: flex-start;
+          gap: 0;
+        }
+
+        .bracket-round {
+          position: relative;
+          z-index: 2;
+        }
+
+        .bracket-slots {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .bracket-slot {
+          position: relative;
+          z-index: 2;
+        }
+
+        .bracket-connectors {
+          position: relative;
+          width: 38px;
+          height: calc(16 * var(--slot-h) + 15 * var(--gap-r32));
+          margin-top: 55px;
+          flex: 0 0 38px;
+        }
+
+        .bracket-connector {
+          position: relative;
+          height: calc((var(--slot-h) * 2) + var(--gap-r32));
+        }
+
+        .bracket-line {
+          position: absolute;
+          display: block;
+          background: linear-gradient(90deg, rgba(242,181,68,0.18), rgba(242,181,68,0.62));
+          box-shadow: 0 0 12px rgba(242,181,68,0.12);
+        }
+
+        .bracket-line-top,
+        .bracket-line-bottom {
+          left: 0;
+          width: 18px;
+          height: 1px;
+        }
+
+        .bracket-line-top {
+          top: calc(var(--slot-h) / 2);
+        }
+
+        .bracket-line-bottom {
+          top: calc(var(--slot-h) + var(--gap-r32) + (var(--slot-h) / 2));
+        }
+
+        .bracket-line-join {
+          left: 18px;
+          top: calc(var(--slot-h) / 2);
+          width: 1px;
+          height: calc(var(--slot-h) + var(--gap-r32));
+          background: linear-gradient(180deg, rgba(242,181,68,0.62), rgba(242,181,68,0.18));
+        }
+
+        .bracket-line-out {
+          left: 18px;
+          top: calc(var(--slot-h) + (var(--gap-r32) / 2));
+          width: 20px;
+          height: 1px;
+        }
+
+        @media (max-width: 768px) {
+          .bracket-board {
+            gap: 28px;
+            padding-bottom: 10px;
+          }
+
+          .bracket-connectors {
+            width: 28px;
+            flex-basis: 28px;
+          }
+
+          .bracket-line-top,
+          .bracket-line-bottom {
+            width: 13px;
+          }
+
+          .bracket-line-join {
+            left: 13px;
+          }
+
+          .bracket-line-out {
+            left: 13px;
+            width: 15px;
+          }
+        }
+      `}</style>
 
       {/* Final highlight card */}
       <div
