@@ -71,18 +71,19 @@ export function HeroSection() {
 
       {/* Main content */}
       <div
-        className="relative w-full flex-1 flex flex-col items-center justify-center"
+        className="hero-content relative w-full flex-1 flex flex-col items-center justify-center"
         style={{ zIndex: 10, maxWidth: '72rem', margin: '0 auto', padding: 'clamp(3rem, 6vw, 5rem) 1.5rem clamp(1.5rem, 3vw, 3rem)', width: '100%' }}
       >
-        <div style={{ maxWidth: '58rem', margin: '0 auto', textAlign: 'center' }}>
+        <div className="hero-copy" style={{ maxWidth: '58rem', margin: '0 auto', textAlign: 'center' }}>
           {/* Eyebrow badges */}
           <motion.div
+            className="hero-badges"
             initial={rm ? false : { opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
             style={{ marginBottom: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}
           >
-            <span style={{
+            <span className="hero-badge" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
               padding: '0.35rem 0.85rem', borderRadius: '9999px',
               fontSize: '0.82rem', fontWeight: 700,
@@ -92,7 +93,7 @@ export function HeroSection() {
             }}>
               World Cup 2026
             </span>
-            <span style={{
+            <span className="hero-badge" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
               padding: '0.35rem 0.85rem', borderRadius: '9999px',
               fontSize: '0.82rem', fontWeight: 700,
@@ -109,6 +110,7 @@ export function HeroSection() {
 
           {/* Headline */}
           <motion.h1
+            className="hero-title"
             initial={rm ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.1 }}
@@ -138,6 +140,7 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <motion.p
+            className="hero-subcopy"
             initial={rm ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.2 }}
@@ -156,6 +159,7 @@ export function HeroSection() {
 
           {/* CTAs */}
           <motion.div
+            className="hero-actions"
             initial={rm ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.3 }}
@@ -214,6 +218,7 @@ export function HeroSection() {
           </motion.div>
 
           <motion.div
+            className="hero-trust-bar"
             initial={rm ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.36 }}
@@ -228,6 +233,7 @@ export function HeroSection() {
 
           {/* Countdown card */}
           <motion.div
+            className="hero-countdown"
             initial={rm ? false : { opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.55, delay: 0.4 }}

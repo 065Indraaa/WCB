@@ -10,16 +10,20 @@ export function BackgroundSong() {
     if (!audio) return;
 
     let started = false;
+    audio.volume = 0.35;
+    audio.loop = true;
+    audio.load();
 
     const removeFallbackListeners = () => {
       window.removeEventListener('pointerdown', playSong);
       window.removeEventListener('keydown', playSong);
       window.removeEventListener('touchstart', playSong);
+      window.removeEventListener('touchend', playSong);
+      window.removeEventListener('click', playSong);
     };
 
     const playSong = () => {
       if (started) return;
-      audio.volume = 0.35;
       void audio
         .play()
         .then(() => {
@@ -31,13 +35,14 @@ export function BackgroundSong() {
         });
     };
 
-    const timer = window.setTimeout(playSong, 200);
-    window.addEventListener('pointerdown', playSong, { once: true });
-    window.addEventListener('keydown', playSong, { once: true });
-    window.addEventListener('touchstart', playSong, { once: true });
+    playSong();
+    window.addEventListener('pointerdown', playSong);
+    window.addEventListener('keydown', playSong);
+    window.addEventListener('touchstart', playSong);
+    window.addEventListener('touchend', playSong);
+    window.addEventListener('click', playSong);
 
     return () => {
-      window.clearTimeout(timer);
       removeFallbackListeners();
     };
   }, []);
@@ -47,10 +52,17 @@ export function BackgroundSong() {
       ref={audioRef}
       src="/song.mp3"
       autoPlay
+      loop
       preload="auto"
       playsInline
       aria-hidden="true"
-      style={{ display: 'none' }}
+      style={{
+        position: 'absolute',
+        width: 0,
+        height: 0,
+        opacity: 0,
+        pointerEvents: 'none',
+      }}
     />
   );
 }
