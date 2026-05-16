@@ -1,12 +1,30 @@
 export const metadata = { title: 'Bracket | World Cup 2026' };
 
+const SLOT_HEIGHT = 104;
+const SLOT_WIDTH = 190;
+const BASE_GAP = 18;
+const BASE_MATCH_COUNT = 16;
+const BASE_STEP = SLOT_HEIGHT + BASE_GAP;
+const BRACKET_HEIGHT = BASE_MATCH_COUNT * SLOT_HEIGHT + (BASE_MATCH_COUNT - 1) * BASE_GAP;
+const CONNECTOR_WIDTH = 64;
+const CONNECTOR_JOIN_X = 22;
+
 const ROUNDS = [
-  { id: 'R32', label: 'Round of 32', count: 32, gap: 18 },
-  { id: 'R16', label: 'Round of 16', count: 16, gap: 152 },
-  { id: 'QF', label: 'Quarter-Finals', count: 8, gap: 420 },
-  { id: 'SF', label: 'Semi-Finals', count: 4, gap: 956 },
-  { id: 'F', label: 'Final', count: 2, gap: 0 },
+  { id: 'R32', label: 'Round of 32', count: 32 },
+  { id: 'R16', label: 'Round of 16', count: 16 },
+  { id: 'QF', label: 'Quarter-Finals', count: 8 },
+  { id: 'SF', label: 'Semi-Finals', count: 4 },
+  { id: 'F', label: 'Final', count: 2 },
 ];
+
+function getRoundLayout(roundIndex: number) {
+  const groupSize = 2 ** roundIndex;
+  const centerStep = BASE_STEP * groupSize;
+  const gap = centerStep - SLOT_HEIGHT;
+  const paddingTop = (BASE_STEP * (groupSize - 1)) / 2;
+
+  return { gap, paddingTop, centerStep };
+}
 
 function MatchSlot({ position }: { position: number }) {
   return (
@@ -71,14 +89,34 @@ function BracketConnectors({ matchCount }: { matchCount: number }) {
 
   return (
     <div className="bracket-connectors" aria-hidden="true">
-      {Array.from({ length: matchCount / 2 }).map((_, i) => (
-        <div key={i} className="bracket-connector">
-          <span className="bracket-line bracket-line-top" />
-          <span className="bracket-line bracket-line-bottom" />
-          <span className="bracket-line bracket-line-join" />
-          <span className="bracket-line bracket-line-out" />
-        </div>
-      ))}
+      {Array.from({ length: matchCount / 2 }).map((_, i) => {
+        const roundIndex = Math.log2(BASE_MATCH_COUNT / matchCount);
+        const { paddingTop, centerStep } = getRoundLayout(roundIndex);
+        const topCenter = paddingTop + SLOT_HEIGHT / 2 + (i * 2) * centerStep;
+        const bottomCenter = paddingTop + SLOT_HEIGHT / 2 + (i * 2 + 1) * centerStep;
+        const targetCenter = (topCenter + bottomCenter) / 2;
+
+        return (
+          <div key={i} className="bracket-connector">
+            <span
+              className="bracket-line bracket-line-horizontal"
+              style={{ left: 0, top: topCenter, width: CONNECTOR_JOIN_X }}
+            />
+            <span
+              className="bracket-line bracket-line-horizontal"
+              style={{ left: 0, top: bottomCenter, width: CONNECTOR_JOIN_X }}
+            />
+            <span
+              className="bracket-line bracket-line-vertical"
+              style={{ left: CONNECTOR_JOIN_X, top: topCenter, height: bottomCenter - topCenter }}
+            />
+            <span
+              className="bracket-line bracket-line-horizontal bracket-line-output"
+              style={{ left: CONNECTOR_JOIN_X, top: targetCenter, width: CONNECTOR_WIDTH - CONNECTOR_JOIN_X }}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -105,6 +143,8 @@ export default function BracketPage() {
         <div className="bracket-board">
           {ROUNDS.map((round, roundIndex) => {
             const matchCount = round.count / 2;
+            const { gap, paddingTop } = getRoundLayout(roundIndex);
+
             return (
               <div key={round.id} className="bracket-round-wrap">
                 <div className="bracket-round">
@@ -124,8 +164,8 @@ export default function BracketPage() {
                   <div
                     className="bracket-slots"
                     style={{
-                      gap: round.gap,
-                      paddingTop: roundIndex === 0 ? 0 : Math.max(0, round.gap / 2),
+                      gap,
+                      paddingTop,
                     }}
                   >
                     {Array.from({ length: matchCount }).map((_, i) => (
@@ -142,11 +182,9 @@ export default function BracketPage() {
 
       <style>{`
         .bracket-board {
-          --slot-h: 104px;
-          --gap-r32: 18px;
           display: flex;
           align-items: flex-start;
-          gap: 38px;
+          gap: 0;
           min-width: max-content;
           padding: 2px 12px 4px 2px;
         }
@@ -154,17 +192,18 @@ export default function BracketPage() {
         .bracket-round-wrap {
           display: flex;
           align-items: flex-start;
-          gap: 0;
         }
 
         .bracket-round {
           position: relative;
           z-index: 2;
+          width: ${SLOT_WIDTH}px;
         }
 
         .bracket-slots {
           display: flex;
           flex-direction: column;
+          min-height: ${BRACKET_HEIGHT}px;
         }
 
         .bracket-slot {
@@ -174,15 +213,15 @@ export default function BracketPage() {
 
         .bracket-connectors {
           position: relative;
-          width: 38px;
-          height: calc(16 * var(--slot-h) + 15 * var(--gap-r32));
+          width: ${CONNECTOR_WIDTH}px;
+          height: ${BRACKET_HEIGHT}px;
           margin-top: 55px;
-          flex: 0 0 38px;
+          flex: 0 0 ${CONNECTOR_WIDTH}px;
         }
 
         .bracket-connector {
-          position: relative;
-          height: calc((var(--slot-h) * 2) + var(--gap-r32));
+          position: absolute;
+          inset: 0;
         }
 
         .bracket-line {
@@ -192,59 +231,44 @@ export default function BracketPage() {
           box-shadow: 0 0 12px rgba(242,181,68,0.12);
         }
 
-        .bracket-line-top,
-        .bracket-line-bottom {
-          left: 0;
-          width: 18px;
+        .bracket-line-horizontal {
           height: 1px;
+          transform: translateY(-0.5px);
         }
 
-        .bracket-line-top {
-          top: calc(var(--slot-h) / 2);
-        }
-
-        .bracket-line-bottom {
-          top: calc(var(--slot-h) + var(--gap-r32) + (var(--slot-h) / 2));
-        }
-
-        .bracket-line-join {
-          left: 18px;
-          top: calc(var(--slot-h) / 2);
+        .bracket-line-vertical {
           width: 1px;
-          height: calc(var(--slot-h) + var(--gap-r32));
+          transform: translateX(-0.5px);
           background: linear-gradient(180deg, rgba(242,181,68,0.62), rgba(242,181,68,0.18));
         }
 
-        .bracket-line-out {
-          left: 18px;
-          top: calc(var(--slot-h) + (var(--gap-r32) / 2));
-          width: 20px;
-          height: 1px;
+        .bracket-line-output::after {
+          content: '';
+          position: absolute;
+          right: -3px;
+          top: -3px;
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #F2B544;
+          box-shadow: 0 0 14px rgba(242,181,68,0.35);
+        }
+
+        .bracket-round-wrap:last-child .bracket-connectors {
+          display: none;
+        }
+
+        .bracket-round-wrap:last-child {
+          padding-right: 0;
         }
 
         @media (max-width: 768px) {
           .bracket-board {
-            gap: 28px;
             padding-bottom: 10px;
           }
 
           .bracket-connectors {
-            width: 28px;
-            flex-basis: 28px;
-          }
-
-          .bracket-line-top,
-          .bracket-line-bottom {
-            width: 13px;
-          }
-
-          .bracket-line-join {
-            left: 13px;
-          }
-
-          .bracket-line-out {
-            left: 13px;
-            width: 15px;
+            opacity: 0.86;
           }
         }
       `}</style>
