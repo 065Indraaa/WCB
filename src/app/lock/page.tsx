@@ -133,17 +133,17 @@ export default function LockPage() {
             {
               title: 'Early credit rate',
               desc: `Lock before launch to get 1 credit per ${EARLY_TOKENS_PER_CREDIT} $WCB. After launch the rate becomes 1 credit per ${POST_LAUNCH_TOKENS_PER_CREDIT} $WCB.`,
-              img: 'Countdown Visual',
+              img: 'Early Window Countdown',
             },
             {
               title: 'Platform credits',
               desc: 'Credits are wallet-bound platform credits for entries, access, ranking, and future redeem rules once enabled.',
-              img: 'Betting Credits Visual',
+              img: 'Platform Credit Ticket',
             },
             {
               title: 'Non-custodial lock',
               desc: `Locking is non-custodial via Streamflow. WCB uses a fixed ${FIXED_LOCK_DAYS}-day lock and reads the real lock on-chain.`,
-              img: 'Security Visual',
+              img: 'Streamflow Security Lock',
             },
           ].map((r) => (
             <div

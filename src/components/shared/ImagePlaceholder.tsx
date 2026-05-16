@@ -24,39 +24,39 @@ function getVisualKind(label: string): VisualKind {
 
 const VISUAL_COPY: Record<VisualKind, { eyebrow: string; title: string; sub: string; accent: string }> = {
   leaderboard: {
-    eyebrow: 'LIVE RANKING',
-    title: 'Leaderboard Sprint',
-    sub: 'Lock 60D / climb the board',
+    eyebrow: 'RANKING BOARD',
+    title: 'Live lock standings',
+    sub: 'Eligible 60-day locks only',
     accent: '#F2B544',
   },
   ad: {
-    eyebrow: 'MATCHDAY ACCESS',
-    title: 'WCB Market Pass',
-    sub: 'Vote / lock / enter',
+    eyebrow: 'MATCHDAY PASS',
+    title: 'Vote before markets open',
+    sub: 'Preview picks, no live betting yet',
     accent: '#14F195',
   },
   countdown: {
-    eyebrow: 'KICKOFF TIMER',
-    title: 'June 11, 2026',
-    sub: 'Opening match window',
+    eyebrow: 'EARLY WINDOW',
+    title: 'Lock before June 11',
+    sub: 'Get the 100 WCB per credit rate',
     accent: '#F2B544',
   },
   credits: {
-    eyebrow: 'CREDIT TICKET',
-    title: '100:1 Early Rate',
-    sub: 'Before launch / 60D lock',
+    eyebrow: 'PLATFORM CREDIT',
+    title: 'Credits track your lock',
+    sub: 'Redeem / withdraw coming soon',
     accent: '#9945FF',
   },
   security: {
     eyebrow: 'STREAMFLOW LOCK',
-    title: 'On-chain 60D',
-    sub: 'No manual custody',
+    title: 'Fixed 60-day lock',
+    sub: 'Read from real on-chain records',
     accent: '#14F195',
   },
   market: {
-    eyebrow: 'WCB VISUAL',
-    title: 'Football Markets',
-    sub: 'World Cup betting layer',
+    eyebrow: 'WORLD CUP MARKET',
+    title: 'Football preview board',
+    sub: 'Sentiment before betting opens',
     accent: '#F2B544',
   },
 };
@@ -146,42 +146,91 @@ function OddsBoard({ kind }: { kind: VisualKind }) {
   );
 }
 
-function IconVisual({ kind, accent }: { kind: VisualKind; accent: string }) {
-  if (kind === 'countdown') {
-    return (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 34px)', gap: 5 }}>
-        {['D', 'H', 'M'].map((item, index) => (
-          <div key={item} style={{ padding: '7px 0', borderRadius: 7, background: 'rgba(7,7,7,0.62)', border: '1px solid rgba(242,181,68,0.2)', textAlign: 'center' }}>
-            <div style={{ color: '#FFFFFF', fontSize: '0.86rem', fontWeight: 950 }}>{[26, 18, 45][index]}</div>
-            <div style={{ color: '#6E6E6E', fontSize: '0.48rem', fontWeight: 900 }}>{item}</div>
+function CountdownVisual({ accent }: { accent: string }) {
+  return (
+    <div style={{ display: 'grid', gap: 7, minWidth: 132 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 5 }}>
+        {[
+          ['26', 'DAYS'],
+          ['18', 'HRS'],
+          ['45', 'MIN'],
+        ].map(([value, label]) => (
+          <div key={label} style={{ padding: '7px 0', borderRadius: 8, background: 'rgba(7,7,7,0.68)', border: '1px solid rgba(242,181,68,0.22)', textAlign: 'center' }}>
+            <div style={{ color: '#FFFFFF', fontSize: '0.92rem', fontWeight: 950 }}>{value}</div>
+            <div style={{ color: '#6E6E6E', fontSize: '0.46rem', fontWeight: 950, letterSpacing: '0.08em' }}>{label}</div>
           </div>
         ))}
       </div>
-    );
+      <div style={{ height: 6, borderRadius: 999, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+        <div style={{ width: '68%', height: '100%', background: `linear-gradient(90deg, ${accent}, #FFD36B)`, borderRadius: 999 }} />
+      </div>
+    </div>
+  );
+}
+
+function CreditTicketVisual() {
+  return (
+    <div style={{ position: 'relative', width: 132, height: 84 }}>
+      <div style={{ position: 'absolute', inset: '18px 6px 0 24px', borderRadius: 12, background: 'rgba(153,69,255,0.18)', border: '1px solid rgba(153,69,255,0.34)', transform: 'rotate(-7deg)' }} />
+      <div style={{ position: 'absolute', inset: '4px 18px 18px 0', borderRadius: 12, background: 'rgba(242,181,68,0.16)', border: '1px solid rgba(242,181,68,0.34)', transform: 'rotate(6deg)' }} />
+      <div style={{ position: 'absolute', inset: '11px 10px', borderRadius: 12, background: '#101010', border: '1px solid rgba(255,255,255,0.12)', display: 'grid', gridTemplateColumns: '1fr auto', alignItems: 'center', padding: '0 10px', gap: 8 }}>
+        <div>
+          <div style={{ color: '#FFD36B', fontSize: '0.58rem', fontWeight: 950, letterSpacing: '0.1em' }}>EARLY</div>
+          <div style={{ color: '#FFFFFF', fontSize: '1rem', fontWeight: 950, lineHeight: 1 }}>100:1</div>
+        </div>
+        <div style={{ width: 1, height: 38, borderLeft: '1px dashed rgba(255,255,255,0.24)' }} />
+      </div>
+    </div>
+  );
+}
+
+function SecurityVisual({ accent }: { accent: string }) {
+  return (
+    <div style={{ position: 'relative', width: 132, height: 88, display: 'grid', placeItems: 'center' }}>
+      <div style={{ position: 'absolute', left: 4, right: 4, top: 40, height: 2, background: `linear-gradient(90deg, transparent, ${accent}88, transparent)` }} />
+      {[10, 56, 102].map((left, index) => (
+        <div key={left} style={{ position: 'absolute', left, top: index === 1 ? 12 : 26, width: 20, height: 20, borderRadius: '50%', background: '#101010', border: `1px solid ${accent}66`, boxShadow: `0 0 18px ${accent}20` }} />
+      ))}
+      <div style={{ width: 50, height: 39, borderRadius: 10, background: '#101010', border: `1px solid ${accent}88`, position: 'relative', boxShadow: `0 0 26px ${accent}20` }}>
+        <div style={{ position: 'absolute', width: 28, height: 22, borderRadius: '18px 18px 0 0', border: `4px solid ${accent}`, borderBottom: 0, left: 10, top: -18 }} />
+        <div style={{ position: 'absolute', width: 7, height: 13, borderRadius: 999, background: accent, left: 20, top: 12 }} />
+      </div>
+    </div>
+  );
+}
+
+function MarketPassVisual({ accent }: { accent: string }) {
+  return (
+    <div style={{ width: 130, display: 'grid', gap: 6 }}>
+      {[
+        ['VOTE', 'OPEN'],
+        ['LOCK', '60D'],
+        ['BET', 'JUN 11'],
+      ].map(([label, value]) => (
+        <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 8px', borderRadius: 8, background: 'rgba(7,7,7,0.58)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <span style={{ color: '#B3B3B3', fontSize: '0.55rem', fontWeight: 950 }}>{label}</span>
+          <span style={{ color: accent, fontSize: '0.58rem', fontWeight: 950 }}>{value}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function IconVisual({ kind, accent }: { kind: VisualKind; accent: string }) {
+  if (kind === 'countdown') {
+    return <CountdownVisual accent={accent} />;
   }
 
   if (kind === 'credits') {
-    return (
-      <div style={{ position: 'relative', width: 104, height: 76 }}>
-        <div style={{ position: 'absolute', inset: '12px 2px 0 18px', borderRadius: 10, background: 'rgba(153,69,255,0.18)', border: '1px solid rgba(153,69,255,0.34)', transform: 'rotate(-7deg)' }} />
-        <div style={{ position: 'absolute', inset: '2px 14px 12px 0', borderRadius: 10, background: 'rgba(242,181,68,0.16)', border: '1px solid rgba(242,181,68,0.34)', transform: 'rotate(6deg)' }} />
-        <div style={{ position: 'absolute', inset: '9px 8px', borderRadius: 10, background: '#101010', border: '1px solid rgba(255,255,255,0.12)', display: 'grid', placeItems: 'center' }}>
-          <span style={{ color: '#FFD36B', fontSize: '1rem', fontWeight: 950 }}>100:1</span>
-        </div>
-      </div>
-    );
+    return <CreditTicketVisual />;
   }
 
   if (kind === 'security') {
-    return (
-      <div style={{ position: 'relative', width: 88, height: 88, display: 'grid', placeItems: 'center' }}>
-        <div style={{ position: 'absolute', width: 72, height: 72, borderRadius: '50%', border: `1px solid ${accent}55`, background: `${accent}12` }} />
-        <div style={{ width: 42, height: 34, borderRadius: 8, background: '#101010', border: `1px solid ${accent}88`, position: 'relative', boxShadow: `0 0 24px ${accent}20` }}>
-          <div style={{ position: 'absolute', width: 24, height: 20, borderRadius: '18px 18px 0 0', border: `4px solid ${accent}`, borderBottom: 0, left: 8, top: -17 }} />
-          <div style={{ position: 'absolute', width: 6, height: 12, borderRadius: 999, background: accent, left: 17, top: 10 }} />
-        </div>
-      </div>
-    );
+    return <SecurityVisual accent={accent} />;
+  }
+
+  if (kind === 'ad') {
+    return <MarketPassVisual accent={accent} />;
   }
 
   return <OddsBoard kind={kind} />;
@@ -199,7 +248,7 @@ export function ImagePlaceholder({
   const kind = getVisualKind(label);
   const copy = VISUAL_COPY[kind];
   const compact = height === 90 || label.toLowerCase().includes('leaderboard');
-  const showBoard = kind === 'leaderboard' || kind === 'ad';
+  const showBoard = kind === 'leaderboard';
 
   return (
     <div
