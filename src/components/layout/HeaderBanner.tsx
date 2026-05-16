@@ -2,15 +2,15 @@ import Image from 'next/image';
 
 export function HeaderBanner() {
   return (
-    <section className="site-header-banner" aria-label="WCB banner">
-      <div className="site-header-banner-frame">
+    <section className="home-hero-banner" aria-label="WCB promotional banner">
+      <div className="home-hero-banner-frame">
         <Image
           src="/banner.jpg"
           alt="WCB promotional banner"
           width={1760}
           height={576}
           priority
-          sizes="(max-width: 1280px) 100vw, 1280px"
+          sizes="(max-width: 960px) 92vw, 928px"
           style={{
             width: '100%',
             height: 'auto',

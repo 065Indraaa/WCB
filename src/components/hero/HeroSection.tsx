@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
+import { HeaderBanner } from '@/components/layout/HeaderBanner';
 import { CountdownTimer } from './CountdownTimer';
 import { WcbText } from '@/components/shared/WcbText';
 
@@ -229,6 +230,14 @@ export function HeroSection() {
                 {item}
               </span>
             ))}
+          </motion.div>
+
+          <motion.div
+            initial={rm ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.38 }}
+          >
+            <HeaderBanner />
           </motion.div>
 
           {/* Countdown card */}
