@@ -7,7 +7,7 @@ const BASE_MATCH_COUNT = 16;
 const BASE_STEP = SLOT_HEIGHT + BASE_GAP;
 const BRACKET_HEIGHT = BASE_MATCH_COUNT * SLOT_HEIGHT + (BASE_MATCH_COUNT - 1) * BASE_GAP;
 const CONNECTOR_WIDTH = 64;
-const CONNECTOR_JOIN_X = 22;
+const CONNECTOR_JOIN_X = 28;
 
 const ROUNDS = [
   { id: 'R32', label: 'Round of 32', count: 32 },
@@ -86,15 +86,16 @@ function MatchSlot({ position }: { position: number }) {
 
 function BracketConnectors({ matchCount }: { matchCount: number }) {
   if (matchCount <= 1) return null;
+  const roundIndex = Math.log2(BASE_MATCH_COUNT / matchCount);
+  const { paddingTop, centerStep } = getRoundLayout(roundIndex);
+  const nextLayout = getRoundLayout(roundIndex + 1);
 
   return (
     <div className="bracket-connectors" aria-hidden="true">
       {Array.from({ length: matchCount / 2 }).map((_, i) => {
-        const roundIndex = Math.log2(BASE_MATCH_COUNT / matchCount);
-        const { paddingTop, centerStep } = getRoundLayout(roundIndex);
         const topCenter = paddingTop + SLOT_HEIGHT / 2 + (i * 2) * centerStep;
         const bottomCenter = paddingTop + SLOT_HEIGHT / 2 + (i * 2 + 1) * centerStep;
-        const targetCenter = (topCenter + bottomCenter) / 2;
+        const targetCenter = nextLayout.paddingTop + SLOT_HEIGHT / 2 + i * nextLayout.centerStep;
 
         return (
           <div key={i} className="bracket-connector">

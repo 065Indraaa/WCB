@@ -502,7 +502,7 @@ export default function LeaderboardPage() {
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: 14 }}>
             <span className="data-pill">Holder source: {holderSource}</span>
             <span className="data-pill">Lock source: {meta.source ?? 'Streamflow'}</span>
-            <span className="data-pill">Mint: {WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'N/A'}</span>
+            <span className="data-pill">Mint: Coming Soon</span>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
@@ -702,10 +702,7 @@ export default function LeaderboardPage() {
 
             <div style={{ padding: '0.875rem 1.25rem', background: '#111111', borderTop: '1px solid #2A2A2A', textAlign: 'center' }}>
               <p style={{ fontSize: '0.72rem', color: '#6E6E6E' }}>
-                Top 20 locked positions / Token:{' '}
-                <a href={`https://solscan.io/token/${WCB_MINT}`} target="_blank" rel="noopener noreferrer" style={{ color: '#F2B544', textDecoration: 'none' }}>
-                  {WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'N/A'}
-                </a>
+                Top 20 locked positions / Token: <span style={{ color: '#F2B544', fontWeight: 800 }}>Coming Soon</span>
                 {' '}/ Click any row to view on Streamflow
               </p>
             </div>

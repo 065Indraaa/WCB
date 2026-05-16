@@ -11,6 +11,7 @@ interface ImagePlaceholderProps {
 }
 
 type VisualKind = 'leaderboard' | 'ad' | 'countdown' | 'credits' | 'security' | 'market';
+type VisualCopy = { eyebrow: string; title: string; sub: string; accent: string; visual?: VisualKind };
 
 function getVisualKind(label: string): VisualKind {
   const lower = label.toLowerCase();
@@ -22,7 +23,7 @@ function getVisualKind(label: string): VisualKind {
   return 'market';
 }
 
-const VISUAL_COPY: Record<VisualKind, { eyebrow: string; title: string; sub: string; accent: string }> = {
+const VISUAL_COPY: Record<VisualKind, VisualCopy> = {
   leaderboard: {
     eyebrow: 'RANKING BOARD',
     title: 'Live lock standings',
@@ -60,6 +61,74 @@ const VISUAL_COPY: Record<VisualKind, { eyebrow: string; title: string; sub: str
     accent: '#F2B544',
   },
 };
+
+const SLOT_COPY: Array<{ key: string; copy: VisualCopy }> = [
+  {
+    key: 'lock now market bar',
+    copy: {
+      eyebrow: 'LOCK WINDOW',
+      title: 'Lock Now. Earn Credits.',
+      sub: 'Early rate before kickoff',
+      accent: '#F2B544',
+      visual: 'credits',
+    },
+  },
+  {
+    key: 'prime matchday sponsor',
+    copy: {
+      eyebrow: 'PRIME MATCHDAY',
+      title: 'Opening odds desk',
+      sub: 'Featured partner slot',
+      accent: '#14F195',
+      visual: 'market',
+    },
+  },
+  {
+    key: 'credit boost lounge',
+    copy: {
+      eyebrow: 'CREDIT BOOST',
+      title: 'Lock edge starts here',
+      sub: 'Priority access lane',
+      accent: '#9945FF',
+      visual: 'credits',
+    },
+  },
+  {
+    key: 'opening line watch',
+    copy: {
+      eyebrow: 'LINE WATCH',
+      title: 'Markets warming up',
+      sub: 'Match-by-match preview board',
+      accent: '#FFD36B',
+      visual: 'market',
+    },
+  },
+  {
+    key: 'live ticket zone',
+    copy: {
+      eyebrow: 'TICKET ZONE',
+      title: 'Builder opens soon',
+      sub: 'Save the matchday lane',
+      accent: '#14F195',
+      visual: 'ad',
+    },
+  },
+  {
+    key: 'sharp lock desk',
+    copy: {
+      eyebrow: 'SHARP LOCK DESK',
+      title: 'Lock credits first',
+      sub: 'Early wallet edge',
+      accent: '#F2B544',
+      visual: 'security',
+    },
+  },
+];
+
+function getVisualCopy(label: string): VisualCopy {
+  const lower = label.toLowerCase();
+  return SLOT_COPY.find((slot) => lower.includes(slot.key))?.copy ?? VISUAL_COPY[getVisualKind(label)];
+}
 
 function FieldLines({ compact = false }: { compact?: boolean }) {
   return (
@@ -246,9 +315,9 @@ export function ImagePlaceholder({
   style = {},
 }: ImagePlaceholderProps) {
   const kind = getVisualKind(label);
-  const copy = VISUAL_COPY[kind];
+  const copy = getVisualCopy(label);
+  const visualKind = copy.visual ?? kind;
   const compact = height === 90 || label.toLowerCase().includes('leaderboard');
-  const showBoard = kind === 'leaderboard';
 
   return (
     <div
@@ -308,7 +377,7 @@ export function ImagePlaceholder({
       </div>
 
       <div style={{ position: 'relative', zIndex: 1, flexShrink: 0 }}>
-        {showBoard ? <OddsBoard kind={kind} /> : <IconVisual kind={kind} accent={copy.accent} />}
+        <IconVisual kind={visualKind} accent={copy.accent} />
       </div>
     </div>
   );

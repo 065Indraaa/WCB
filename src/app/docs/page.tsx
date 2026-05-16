@@ -2,7 +2,6 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { BrandLogo } from '@/components/shared/BrandLogo';
 import { EARLY_TOKENS_PER_CREDIT, FIXED_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
-import { WCB_MINT } from '@/lib/wallet';
 
 export const metadata = {
   title: 'Documentation & Whitepaper | WORLDCUPBET',
@@ -436,8 +435,6 @@ function SpecRow({ label, value }: { label: string; value: string }) {
 }
 
 export default function DocsPage() {
-  const mintDisplay = WCB_MINT ? `${WCB_MINT.slice(0, 8)}...${WCB_MINT.slice(-6)}` : 'Set by token config';
-
   return (
     <div style={{ background: '#070707' }}>
       <section style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -844,7 +841,7 @@ export default function DocsPage() {
                 System Facts
               </p>
               <SpecRow label="Token" value="$WCB" />
-              <SpecRow label="Mint" value={mintDisplay} />
+              <SpecRow label="Mint" value="Coming Soon" />
               <SpecRow label="Network" value="Solana" />
               <SpecRow label="Holder data" value="Token accounts" />
               <SpecRow label="Lock data" value="Streamflow" />

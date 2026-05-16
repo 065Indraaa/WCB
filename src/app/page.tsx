@@ -162,7 +162,7 @@ export default function Home() {
             <ImagePlaceholder
               width="100%"
               height={90}
-              label="Leaderboard Banner 728 x 90"
+              label="Lock Now Market Bar 728 x 90"
               rounded={6}
             />
           </div>
@@ -239,7 +239,7 @@ export default function Home() {
           <TokenPriceWidget />
 
           {/* Ad slot 1 */}
-          <SidebarAdSlot label="Ad Slot 300 x 250" />
+          <SidebarAdSlot label="Prime Matchday Sponsor 300 x 250" />
 
           {/* Quick links */}
           <div className="bet-card" style={{ padding: '10px' }}>
@@ -274,7 +274,7 @@ export default function Home() {
           </div>
 
           {/* Ad slot 2 */}
-          <SidebarAdSlot label="Ad Slot 300 x 250" />
+          <SidebarAdSlot label="Credit Boost Lounge 300 x 250" />
 
         </aside>
       </div>

@@ -85,7 +85,7 @@ export default function MatchesPage() {
           <ImagePlaceholder
             width="100%"
             height={90}
-            label="Leaderboard Banner 728 x 90"
+            label="Opening Line Watch 728 x 90"
             rounded={6}
           />
         </div>
@@ -152,12 +152,15 @@ export default function MatchesPage() {
         </div>
 
         {/* Ad slots */}
-        {[1, 2].map((i) => (
-          <div key={i} style={{ borderRadius: 6, overflow: 'hidden', border: '1px solid #30363D' }}>
+        {[
+          'Live Ticket Zone 300 x 250',
+          'Sharp Lock Desk 300 x 250',
+        ].map((label) => (
+          <div key={label} style={{ borderRadius: 6, overflow: 'hidden', border: '1px solid #30363D' }}>
             <ImagePlaceholder
               width="100%"
               aspectRatio="6/5"
-              label={`Ad Slot ${i} 300 x 250`}
+              label={label}
               rounded={0}
               style={{ border: 'none', borderRadius: 0 }}
             />

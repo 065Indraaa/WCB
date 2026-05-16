@@ -1,11 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/shared/BrandLogo';
-import { WCB_MINT } from '@/lib/tokenConfig';
 
-const CONTRACT = WCB_MINT;
 const PUMPFUN  = process.env.NEXT_PUBLIC_PUMPFUN_URL  ?? 'https://pump.fun';
 const TWITTER  = process.env.NEXT_PUBLIC_TWITTER_URL  ?? 'https://twitter.com/WCBLIVE';
 const TELEGRAM = process.env.NEXT_PUBLIC_TELEGRAM_URL ?? 'https://t.me/wcblive';
@@ -21,21 +18,6 @@ const linkStyle: React.CSSProperties = {
 };
 
 export function Footer() {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(CONTRACT);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      /* ignore */
-    }
-  };
-
-  const display =
-    CONTRACT.length > 16 ? `${CONTRACT.slice(0, 6)}...${CONTRACT.slice(-6)}` : CONTRACT;
-
   return (
     <footer
       role="contentinfo"
@@ -230,7 +212,7 @@ export function Footer() {
           }}
           className="sm:flex-row sm:items-center sm:justify-between"
         >
-          {/* Contract address */}
+          {/* Token launch status */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <span style={{ fontSize: '0.68rem', fontWeight: 600, color: '#374151' }}>Contract:</span>
             <div
@@ -238,35 +220,16 @@ export function Footer() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '4px 10px',
+                padding: '5px 11px',
                 borderRadius: 6,
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'rgba(242,181,68,0.08)',
+                border: '1px solid rgba(242,181,68,0.18)',
               }}
             >
-              <code style={{ fontFamily: 'monospace', fontSize: '0.72rem', color: '#6B7280' }} title={CONTRACT}>
-                {display}
-              </code>
-              <button
-                onClick={handleCopy}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: copied ? '#22C55E' : '#374151',
-                  padding: '0 2px',
-                  fontSize: '0.8rem',
-                  lineHeight: 1,
-                  transition: 'color 0.15s',
-                }}
-                aria-label={copied ? 'Copied' : 'Copy contract address'}
-              >
-                {copied ? 'Copied' : 'Copy'}
-              </button>
+              <span style={{ fontSize: '0.7rem', color: '#FFD36B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                Coming Soon
+              </span>
             </div>
-            {copied && (
-              <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#14F195' }}>Copied!</span>
-            )}
           </div>
 
           <p style={{ fontSize: '0.68rem', color: '#374151', margin: 0 }}>
