@@ -2,22 +2,23 @@ import Image from 'next/image';
 
 export function HeaderBanner() {
   return (
-    <section className="home-hero-banner" aria-label="WCB promotional banner">
-      <div className="home-hero-banner-frame">
+    <div className="home-billboard-banner">
+      <div className="home-billboard-frame">
         <Image
           src="/banner.jpg"
           alt="WCB promotional banner"
           width={1760}
           height={576}
-          priority
-          sizes="(max-width: 960px) 92vw, 928px"
+          sizes="(max-width: 1180px) 92vw, 1120px"
           style={{
             width: '100%',
-            height: 'auto',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
             display: 'block',
           }}
         />
       </div>
-    </section>
+    </div>
   );
 }

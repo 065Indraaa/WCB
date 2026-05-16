@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { HeaderBanner } from '@/components/layout/HeaderBanner';
 import { CountdownTimer } from './CountdownTimer';
 import { WcbText } from '@/components/shared/WcbText';
 
@@ -73,7 +72,7 @@ export function HeroSection() {
       {/* Main content */}
       <div
         className="hero-content relative w-full flex-1 flex flex-col items-center justify-center"
-        style={{ zIndex: 10, maxWidth: '72rem', margin: '0 auto', padding: 'clamp(3rem, 6vw, 5rem) 1.5rem clamp(1.5rem, 3vw, 3rem)', width: '100%' }}
+        style={{ zIndex: 10, maxWidth: '72rem', margin: '0 auto', padding: 'clamp(2.4rem, 5vw, 4.2rem) 1.5rem clamp(1.4rem, 3vw, 2.4rem)', width: '100%' }}
       >
         <div className="hero-copy" style={{ maxWidth: '58rem', margin: '0 auto', textAlign: 'center' }}>
           {/* Eyebrow badges */}
@@ -116,7 +115,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.1 }}
             style={{
-              fontSize: 'clamp(2.4rem, 6.5vw, 5.2rem)',
+              fontSize: 'clamp(2.25rem, 5.8vw, 4.55rem)',
               fontWeight: 900,
               color: '#ffffff',
               lineHeight: 1.03,
@@ -223,21 +222,13 @@ export function HeroSection() {
             initial={rm ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.36 }}
-            style={{ display: 'flex', justifyContent: 'center', gap: '0.55rem', flexWrap: 'wrap', margin: '-1.65rem 0 2.25rem' }}
+            style={{ display: 'flex', justifyContent: 'center', gap: '0.55rem', flexWrap: 'wrap', margin: '-1.65rem 0 1.5rem' }}
           >
             {['On-chain holder board', 'Lock-credit ranking', 'Creator-fee prize pool'].map((item) => (
               <span key={item} className="data-pill">
                 {item}
               </span>
             ))}
-          </motion.div>
-
-          <motion.div
-            initial={rm ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.38 }}
-          >
-            <HeaderBanner />
           </motion.div>
 
           {/* Countdown card */}

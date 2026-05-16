@@ -220,10 +220,10 @@ export function WalletDashboard() {
               style={{ padding: '2rem', textAlign: 'center', borderRadius: 12, border: '1px dashed #3A3A3A' }}
             >
               <p style={{ fontSize: '0.9rem', color: '#B3B3B3', marginBottom: '0.5rem' }}>
-                No $WCB locks found for this wallet.
+                No eligible 60-day $WCB locks found for this wallet.
               </p>
               <p style={{ fontSize: '0.8rem', color: '#6E6E6E' }}>
-                Use the calculator to lock your tokens and earn credits.
+                Use the calculator to create a fixed 60-day Streamflow lock and earn credits.
               </p>
             </motion.div>
           )}

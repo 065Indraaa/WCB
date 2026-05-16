@@ -522,7 +522,7 @@ export default function LeaderboardPage() {
         {[
           { label: 'Tracked Holders', value: holderTotal.toLocaleString('en-US'), color: '#F2B544' },
           { label: 'Platform Credits', value: formatCredits(totals.totalCredits), color: '#9945FF' },
-          { label: 'Active Locks', value: (totals.totalLocks ?? totals.totalLockers).toLocaleString('en-US'), color: '#FFD36B' },
+          { label: 'Eligible 60d Locks', value: (totals.totalLocks ?? totals.totalLockers).toLocaleString('en-US'), color: '#FFD36B' },
           { label: 'Prize Pool 24h', value: prizePoolQuery.isLoading ? 'Syncing' : formatUsd(prizePoolQuery.data?.prizePoolCredit24hUsd), color: '#14F195' },
         ].map((s) => (
           <div key={s.label} className="card card-hover" style={{ padding: '1.25rem', textAlign: 'center', minHeight: 108 }}>
@@ -635,8 +635,10 @@ export default function LeaderboardPage() {
           </motion.div>
         ) : topLockLeaderboard.length === 0 ? (
           <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="card p-16 text-center">
-            <p style={{ fontSize: '1.1rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.5rem' }}>No data yet</p>
-            <p style={{ color: '#B3B3B3', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Lock <WcbMark /> to establish a leaderboard position.</p>
+            <p style={{ fontSize: '1.1rem', fontWeight: 800, color: '#FFFFFF', marginBottom: '0.5rem' }}>No eligible 60-day locks yet</p>
+            <p style={{ color: '#B3B3B3', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+              The lock board only counts active {FIXED_LOCK_DAYS}-day Streamflow locks for <WcbMark />.
+            </p>
             <a href="/lock" className="btn-primary" style={{ display: 'inline-flex' }}>Lock <WcbMark tone="inherit" /> Now</a>
           </motion.div>
         ) : (

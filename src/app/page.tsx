@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { HeroSection } from '@/components/hero/HeroSection';
+import { HeaderBanner } from '@/components/layout/HeaderBanner';
 import { MatchCard } from '@/components/matches/MatchCard';
 import { GroupCard } from '@/components/groups/GroupCard';
 import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
@@ -53,6 +54,16 @@ function SidebarAdSlot({ label }: { label: string }) {
         </p>
       </div>
     </div>
+  );
+}
+
+function HomeBillboard() {
+  return (
+    <section className="home-billboard-section" aria-label="WCB promotional banner">
+      <div className="home-billboard-inner">
+        <HeaderBanner />
+      </div>
+    </section>
   );
 }
 
@@ -119,6 +130,7 @@ export default function Home() {
       <WalletRedirectHandler />
       <PromoBanner />
       <HeroSection />
+      <HomeBillboard />
       <SportsbookPreview />
 
       {/* Main content with sidebar */}
