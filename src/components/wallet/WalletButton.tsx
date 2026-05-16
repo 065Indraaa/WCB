@@ -25,15 +25,15 @@ export function WalletButton({ className, style }: WalletButtonProps) {
         className={className}
         style={{
           background: '#111111',
-          border: '1px solid rgba(20,241,149,0.35)',
-          color: '#14F195',
+          border: '1px solid #2A2A2A',
+          color: '#FFFFFF',
           borderRadius: 10,
           fontSize: '0.8rem',
           fontWeight: 700,
           height: 36,
           padding: '0 0.875rem',
           fontFamily: 'monospace',
-          boxShadow: '0 0 0 1px rgba(0,0,0,0.35)',
+          boxShadow: 'none',
           ...style,
         }}
       >

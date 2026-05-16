@@ -102,6 +102,16 @@
     -webkit-text-fill-color: #2CE7B7;
   }
 
+  /* Inside buttons, $WCB text should inherit button color (not green) */
+  .btn-primary .wcb-mark,
+  .btn-secondary .wcb-mark,
+  button .wcb-mark,
+  a[class*="btn"] .wcb-mark {
+    color: inherit;
+    -webkit-text-fill-color: inherit;
+    text-shadow: none;
+  }
+
   .wcb-mark-hero {
     background: linear-gradient(135deg, #FFD36B 0%, #2CE7B7 54%, #BFA7FF 100%);
     -webkit-background-clip: text;
