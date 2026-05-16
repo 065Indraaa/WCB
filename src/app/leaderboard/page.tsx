@@ -9,7 +9,6 @@ import { useLeaderboard } from '@/lib/hooks/useLeaderboard';
 import { usePrizePoolMetrics } from '@/lib/hooks/usePrizePoolMetrics';
 import type { PrizePoolMetrics } from '@/lib/api/prizepool';
 import { FIXED_LOCK_DAYS, formatCredits, formatTokenAmount } from '@/lib/lock';
-import { WCB_MINT } from '@/lib/wallet';
 import { WalletButtonDynamic, WalletMultiButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 import { WcbMark } from '@/components/shared/WcbText';
 import type { WalletEntry } from '@/types/leaderboard';
@@ -604,15 +603,12 @@ export default function LeaderboardPage() {
               Top wallets by Streamflow locked amount
             </h2>
           </div>
-          <a
-            href={meta.streamflowDashboardUrl ?? `https://app.streamflow.finance/token-dashboard/solana/mainnet/${WCB_MINT}?type=lock`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <span
             className="btn-secondary"
-            style={{ fontSize: '0.78rem', padding: '0.5rem 0.75rem' }}
+            style={{ fontSize: '0.78rem', padding: '0.5rem 0.75rem', cursor: 'default', opacity: 0.78 }}
           >
-            Verify on Streamflow
-          </a>
+            Streamflow Coming Soon
+          </span>
         </div>
       </div>
 
