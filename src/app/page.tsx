@@ -166,6 +166,7 @@ export default function Home() {
             </div>
 
             <div
+              className="home-groups-grid"
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',

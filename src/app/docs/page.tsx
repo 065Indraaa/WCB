@@ -868,8 +868,21 @@ export default function DocsPage() {
       <style>{`
         @media (max-width: 1023px) {
           .docs-hero-grid,
-          .docs-section-grid {
+          .docs-section-grid,
+          .docs-layout {
             grid-template-columns: 1fr !important;
+          }
+          .docs-sidebar {
+            position: static !important;
+            padding-top: 0 !important;
+          }
+        }
+        @media (max-width: 767px) {
+          .docs-hero-grid,
+          .docs-section-grid,
+          .docs-layout {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
           }
           .docs-sidebar {
             position: static !important;

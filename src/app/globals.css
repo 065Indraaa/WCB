@@ -704,6 +704,25 @@
   }
   .docs-sidebar {
     position: static !important;
+    padding-top: 0 !important;
+  }
+  .docs-hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .docs-section-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (max-width: 767px) {
+  .docs-layout,
+  .docs-hero-grid,
+  .docs-section-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .docs-sidebar {
+    position: static !important;
+    padding-top: 0 !important;
   }
 }
 
@@ -763,4 +782,89 @@
 .wallet-adapter-modal-overlay {
   background: rgba(0,0,0,0.72) !important;
   backdrop-filter: blur(8px);
+}
+
+/* ============================================================
+   Mobile polish — prevent overflow and improve readability
+   ============================================================ */
+@media (max-width: 640px) {
+  /* Prevent horizontal overflow on small screens */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Reduce large headings on very small screens */
+  h1.text-4xl,
+  .text-4xl {
+    font-size: 1.75rem !important;
+  }
+  h1.text-5xl,
+  .text-5xl {
+    font-size: 2rem !important;
+  }
+
+  /* Ensure buttons don't overflow */
+  .btn-primary,
+  .btn-secondary {
+    min-width: 0 !important;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  /* Lock page calculator inputs */
+  .lock-main-grid input[type="text"],
+  .lock-main-grid input[type="number"] {
+    font-size: 0.9rem;
+  }
+
+  /* Leaderboard table scroll */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  thead, tbody, tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  /* Reduce padding on cards */
+  .card {
+    border-radius: 8px;
+  }
+
+  /* Token page metrics grid */
+  .grid-cols-2.sm\\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  /* Extra small screens (iPhone SE, etc.) */
+  h1.text-4xl,
+  .text-4xl {
+    font-size: 1.5rem !important;
+  }
+
+  .stats-grid-3 {
+    grid-template-columns: 1fr !important;
+    gap: 4px !important;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .home-groups-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-groups-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
