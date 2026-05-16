@@ -1,53 +1,76 @@
 /**
- * $WCB Token Lock System — Early Stage
+ * $WCB Token Lock System
  *
- * Users lock $WCB via Streamflow for a chosen duration.
- * In return they receive Credits proportional to amount × duration.
- * Credits are used as betting capital when the platform goes live.
- * Credits can be redeemed back to $WCB at 1:1 rate (early stage only).
+ * Users lock $WCB via Streamflow for a fixed 60-day duration.
+ * In return they receive wallet-bound platform credits.
+ *
+ * Credits are used for WCB platform entries, access, leaderboard ranking, and
+ * future redeem/withdraw flows. Credit redeem is coming soon and is not active
+ * in the current product.
  *
  * Rules:
- * - No early unlock — tokens are locked until duration expires
- * - More tokens + longer duration = more credits
- * - Only available during pre-launch (early stage)
- * - Credits are non-transferable (wallet-bound)
+ * - No early unlock: tokens are locked until the Streamflow unlock date
+ * - Fixed duration: 60 days
+ * - Early rate before launch: 100 $WCB locked = 1 credit
+ * - Post-launch rate: 200 $WCB locked = 1 credit
+ * - Credits are wallet-bound until redeem/withdraw rules are enabled
  */
 
 export interface LockTier {
   days: number;
   label: string;
-  multiplier: number;   // credit multiplier vs 30-day baseline
-  badge: string;        // display badge
+  multiplier: number;
+  badge: string;
   color: string;
   highlight?: boolean;
 }
 
-/** Duration tiers with credit multipliers */
+export const FIXED_LOCK_DAYS = 60;
+export const MIN_LOCK_AMOUNT = 100;
+export const EARLY_TOKENS_PER_CREDIT = 100;
+export const POST_LAUNCH_TOKENS_PER_CREDIT = 200;
+export const TOKENS_PER_CREDIT = EARLY_TOKENS_PER_CREDIT;
+export const SECONDS_PER_DAY = 86_400;
+export const LOCK_DURATION_TOLERANCE_SECONDS = 3_600;
+export const LOCK_LAUNCH_ISO = '2026-06-11T00:00:00Z';
+export const CREDIT_REDEEM_STATUS = 'coming-soon';
+
 export const LOCK_TIERS: LockTier[] = [
-  { days: 7,   label: '7 Days',    multiplier: 0.5, badge: 'Starter',   color: '#94A3B8' },
-  { days: 30,  label: '30 Days',   multiplier: 1.0, badge: 'Holder',    color: '#22C55E' },
-  { days: 60,  label: '60 Days',   multiplier: 1.5, badge: 'Believer',  color: '#15803D' },
-  { days: 90,  label: '90 Days',   multiplier: 2.0, badge: 'Diamond',   color: '#D97706', highlight: true },
-  { days: 180, label: '180 Days',  multiplier: 3.0, badge: 'Legend',    color: '#7C3AED' },
-  { days: 365, label: '1 Year',    multiplier: 5.0, badge: 'OG',        color: '#DC2626' },
+  {
+    days: FIXED_LOCK_DAYS,
+    label: '60 Days',
+    multiplier: 1,
+    badge: 'Locker',
+    color: '#F2B544',
+    highlight: true,
+  },
 ];
 
-/** Minimum lock amount in $WCB tokens */
-export const MIN_LOCK_AMOUNT = 100_000;
+function resolveLaunchTimestamp(): number {
+  const fallback = Math.floor(Date.parse(LOCK_LAUNCH_ISO) / 1000);
+  const parsed = Date.parse(process.env.NEXT_PUBLIC_LAUNCH_DATE ?? LOCK_LAUNCH_ISO);
+  return Number.isFinite(parsed) ? Math.floor(parsed / 1000) : fallback;
+}
 
-/**
- * Credit rate: 1 credit per 100 $WCB (at 1x multiplier)
- * Redemption: 1 credit = 100 $WCB
- */
-export const TOKENS_PER_CREDIT = 100;
-export const CREDIT_TO_TOKEN_RATE = 100; // 1 credit redeems for 100 $WCB
-export const SECONDS_PER_DAY = 86_400;
+export const LOCK_LAUNCH_TIMESTAMP = resolveLaunchTimestamp();
 
 export interface LockSchedule {
   createdAt?: number;
   start?: number;
   cliff?: number;
   end?: number;
+}
+
+export function currentUnixTimestamp(): number {
+  return Math.floor(Date.now() / 1000);
+}
+
+export function isEarlyCreditWindow(timestamp = currentUnixTimestamp()): boolean {
+  return timestamp < LOCK_LAUNCH_TIMESTAMP;
+}
+
+export function getTokensPerCreditForTimestamp(timestamp = currentUnixTimestamp()): number {
+  return isEarlyCreditWindow(timestamp) ? EARLY_TOKENS_PER_CREDIT : POST_LAUNCH_TOKENS_PER_CREDIT;
 }
 
 function validUnixTimestamp(value: number | undefined): number | null {
@@ -64,6 +87,16 @@ export function getLockCreditStartTimestamp(schedule: LockSchedule): number {
   );
 }
 
+export function getLockDurationStartTimestamp(schedule: LockSchedule): number {
+  return (
+    validUnixTimestamp(schedule.start) ??
+    validUnixTimestamp(schedule.createdAt) ??
+    validUnixTimestamp(schedule.cliff) ??
+    validUnixTimestamp(schedule.end) ??
+    0
+  );
+}
+
 export function getLockUnlockTimestamp(schedule: LockSchedule): number {
   const candidates = [schedule.end, schedule.cliff, schedule.start]
     .map(validUnixTimestamp)
@@ -73,153 +106,71 @@ export function getLockUnlockTimestamp(schedule: LockSchedule): number {
 }
 
 /**
- * Convert a Streamflow lock timestamp range to the app's credit duration.
- * The duration is rounded up to avoid under-counting locks created with
- * minute/second drift, then capped at the highest configured tier.
+ * Convert a Streamflow lock timestamp range to the app's displayed duration.
+ * WCB only supports 60-day locks going forward, but existing Streamflow records
+ * may have slight timestamp drift, so this reports the real rounded duration.
  */
 export function getCreditDurationDays(startTs: number, endTs: number): number {
   const rawDays = Math.max(0, (endTs - startTs) / SECONDS_PER_DAY);
-  const roundedDays = Math.max(1, Math.ceil(rawDays));
-  const maxTierDays = Math.max(...LOCK_TIERS.map((tier) => tier.days));
-  return Math.min(roundedDays, maxTierDays);
+  return Math.max(1, Math.ceil(rawDays));
 }
 
 export function getLockCreditDurationDays(schedule: LockSchedule): number {
   return getCreditDurationDays(
-    getLockCreditStartTimestamp(schedule),
+    getLockDurationStartTimestamp(schedule),
     getLockUnlockTimestamp(schedule),
   );
 }
 
+export function isCreditEligibleDuration(days: number): boolean {
+  return days === FIXED_LOCK_DAYS;
+}
+
+export function isCreditEligibleLockSchedule(schedule: LockSchedule): boolean {
+  const startTs = getLockDurationStartTimestamp(schedule);
+  const endTs = getLockUnlockTimestamp(schedule);
+  if (startTs <= 0 || endTs <= startTs) return false;
+
+  const expected = FIXED_LOCK_DAYS * SECONDS_PER_DAY;
+  const actual = endTs - startTs;
+  return actual >= expected && actual <= expected + LOCK_DURATION_TOLERANCE_SECONDS;
+}
+
 export function calculateLockCredits(amount: number, schedule: LockSchedule): number {
-  return calculateCredits(amount, getLockCreditDurationDays(schedule));
+  if (!isCreditEligibleLockSchedule(schedule)) return 0;
+  return calculateCredits(amount, getLockCreditStartTimestamp(schedule));
 }
 
 /**
- * Calculate credits earned for a given lock.
+ * Calculate wallet-bound platform credits.
  *
- * Formula: floor((amount / 100) × durationMultiplier)
- * Examples:
- *   100K $WCB × 30d (1x) = 1,000 credits
- *   100K $WCB × 90d (2x) = 2,000 credits
- *   1M   $WCB × 90d (2x) = 20,000 credits
- *
- * @param amount    Token amount (e.g. 500_000)
- * @param days      Lock duration in days
- * @returns         Credits earned
+ * Before launch: floor(amount / 100)
+ * After launch: floor(amount / 200)
  */
-export function calculateCredits(amount: number, days: number): number {
-  const multiplier = getMultiplierForDays(days);
-  const baseCredits = amount / TOKENS_PER_CREDIT;
-  return Math.floor(baseCredits * multiplier);
+export function calculateCredits(amount: number, lockTimestamp = currentUnixTimestamp()): number {
+  return Math.floor(Math.max(0, amount) / getTokensPerCreditForTimestamp(lockTimestamp));
 }
 
 /**
- * Get the multiplier for a given number of days.
- * Uses linear interpolation between defined tiers.
+ * Duration multipliers are no longer used. This remains for legacy display
+ * paths that still expect a multiplier value.
  */
 export function getMultiplierForDays(days: number): number {
-  if (days <= 0) return 0;
-
-  // Find surrounding tiers
-  const sorted = [...LOCK_TIERS].sort((a, b) => a.days - b.days);
-
-  // Below minimum tier
-  if (days < sorted[0].days) {
-    return (days / sorted[0].days) * sorted[0].multiplier;
-  }
-
-  // Above maximum tier
-  const last = sorted[sorted.length - 1];
-  if (days >= last.days) {
-    return last.multiplier;
-  }
-
-  // Interpolate between two tiers
-  for (let i = 0; i < sorted.length - 1; i++) {
-    const lo = sorted[i];
-    const hi = sorted[i + 1];
-    if (days >= lo.days && days < hi.days) {
-      const t = (days - lo.days) / (hi.days - lo.days);
-      return lo.multiplier + t * (hi.multiplier - lo.multiplier);
-    }
-  }
-
-  return 1.0;
+  return days > 0 ? 1 : 0;
 }
 
-/**
- * Get the closest named tier for a given duration.
- */
 export function getTierForDays(days: number): LockTier | null {
-  const sorted = [...LOCK_TIERS].sort((a, b) => a.days - b.days);
-  // Find the highest tier that doesn't exceed the days
-  let best: LockTier | null = null;
-  for (const tier of sorted) {
-    if (days >= tier.days) best = tier;
-  }
-  return best;
+  return days > 0 ? LOCK_TIERS[0] : null;
 }
 
-/**
- * Format a credit amount for display.
- */
 export function formatCredits(credits: number): string {
   if (credits >= 1_000_000) return `${(credits / 1_000_000).toFixed(1)}M`;
   if (credits >= 1_000) return `${(credits / 1_000).toFixed(1)}K`;
   return credits.toString();
 }
 
-/**
- * Format token amount for display.
- */
 export function formatTokenAmount(amount: number): string {
   if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(2)}M`;
   if (amount >= 1_000) return `${(amount / 1_000).toFixed(0)}K`;
   return amount.toString();
 }
-
-/** Mock active locks for UI preview */
-export interface ActiveLock {
-  id: string;
-  wallet: string;
-  amount: number;
-  days: number;
-  startDate: string;   // ISO
-  endDate: string;     // ISO
-  credits: number;
-  status: 'active' | 'completed';
-}
-
-export const MOCK_ACTIVE_LOCKS: ActiveLock[] = [
-  {
-    id: 'lock-001',
-    wallet: 'Ax3k...9mPq',
-    amount: 5_000_000,
-    days: 90,
-    startDate: '2026-04-01T00:00:00Z',
-    endDate: '2026-06-30T00:00:00Z',
-    credits: calculateCredits(5_000_000, 90),
-    status: 'active',
-  },
-  {
-    id: 'lock-002',
-    wallet: 'Bz7r...4nKw',
-    amount: 1_000_000,
-    days: 180,
-    startDate: '2026-03-15T00:00:00Z',
-    endDate: '2026-09-11T00:00:00Z',
-    credits: calculateCredits(1_000_000, 180),
-    status: 'active',
-  },
-  {
-    id: 'lock-003',
-    wallet: 'Cy2s...8vLx',
-    amount: 500_000,
-    days: 30,
-    startDate: '2026-04-10T00:00:00Z',
-    endDate: '2026-05-10T00:00:00Z',
-    credits: calculateCredits(500_000, 30),
-    status: 'active',
-  },
-];

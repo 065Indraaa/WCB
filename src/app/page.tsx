@@ -8,6 +8,7 @@ import { WC_2026_GROUP_MATCHES } from '@/lib/constants/matches2026';
 import { buildAllGroups } from '@/lib/groupHelpers';
 import { WalletRedirectHandler } from '@/components/shared/WalletRedirectHandler';
 import { TokenPriceWidget } from '@/components/token/TokenPriceWidget';
+import { EARLY_TOKENS_PER_CREDIT, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
 
 // Promo banner
 function PromoBanner() {
@@ -23,7 +24,7 @@ function PromoBanner() {
         {[
           'Pre-launch market previews are open',
           'Betting activates June 11, 2026',
-          'Lock $WCB to reserve betting credits',
+          'Lock $WCB for platform credits',
           'Leaderboard tiers track wallet activity',
         ].map((t) => (
           <span key={t} style={{ fontSize: '0.72rem', fontWeight: 700, color: '#B3B3B3', whiteSpace: 'nowrap' }}>
@@ -58,7 +59,7 @@ function SidebarAdSlot({ label }: { label: string }) {
 function SportsbookPreview() {
   const metrics = [
     { label: 'Markets', value: '104' },
-    { label: 'Credit Rate', value: '1:100' },
+    { label: 'Early Rate', value: `${EARLY_TOKENS_PER_CREDIT}:1` },
     { label: 'Network', value: 'Solana' },
   ];
 
@@ -198,7 +199,7 @@ export default function Home() {
                   Early holders get priority access.
                 </h2>
                 <p style={{ fontSize: '0.85rem', color: '#B3B3B3', marginBottom: '16px', maxWidth: '32rem', lineHeight: 1.7 }}>
-                  Betting opens on June 11, 2026. Lock $WCB now to reserve credits and prepare for the first market window.
+                  Lock before June 11, 2026 for the early credit rate: {EARLY_TOKENS_PER_CREDIT} $WCB per credit. After launch, the rate becomes {POST_LAUNCH_TOKENS_PER_CREDIT} $WCB per credit.
                 </p>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <a
@@ -226,7 +227,7 @@ export default function Home() {
           <TokenPriceWidget />
 
           {/* Ad slot 1 */}
-          <SidebarAdSlot label="Sponsor Ad 300 x 250" />
+          <SidebarAdSlot label="Ad Slot 300 x 250" />
 
           {/* Quick links */}
           <div className="bet-card" style={{ padding: '10px' }}>
@@ -261,7 +262,7 @@ export default function Home() {
           </div>
 
           {/* Ad slot 2 */}
-          <SidebarAdSlot label="Sponsor Ad 300 x 250" />
+          <SidebarAdSlot label="Ad Slot 300 x 250" />
 
         </aside>
       </div>

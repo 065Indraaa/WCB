@@ -8,7 +8,7 @@ import { useCommunityLocks } from '@/lib/hooks/useCommunityLocks';
 import { useLeaderboard } from '@/lib/hooks/useLeaderboard';
 import { usePrizePoolMetrics } from '@/lib/hooks/usePrizePoolMetrics';
 import type { PrizePoolMetrics } from '@/lib/api/prizepool';
-import { formatCredits, formatTokenAmount } from '@/lib/lock';
+import { FIXED_LOCK_DAYS, formatCredits, formatTokenAmount } from '@/lib/lock';
 import { WCB_MINT } from '@/lib/wallet';
 import { WalletButtonDynamic, WalletMultiButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 import { WcbMark } from '@/components/shared/WcbText';
@@ -28,12 +28,12 @@ const PRIZE_POOL_FLOW = [
   {
     code: '01',
     title: 'Live creator fee',
-    desc: 'When live markets are active, creator fee becomes the primary source for the prize pool credit reserve.',
+    desc: 'Creator fee is the only funding source tracked for the prize pool credit reserve.',
   },
   {
     code: '02',
     title: 'Reserve accounting',
-    desc: 'A protocol-defined share is tracked as prize pool credit before each campaign or matchday distribution window.',
+    desc: 'A configured share of creator fee is tracked before each campaign or matchday distribution window.',
   },
   {
     code: '03',
@@ -43,7 +43,7 @@ const PRIZE_POOL_FLOW = [
   {
     code: '04',
     title: 'Credit allocation',
-    desc: 'Prize pool credit is allocated to qualified holders, lockers, and campaign winners after review.',
+    desc: 'Prize pool credit is allocated only under published rules after eligibility review.',
   },
 ];
 
@@ -253,7 +253,7 @@ function PrizePoolCreditPanel({
               Live creator-fee estimate for holder and locker rewards.
             </h2>
             <p style={{ fontSize: '0.92rem', color: '#B3B3B3', lineHeight: 1.7, maxWidth: 760 }}>
-              The prize pool credit counter uses a live creator vault when the creator wallet is available. Otherwise it estimates reward capacity from Jupiter token volume and Pump.fun creator-fee tiers.
+              The prize pool credit counter only tracks creator fee. It uses a live creator vault when available; otherwise it estimates creator-fee capacity from token volume and Pump.fun creator-fee tiers.
             </p>
             {error && (
               <p style={{ color: '#EF4444', fontSize: '0.8rem', fontWeight: 700, marginTop: '0.65rem' }}>
@@ -278,7 +278,7 @@ function PrizePoolCreditPanel({
 
       <div style={{ padding: '0.8rem 1.15rem', borderBottom: '1px solid #2A2A2A', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap', background: '#0E0E0E' }}>
         <p style={{ fontSize: '0.74rem', color: '#B3B3B3', margin: 0 }}>
-          Source: {metrics?.source ?? 'jupiter-token-api'} / Allocation: {formatRate(metrics?.allocationRate)} / Status: {statusLabel}
+          Funding source: creator fee only / Data: {metrics?.source ?? 'jupiter-token-api'} / Allocation: {formatRate(metrics?.allocationRate)} / Status: {statusLabel}
         </p>
         <button
           onClick={refetch}
@@ -497,7 +497,7 @@ export default function LeaderboardPage() {
             <WcbMark /> Leaderboards
           </h1>
           <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
-            Holder rank shows ownership. Lock rank shows locked amount. Prize pool credit is funded from live creator fee once markets are active.
+            Holder rank shows ownership. Lock rank shows eligible {FIXED_LOCK_DAYS}-day Streamflow locks. Prize pool credit is funded only from creator fee once markets are active.
           </p>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: 14 }}>
             <span className="data-pill">Holder source: {holderSource}</span>
@@ -521,7 +521,7 @@ export default function LeaderboardPage() {
       <div className="stats-grid-4" style={{ marginBottom: '1.5rem' }}>
         {[
           { label: 'Tracked Holders', value: holderTotal.toLocaleString('en-US'), color: '#F2B544' },
-          { label: 'Locked Credits', value: formatCredits(totals.totalCredits), color: '#9945FF' },
+          { label: 'Platform Credits', value: formatCredits(totals.totalCredits), color: '#9945FF' },
           { label: 'Active Locks', value: (totals.totalLocks ?? totals.totalLockers).toLocaleString('en-US'), color: '#FFD36B' },
           { label: 'Prize Pool 24h', value: prizePoolQuery.isLoading ? 'Syncing' : formatUsd(prizePoolQuery.data?.prizePoolCredit24hUsd), color: '#14F195' },
         ].map((s) => (
@@ -742,7 +742,7 @@ export default function LeaderboardPage() {
           Want to climb the leaderboard?
         </p>
         <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>
-          Lock more <WcbMark /> for longer to earn more credits and secure your tier.
+          Lock eligible {FIXED_LOCK_DAYS}-day Streamflow positions to earn platform credits and secure your tier.
         </p>
         <a href="/lock" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.875rem 2rem', borderRadius: 12, background: '#F2B544', color: '#070707', fontWeight: 800, fontSize: '0.95rem', textDecoration: 'none', boxShadow: '0 8px 22px rgba(242,181,68,0.24)' }}>
           Lock <WcbMark tone="inherit" /> Now

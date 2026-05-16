@@ -3,7 +3,7 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWalletLocks } from '@/lib/hooks/useWalletLocks';
-import { formatCredits, formatTokenAmount, getTierForDays } from '@/lib/lock';
+import { FIXED_LOCK_DAYS, formatCredits, formatTokenAmount, getTierForDays } from '@/lib/lock';
 import { truncateAddress } from '@/lib/wallet';
 import { WalletMultiButtonDynamic } from './WalletButtonDynamic';
 
@@ -129,7 +129,7 @@ export function WalletDashboard() {
           Connect your wallet
         </h3>
         <p style={{ fontSize: '0.9rem', color: '#B3B3B3', marginBottom: '1.5rem', maxWidth: 320, margin: '0 auto 1.5rem' }}>
-          Connect a Solana wallet to review your $WCB locks, available credits, and on-chain history.
+          Connect a Solana wallet to review your real Streamflow $WCB locks, platform credits, and on-chain history.
         </p>
         <WalletMultiButtonDynamic
           style={{
@@ -187,9 +187,9 @@ export function WalletDashboard() {
       {/* Stats grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem', marginBottom: '1.5rem' }}>
         <StatCard label="Total Locked" value={formatTokenAmount(stats.totalLocked)} sub="$WCB tokens" color="#FFFFFF" />
-        <StatCard label="Total Credits" value={formatCredits(stats.totalCredits)} sub="available to bet" color="#F2B544" />
+        <StatCard label="Total Credits" value={formatCredits(stats.totalCredits)} sub="platform credits" color="#F2B544" />
         <StatCard label="Active Locks" value={stats.activeLocks.toString()} sub="on Streamflow" />
-        <StatCard label="Longest Lock" value={stats.longestDays > 0 ? `${stats.longestDays}d` : '-'} sub="duration" />
+        <StatCard label="Lock Term" value={stats.longestDays > 0 ? `${FIXED_LOCK_DAYS}d` : '-'} sub="eligible duration" />
       </div>
 
       {/* Locks list */}

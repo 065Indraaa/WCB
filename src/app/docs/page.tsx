@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { BrandLogo } from '@/components/shared/BrandLogo';
+import { EARLY_TOKENS_PER_CREDIT, FIXED_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
 import { WCB_MINT } from '@/lib/wallet';
 
 export const metadata = {
   title: 'Documentation & Whitepaper | WORLDCUPBET',
   description:
-    'WORLDCUPBET documentation for the World Cup 2026 app, $WCB holder ranking, Streamflow lock credits, and prize pool credit calculation.',
+    'WORLDCUPBET documentation for the World Cup 2026 app, $WCB holder ranking, fixed 60-day Streamflow lock credits, and creator-fee prize pool credit calculation.',
 };
 
 const GOLD = '#F2B544';
@@ -47,7 +48,7 @@ const USER_ACTIONS = [
   {
     step: '02',
     title: 'Lock $WCB',
-    body: 'A wallet can lock $WCB through Streamflow. The app records the locked amount and calculates credits separately from liquid holdings.',
+    body: `A wallet can lock $WCB through Streamflow for the fixed ${FIXED_LOCK_DAYS}-day term. The app reads real Streamflow lock data and calculates credits separately from liquid holdings.`,
     action: 'Open lock page',
     href: '/lock',
   },
@@ -70,14 +71,14 @@ const SYSTEM_ROWS = [
   {
     layer: 'Lock Leaderboard',
     source: 'Active Streamflow locks for the same $WCB mint',
-    means: 'Ranks wallets by active locked amount and calculated credits.',
-    live: 'Read from Streamflow lock accounts',
+    means: `Ranks wallets by eligible ${FIXED_LOCK_DAYS}-day locked amount and calculated credits.`,
+    live: 'Read from Streamflow lock accounts, no local mock data',
   },
   {
     layer: 'Prize Pool Credit',
-    source: 'Estimated creator fee from token volume',
-    means: 'Shows estimated reward capacity. It is not a guaranteed payout.',
-    live: 'Estimated from market volume and configured fee settings',
+    source: 'Creator fee only',
+    means: 'Shows creator-fee reward capacity for the coming redeem/withdraw flow and never uses locked user tokens.',
+    live: 'Live vault when available, otherwise creator-fee estimate from market volume',
   },
 ];
 
@@ -87,8 +88,8 @@ const LOCK_MECHANISM = [
     body: 'The app reads the connected Solana wallet to check $WCB balance and lock records.',
   },
   {
-    title: 'Choose amount and duration',
-    body: 'The lock page estimates credits from the selected token amount and lock duration before the transaction is submitted.',
+    title: 'Choose amount',
+    body: `The app-supported lock term is fixed at ${FIXED_LOCK_DAYS} days. The lock page estimates credits from token amount and the current launch window rate before the transaction is submitted.`,
   },
   {
     title: 'Lock through Streamflow',
@@ -103,19 +104,23 @@ const LOCK_MECHANISM = [
 const CREDIT_RULES = [
   {
     label: 'Base rule',
-    value: 'Credits are calculated from locked amount and lock duration.',
+    value: `Before launch: ${EARLY_TOKENS_PER_CREDIT} $WCB locked = 1 credit. After launch: ${POST_LAUNCH_TOKENS_PER_CREDIT} $WCB locked = 1 credit.`,
+  },
+  {
+    label: 'Eligible duration',
+    value: `Only fixed ${FIXED_LOCK_DAYS}-day Streamflow locks are credit-eligible in the app.`,
   },
   {
     label: 'Wallet-bound',
-    value: 'Credits are associated with the wallet and are not transferable tokens.',
+    value: 'Credits stay associated with the wallet until redeem/withdraw rules are enabled.',
   },
   {
     label: 'Ranking use',
     value: 'Credits determine the wallet position on the lock leaderboard.',
   },
   {
-    label: 'Future use',
-    value: 'Credits may be referenced by future access, reward, or tournament rules.',
+    label: 'Redeem status',
+    value: 'Credit redeem/withdraw is coming soon and is not active yet.',
   },
 ];
 
@@ -138,7 +143,7 @@ const BETTING_FLOW = [
   {
     phase: 'Reward',
     title: 'Reward calculation',
-    body: 'Reward rules may reference match activity, holder balance, lock credits, and prize pool credit.',
+    body: 'Reward rules may reference match activity, holder balance, lock credits, and creator-fee prize pool credit after rules are published.',
   },
 ];
 
@@ -158,7 +163,7 @@ const BENEFITS = [
     accent: PURPLE,
     items: [
       'Convert active $WCB locks into wallet-bound credits.',
-      'Compete on the lock leaderboard using locked amount and duration.',
+      `Compete on the lock leaderboard using eligible ${FIXED_LOCK_DAYS}-day Streamflow locks.`,
       'Keep locked balances separate from liquid holdings.',
       'Use Streamflow records as the lock data source.',
     ],
@@ -185,23 +190,23 @@ const LEADERBOARD_CARDS = [
   {
     title: 'Lock Board',
     accent: PURPLE,
-    body: 'Ranks wallets by active locked amount and calculated credits.',
-    bullets: ['Uses Streamflow locks', 'Shows locked $WCB and credits', 'Keeps lock rank separate from holdings'],
+    body: `Ranks wallets by eligible ${FIXED_LOCK_DAYS}-day locked amount and calculated credits.`,
+    bullets: ['Uses real Streamflow locks', 'Shows locked $WCB and credits', 'Keeps lock rank separate from holdings'],
   },
 ];
 
 const PRIZE_POOL_STEPS = [
   {
     title: 'Volume is tracked',
-    body: 'The app reads token volume from the configured market data provider.',
+    body: 'The app reads token volume only to estimate creator-fee capacity when a live creator vault is not available.',
   },
   {
-    title: 'Creator fee is estimated',
-    body: 'The fee rate uses the configured creator-fee setting or the selected fee model.',
+    title: 'Creator fee is counted',
+    body: 'Creator fee is the only funding source used for prize pool credit. Locked user tokens are excluded.',
   },
   {
     title: 'Credit is displayed',
-    body: 'The app displays estimated prize pool credit for transparency.',
+    body: 'The app displays live or estimated creator-fee prize pool credit for transparency.',
   },
   {
     title: 'Rules can reference it',
@@ -224,11 +229,11 @@ const WHITEPAPER_SECTIONS = [
   },
   {
     title: '4. The Reward Model',
-    body: 'Prize pool credit is estimated from market activity and fee assumptions. It is an informational metric and does not create a guaranteed payout.',
+    body: 'Prize pool credit is funded only from creator fee. It becomes actionable through published reward and redeem/withdraw rules.',
   },
   {
     title: '5. The Trust Model',
-    body: 'Holder rank is based on token accounts. Lock rank is based on Streamflow lock records. Prize pool credit is based on market volume and configured fee assumptions.',
+    body: 'Holder rank is based on token accounts. Lock rank is based on eligible Streamflow lock records. Prize pool credit is based only on creator fee, never on locked user tokens.',
   },
 ];
 
@@ -252,14 +257,14 @@ const ROADMAP = [
     title: 'Lock Credit Layer',
     window: 'Before kickoff',
     status: 'Implementation',
-    items: ['Streamflow lock tracking', 'Credit leaderboard', 'Wallet lock dashboard'],
+    items: [`Fixed ${FIXED_LOCK_DAYS}-day Streamflow lock tracking`, 'Credit leaderboard', 'Wallet lock dashboard', 'Credit redeem rules marked coming soon'],
   },
   {
     phase: 'Phase 4',
     title: 'Tournament Layer',
     window: 'June 11, 2026+',
     status: 'Live event',
-    items: ['Betting layer activation', 'Matchday reward windows', 'Prize pool credit tracking', 'Holder and lock participant rewards'],
+    items: ['Betting layer activation', 'Matchday reward windows', 'Creator-fee prize pool credit tracking', 'Holder and lock participant rewards'],
   },
 ];
 
@@ -273,12 +278,16 @@ const FAQS = [
     a: 'Holding and locking are different actions. The holder leaderboard ranks liquid token balances. The lock leaderboard ranks active Streamflow locks and calculated credits.',
   },
   {
-    q: 'Is prize pool credit guaranteed payout?',
-    a: 'No. Prize pool credit is an estimate. Actual rewards depend on published rules, eligibility criteria, and distribution windows.',
+    q: 'Can prize pool credit be withdrawn?',
+    a: 'Prize pool credit is intended for the coming reward redeem/withdraw flow. It is not live yet, so exact rules, eligibility, and timing must be published before users can claim or withdraw.',
+  },
+  {
+    q: 'Can credits be withdrawn?',
+    a: 'Credit redeem/withdraw is planned as coming soon, but it is not active yet. Exact rules, eligibility, and timing should be published before it goes live.',
   },
   {
     q: 'What is live now?',
-    a: 'The app can show tournament pages, token access, wallet connection, holder data, Streamflow lock data, and estimated prize pool credit when the required configuration is available.',
+    a: 'The app can show tournament pages, token access, wallet connection, holder data, real Streamflow lock data, and creator-fee prize pool credit when the required configuration is available.',
   },
 ];
 
@@ -455,7 +464,7 @@ export default function DocsPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3" style={{ marginBottom: '1.35rem' }}>
                 <StatusCard label="Chain" value="Solana" />
                 <StatusCard label="Token" value="$WCB" />
-                <StatusCard label="Lock source" value="Streamflow" accent={PURPLE} />
+                <StatusCard label="Lock term" value={`${FIXED_LOCK_DAYS} days`} accent={PURPLE} />
                 <StatusCard label="Kickoff" value="June 11, 2026" accent={GREEN} />
               </div>
 
@@ -490,9 +499,9 @@ export default function DocsPage() {
               <div style={{ display: 'grid', gap: '0.8rem' }}>
                 {[
                   ['Hold', 'Holder ranking is based on wallet balance.'],
-                  ['Lock', 'Lock credits are calculated from active Streamflow locks.'],
+                  ['Lock', `Lock credits are calculated from eligible ${FIXED_LOCK_DAYS}-day Streamflow locks.`],
                   ['Betting', 'Betting functionality is marked as coming soon.'],
-                  ['Rewards', 'Rewards depend on published eligibility rules.'],
+                  ['Rewards', 'Creator fee is the only prize pool credit source.'],
                 ].map(([label, value]) => (
                   <div key={label} style={{ padding: '0.9rem', borderRadius: 8, background: CARD, border: `1px solid ${BORDER}` }}>
                     <p style={{ color: GOLD, fontSize: '0.7rem', fontWeight: 900, marginBottom: 4 }}>{label}</p>
@@ -521,10 +530,10 @@ export default function DocsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <StatusCard label="Ownership" value="Holder rank" />
                   <StatusCard label="Locking" value="Lock credits" accent={PURPLE} />
-                  <StatusCard label="Rewards" value="Prize pool credit" accent={GREEN} />
+                  <StatusCard label="Rewards" value="Creator-fee credit" accent={GREEN} />
                 </div>
                 <p style={{ color: TEXT_SOFT, fontSize: '0.92rem', lineHeight: 1.75, marginTop: '1rem', marginBottom: 0 }}>
-                  These areas are displayed separately so users can distinguish liquid holdings, locked positions, and estimated reward capacity.
+                  These areas are displayed separately so users can distinguish liquid holdings, locked positions, and creator-fee reward capacity.
                 </p>
               </div>
             </Section>
@@ -643,7 +652,7 @@ export default function DocsPage() {
                   Status note
                 </h3>
                 <p style={{ color: TEXT_SOFT, fontSize: '0.9rem', lineHeight: 1.7, margin: 0 }}>
-                  Betting is not presented as live in this documentation. The current product surfaces match pages, leaderboards, locks, and prize pool credit. Betting functionality should only be activated when the required product and compliance configuration is complete.
+                  Betting is not presented as live in this documentation. The current product surfaces match pages, leaderboards, locks, and creator-fee prize pool credit. Betting functionality should only be activated when the required product and compliance configuration is complete.
                 </p>
               </div>
             </Section>
@@ -711,7 +720,7 @@ export default function DocsPage() {
               id="prize-pool"
               eyebrow="Prize Pool"
               title="Prize pool credit."
-              intro="Prize pool credit is an estimate of reward capacity based on token volume and fee assumptions. It is not a guaranteed payout."
+              intro="Prize pool credit is based only on creator fee and is intended for the coming redeem/withdraw flow. Locked user tokens are never used for reward funding."
             >
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                 {PRIZE_POOL_STEPS.map((step, index) => (
@@ -734,7 +743,7 @@ export default function DocsPage() {
                   Formula
                 </h3>
                 <p style={{ color: TEXT_SOFT, lineHeight: 1.7, margin: 0 }}>
-                  Prize Pool Credit = Token Volume x Estimated Creator Fee Rate x Prize Allocation.
+                  Prize Pool Credit = Creator Fee x Prize Allocation.
                 </p>
               </div>
             </Section>
@@ -839,7 +848,8 @@ export default function DocsPage() {
               <SpecRow label="Network" value="Solana" />
               <SpecRow label="Holder data" value="Token accounts" />
               <SpecRow label="Lock data" value="Streamflow" />
-              <SpecRow label="Prize data" value="Estimated fee credit" />
+              <SpecRow label="Lock term" value={`${FIXED_LOCK_DAYS} days`} />
+              <SpecRow label="Prize data" value="Creator fee only" />
             </div>
 
             <div className="card" style={{ padding: '1.15rem', background: SURFACE }}>

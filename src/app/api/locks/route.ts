@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { SolanaStreamClient, StreamType, getNumberFromBN, type Stream } from '@streamflow/stream';
-import { calculateLockCredits, getLockCreditDurationDays, getLockCreditStartTimestamp, getLockUnlockTimestamp } from '@/lib/lock';
+import { calculateLockCredits, getLockCreditDurationDays, getLockCreditStartTimestamp, getLockUnlockTimestamp, isCreditEligibleLockSchedule } from '@/lib/lock';
 import { WCB_MINT, WCB_TOKEN_DECIMALS } from '@/lib/tokenConfig';
 import { buildHeliusRpcUrl } from '@/lib/server/helius';
 
@@ -86,6 +86,8 @@ export async function GET(request: NextRequest) {
         cliff: stream.cliff,
         end: stream.end,
       };
+      if (!isCreditEligibleLockSchedule(schedule)) continue;
+
       const startTs = getLockCreditStartTimestamp(schedule);
       const endTs = getLockUnlockTimestamp(schedule);
       const durationDays = getLockCreditDurationDays(schedule);
@@ -115,7 +117,7 @@ export async function GET(request: NextRequest) {
       locks,
       total: locks.length,
       mint: WCB_MINT,
-      source: 'streamflow-sdk-searchStreams',
+      source: 'streamflow-sdk-60-day-locks',
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Failed to fetch locks';

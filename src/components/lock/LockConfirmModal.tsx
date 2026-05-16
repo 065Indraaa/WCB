@@ -2,7 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { formatCredits, formatTokenAmount } from '@/lib/lock';
+import { buildStreamflowLockUrl } from '@/lib/streamflow';
+import { WCB_MINT } from '@/lib/tokenConfig';
 
 interface LockConfirmModalProps {
   isOpen: boolean;
@@ -14,6 +17,7 @@ interface LockConfirmModalProps {
 
 export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: LockConfirmModalProps) {
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const { publicKey } = useWallet();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -33,6 +37,14 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
   })();
+  const streamflowUrl = publicKey
+    ? buildStreamflowLockUrl({
+        mint: WCB_MINT,
+        amount,
+        durationDays: days,
+        senderWallet: publicKey.toBase58(),
+      })
+    : 'https://app.streamflow.finance';
 
   return (
     <AnimatePresence>
@@ -109,7 +121,7 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
                 {/* Warning */}
                 <div style={{ borderRadius: 10, background: 'rgba(242,181,68,0.08)', border: '1px solid rgba(242,181,68,0.26)', padding: '0.875rem', marginBottom: '1.25rem', display: 'flex', gap: '0.625rem' }}>
                   <p style={{ fontSize: '0.8rem', color: '#B3B3B3', margin: 0, lineHeight: 1.5 }}>
-                    <strong>No early withdrawal.</strong> Your tokens will be locked until {unlockDate}. This action cannot be undone.
+                    <strong>No early token unlock.</strong> Your tokens will be locked until {unlockDate}. Credit redeem/withdraw is coming soon and not active yet.
                   </p>
                 </div>
 
@@ -132,7 +144,7 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
                     Cancel
                   </button>
                   <a
-                    href="https://app.streamflow.finance"
+                    href={streamflowUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
@@ -153,12 +165,14 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
                       boxShadow: '0 8px 22px rgba(242,181,68,0.24)',
                     }}
                   >
-                    Lock via Streamflow
+                    {publicKey ? 'Lock via Streamflow' : 'Open Streamflow'}
                   </a>
                 </div>
 
                 <p style={{ fontSize: '0.7rem', color: '#6E6E6E', textAlign: 'center', marginTop: '0.875rem' }}>
-                  You will be redirected to Streamflow Finance to complete the lock on-chain
+                  {publicKey
+                    ? 'Streamflow opens with your wallet, token, amount, recipient, and unlock date prepared.'
+                    : 'Connect wallet first for an auto-filled Streamflow lock URL.'}
                 </p>
               </div>
             </div>

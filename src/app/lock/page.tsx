@@ -7,7 +7,7 @@ import { LockConfirmModal } from '@/components/lock/LockConfirmModal';
 import { CreditRedemptionInfo } from '@/components/lock/CreditRedemptionInfo';
 import { WalletDashboardDynamic, WalletButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
-import { formatCredits, formatTokenAmount } from '@/lib/lock';
+import { EARLY_TOKENS_PER_CREDIT, FIXED_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT, formatCredits, formatTokenAmount } from '@/lib/lock';
 import { useCommunityLocks } from '@/lib/hooks/useCommunityLocks';
 
 export default function LockPage() {
@@ -36,7 +36,7 @@ export default function LockPage() {
         }}
       >
         <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>
-          Pre-launch lock window: credits are calculated from active Streamflow locks and become visible after wallet connection.
+          Pre-launch lock window: {EARLY_TOKENS_PER_CREDIT} $WCB locked = 1 credit before launch. Credits are auto-detected from real Streamflow locks.
         </p>
         <Link href="/docs" className="btn-secondary" style={{ marginLeft: 'auto' }}>
           Read Docs
@@ -48,7 +48,7 @@ export default function LockPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
           <span className="data-pill">Streamflow live</span>
           <span className="data-pill">Wallet credits auto-detect</span>
-          <span className="data-pill">365-day tier cap</span>
+          <span className="data-pill">{FIXED_LOCK_DAYS}-day fixed lock</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
@@ -59,7 +59,7 @@ export default function LockPage() {
               Lock early. Enter launch with more credit.
             </h1>
             <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
-              Lock $WCB through Streamflow Finance to reserve betting credits before launch. The app reads active locks from the configured mint, calculates credits from locked amount and unlock duration, then displays the position when the wallet connects.
+              Lock $WCB through Streamflow Finance for {FIXED_LOCK_DAYS} days. The app reads active locks from Streamflow, calculates credits from the lock timestamp, then displays the position when the wallet connects.
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -78,7 +78,7 @@ export default function LockPage() {
       >
         {[
           { label: 'Total Locked', value: totalsLoading ? 'Syncing' : formatTokenAmount(totals.totalLocked) + ' $WCB', sub: meta.source ?? 'Streamflow locks' },
-          { label: 'Credits Issued', value: totalsLoading ? 'Syncing' : formatCredits(totals.totalCredits), sub: 'reserved for launch' },
+          { label: 'Credits Issued', value: totalsLoading ? 'Syncing' : formatCredits(totals.totalCredits), sub: 'platform credits' },
           { label: 'Active Locks', value: totalsLoading ? 'Syncing' : (totals.totalLocks ?? totals.totalLockers).toString(), sub: 'tracked Streamflow locks' },
         ].map((s) => (
           <div
@@ -131,18 +131,18 @@ export default function LockPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
           {[
             {
-              title: 'Launch multiplier',
-              desc: 'Lock before launch to receive a 2x credit multiplier while the pre-market window is still open.',
+              title: 'Early credit rate',
+              desc: `Lock before launch to get 1 credit per ${EARLY_TOKENS_PER_CREDIT} $WCB. After launch the rate becomes 1 credit per ${POST_LAUNCH_TOKENS_PER_CREDIT} $WCB.`,
               img: 'Countdown Visual',
             },
             {
-              title: 'Betting credits',
-              desc: 'Credits define how much capacity you carry into the first match markets when betting opens.',
+              title: 'Platform credits',
+              desc: 'Credits are wallet-bound platform credits for entries, access, ranking, and future redeem rules once enabled.',
               img: 'Betting Credits Visual',
             },
             {
               title: 'Non-custodial lock',
-              desc: 'Locking is non-custodial via Streamflow. You choose the duration, and the tokens remain under your control on-chain.',
+              desc: `Locking is non-custodial via Streamflow. WCB uses a fixed ${FIXED_LOCK_DAYS}-day lock and reads the real lock on-chain.`,
               img: 'Security Visual',
             },
           ].map((r) => (

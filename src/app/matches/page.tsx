@@ -6,6 +6,7 @@ import { MatchCard } from '@/components/matches/MatchCard';
 import { MatchFilter, type MatchFilterValue } from '@/components/matches/MatchFilter';
 import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 import { WC_2026_GROUP_MATCHES } from '@/lib/constants/matches2026';
+import { EARLY_TOKENS_PER_CREDIT, FIXED_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
 import type { Match } from '@/types/match';
 
 function utcDateKey(iso: string): string {
@@ -137,7 +138,7 @@ export default function MatchesPage() {
             </Link>
           </div>
           <p style={{ fontSize: '0.78rem', color: '#8B949E', lineHeight: 1.5, marginBottom: '10px' }}>
-            Lock $WCB to earn betting credits. Early lockers receive a 2x credit multiplier.
+            Lock $WCB for {FIXED_LOCK_DAYS} days to earn platform credits. Before launch: {EARLY_TOKENS_PER_CREDIT}:1, after launch: {POST_LAUNCH_TOKENS_PER_CREDIT}:1.
           </p>
           <a
             href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
@@ -156,7 +157,7 @@ export default function MatchesPage() {
             <ImagePlaceholder
               width="100%"
               aspectRatio="6/5"
-              label={`Sponsor Ad ${i} 300 x 250`}
+              label={`Ad Slot ${i} 300 x 250`}
               rounded={0}
               style={{ border: 'none', borderRadius: 0 }}
             />

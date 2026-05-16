@@ -1,50 +1,57 @@
-/**
- * CreditRedemptionInfo explains how credits work and how to redeem them.
- * Static informational component, no interactivity needed.
- */
+import {
+  EARLY_TOKENS_PER_CREDIT,
+  FIXED_LOCK_DAYS,
+  LOCK_LAUNCH_TIMESTAMP,
+  POST_LAUNCH_TOKENS_PER_CREDIT,
+} from '@/lib/lock';
+
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function formatLaunchDate() {
+  const d = new Date(LOCK_LAUNCH_TIMESTAMP * 1000);
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+}
+
 export function CreditRedemptionInfo() {
   const steps = [
     {
       code: '01',
       title: 'Lock $WCB',
-      desc: 'Choose your amount and duration. Tokens are locked on-chain via Streamflow. No early withdrawal.',
+      desc: `Lock for a fixed ${FIXED_LOCK_DAYS} days through Streamflow. The lock is read from real on-chain Streamflow data.`,
     },
     {
       code: '02',
       title: 'Receive Credits',
-      desc: 'Credits are instantly credited to your wallet. More tokens + longer lock = more credits.',
+      desc: `Before launch: ${EARLY_TOKENS_PER_CREDIT} $WCB locked = 1 credit. After launch: ${POST_LAUNCH_TOKENS_PER_CREDIT} $WCB locked = 1 credit.`,
     },
     {
       code: '03',
-      title: 'Use Credits to Bet',
-      desc: 'When the platform goes live on June 11, 2026, use credits as your betting capital on match predictions.',
+      title: 'Use Credits',
+      desc: 'Credits are wallet-bound platform credits for entries, access, leaderboard ranking, and the coming redeem/withdraw flow.',
     },
     {
       code: '04',
-      title: 'Redeem Credits',
-      desc: 'Unused credits can be redeemed back to $WCB at 100 $WCB per credit. Early stage only; this offer ends at launch.',
+      title: 'Redeem / Withdraw Coming Soon',
+      desc: 'Credit redeem/withdraw is planned, but it is not active yet. WCB will publish exact rules before enabling it.',
     },
   ];
 
   const creditTable = [
-    { amount: '100K',  days: 30,  mult: '1.0x', credits: '1,000' },
-    { amount: '100K',  days: 90,  mult: '2.0x', credits: '2,000' },
-    { amount: '100K',  days: 180, mult: '3.0x', credits: '3,000' },
-    { amount: '1M',    days: 30,  mult: '1.0x', credits: '10,000' },
-    { amount: '1M',    days: 90,  mult: '2.0x', credits: '20,000' },
-    { amount: '5M',    days: 365, mult: '5.0x', credits: '250,000' },
+    { amount: '100', early: '1', post: '0' },
+    { amount: '1K', early: '10', post: '5' },
+    { amount: '10K', early: '100', post: '50' },
+    { amount: '100K', early: '1,000', post: '500' },
   ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      {/* How it works */}
       <div className="card p-6">
         <h3 style={{ fontSize: '1.1rem', fontWeight: 900, color: '#FFFFFF', marginBottom: '1.25rem' }}>
           How it works
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
           {steps.map((s, i) => (
-            <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div key={s.code} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                 <div
                   style={{
@@ -80,21 +87,20 @@ export function CreditRedemptionInfo() {
         </div>
       </div>
 
-      {/* Credit rate table */}
       <div className="card overflow-hidden">
         <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #2A2A2A', background: '#111111' }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
-            Credit Rate Examples
+            Credit Rate
           </h3>
           <p style={{ fontSize: '0.75rem', color: '#B3B3B3', marginTop: '0.25rem' }}>
-            Base rate: 1 credit per 100 $WCB / Redemption: 1 credit = 100 $WCB
+            Early locks before {formatLaunchDate()} receive double the post-launch credit rate.
           </p>
         </div>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
             <thead>
               <tr style={{ background: '#111111', borderBottom: '1px solid #2A2A2A' }}>
-                {['Amount', 'Duration', 'Multiplier', 'Credits Earned'].map((h) => (
+                {['Locked Amount', 'Before Launch', 'After Launch'].map((h) => (
                   <th key={h} style={{ padding: '0.625rem 1rem', textAlign: 'left', fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E' }}>
                     {h}
                   </th>
@@ -102,19 +108,16 @@ export function CreditRedemptionInfo() {
               </tr>
             </thead>
             <tbody>
-              {creditTable.map((row, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid #2A2A2A' }}>
+              {creditTable.map((row) => (
+                <tr key={row.amount} style={{ borderBottom: '1px solid #2A2A2A' }}>
                   <td style={{ padding: '0.75rem 1rem', fontWeight: 700, color: '#FFFFFF' }}>
                     {row.amount} $WCB
                   </td>
-                  <td style={{ padding: '0.75rem 1rem', color: '#B3B3B3' }}>
-                    {row.days} days
-                  </td>
-                  <td style={{ padding: '0.75rem 1rem', fontWeight: 700, color: '#F2B544' }}>
-                    {row.mult}
-                  </td>
                   <td style={{ padding: '0.75rem 1rem', fontWeight: 900, color: '#FFD36B' }}>
-                    {row.credits}
+                    {row.early} credits
+                  </td>
+                  <td style={{ padding: '0.75rem 1rem', fontWeight: 800, color: '#B3B3B3' }}>
+                    {row.post} credits
                   </td>
                 </tr>
               ))}
@@ -123,7 +126,6 @@ export function CreditRedemptionInfo() {
         </div>
       </div>
 
-      {/* Important notes */}
       <div
         style={{
           borderRadius: 14,
@@ -137,13 +139,13 @@ export function CreditRedemptionInfo() {
         </h4>
         <ul style={{ margin: 0, padding: '0 0 0 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {[
-            'No early withdrawal; tokens are locked until the chosen duration expires.',
-            'Credits are wallet-bound and non-transferable.',
-            'Credit redemption is only available during the early stage.',
-            'This offer ends when the platform goes live on June 11, 2026.',
-            'Locking is handled entirely on-chain via Streamflow Finance.',
-          ].map((note, i) => (
-            <li key={i} style={{ fontSize: '0.8rem', color: '#B3B3B3', lineHeight: 1.5 }}>
+            `All new lock flows use a fixed ${FIXED_LOCK_DAYS}-day duration.`,
+            'Lock data is sourced from Streamflow records, not local mock data.',
+            'Credits remain wallet-bound until redeem/withdraw rules are enabled.',
+            'Credit redeem/withdraw is coming soon and not active yet.',
+            'Creator fee is the only funding source for WCB reward pool distributions.',
+          ].map((note) => (
+            <li key={note} style={{ fontSize: '0.8rem', color: '#B3B3B3', lineHeight: 1.5 }}>
               {note}
             </li>
           ))}

@@ -1,52 +1,55 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  LOCK_TIERS,
+  EARLY_TOKENS_PER_CREDIT,
+  FIXED_LOCK_DAYS,
+  LOCK_LAUNCH_TIMESTAMP,
   MIN_LOCK_AMOUNT,
+  POST_LAUNCH_TOKENS_PER_CREDIT,
   calculateCredits,
-  getMultiplierForDays,
-  getTierForDays,
+  currentUnixTimestamp,
   formatCredits,
   formatTokenAmount,
+  getTokensPerCreditForTimestamp,
+  isEarlyCreditWindow,
 } from '@/lib/lock';
 
 interface LockCalculatorProps {
   onLockIntent?: (amount: number, days: number, credits: number) => void;
 }
 
-export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
-  const [amount, setAmount] = useState<string>('1000000');
-  const [days, setDays] = useState<number>(30);
-  const [customDays, setCustomDays] = useState<string>('');
-  const [useCustom, setUseCustom] = useState(false);
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-  const effectiveDays = useCustom ? (parseInt(customDays) || 0) : days;
-  const numAmount = parseInt(amount.replace(/,/g, '')) || 0;
+function formatDate(date: Date) {
+  return `${MONTHS[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
+}
+
+export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
+  const [amount, setAmount] = useState<string>('10000');
+  const lockTimestamp = currentUnixTimestamp();
+  const numAmount = parseInt(amount.replace(/,/g, ''), 10) || 0;
+  const creditRate = getTokensPerCreditForTimestamp(lockTimestamp);
+  const earlyWindow = isEarlyCreditWindow(lockTimestamp);
+  const minimumCreditAmount = Math.max(MIN_LOCK_AMOUNT, creditRate);
 
   const credits = useMemo(
-    () => (numAmount >= MIN_LOCK_AMOUNT && effectiveDays >= 7 ? calculateCredits(numAmount, effectiveDays) : 0),
-    [numAmount, effectiveDays],
+    () => (numAmount >= minimumCreditAmount ? calculateCredits(numAmount, lockTimestamp) : 0),
+    [numAmount, lockTimestamp, minimumCreditAmount],
   );
 
-  const multiplier = useMemo(() => getMultiplierForDays(effectiveDays), [effectiveDays]);
-  const tier = useMemo(() => getTierForDays(effectiveDays), [effectiveDays]);
-
   const unlockDate = useMemo(() => {
-    if (effectiveDays <= 0) return null;
     const d = new Date();
-    d.setDate(d.getDate() + effectiveDays);
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
-  }, [effectiveDays]);
+    d.setUTCDate(d.getUTCDate() + FIXED_LOCK_DAYS);
+    return formatDate(d);
+  }, []);
 
-  const isValid = numAmount >= MIN_LOCK_AMOUNT && effectiveDays >= 7;
+  const launchDate = useMemo(() => formatDate(new Date(LOCK_LAUNCH_TIMESTAMP * 1000)), []);
+  const isValid = numAmount >= minimumCreditAmount;
 
   const handleAmountChange = (val: string) => {
-    // Allow only numbers
-    const clean = val.replace(/[^0-9]/g, '');
-    setAmount(clean);
+    setAmount(val.replace(/[^0-9]/g, ''));
   };
 
   const handlePreset = (preset: number) => {
@@ -55,22 +58,19 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
 
   return (
     <div className="card overflow-hidden">
-      {/* Header */}
       <div style={{ padding: '1.5rem', borderBottom: '1px solid #2A2A2A', background: 'linear-gradient(135deg, #111111 0%, #171717 100%)' }}>
         <p style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.8)', marginBottom: '0.25rem' }}>
-          Early Stage / Lock & Earn
+          {earlyWindow ? 'Early Lock Rate' : 'Post-Launch Lock Rate'}
         </p>
         <h2 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>
           Lock $WCB for Credits
         </h2>
         <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.85)', marginTop: '0.375rem' }}>
-          Lock your tokens via Streamflow. Earn credits to use when betting goes live.
+          Fixed 60-day Streamflow lock. Credit redeem/withdraw is coming soon and not active yet.
         </p>
       </div>
 
       <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-
-        {/* Amount input */}
         <div>
           <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#B3B3B3', marginBottom: '0.5rem' }}>
             Amount to Lock
@@ -99,128 +99,66 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
             </span>
           </div>
 
-          {/* Preset amounts */}
           <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.625rem', flexWrap: 'wrap' }}>
-            {[100_000, 500_000, 1_000_000, 5_000_000].map((p) => (
+            {[100, 1_000, 10_000, 100_000].map((preset) => (
               <button
-                key={p}
-                onClick={() => handlePreset(p)}
+                key={preset}
+                onClick={() => handlePreset(preset)}
                 style={{
                   padding: '0.25rem 0.75rem',
                   borderRadius: 8,
-                  border: `1px solid ${numAmount === p ? '#F2B544' : '#2A2A2A'}`,
-                  background: numAmount === p ? 'rgba(242,181,68,0.12)' : '#111111',
-                  color: numAmount === p ? '#FFD36B' : '#B3B3B3',
+                  border: `1px solid ${numAmount === preset ? '#F2B544' : '#2A2A2A'}`,
+                  background: numAmount === preset ? 'rgba(242,181,68,0.12)' : '#111111',
+                  color: numAmount === preset ? '#FFD36B' : '#B3B3B3',
                   fontSize: '0.75rem',
                   fontWeight: 700,
                   cursor: 'pointer',
                 }}
               >
-                {formatTokenAmount(p)}
+                {formatTokenAmount(preset)}
               </button>
             ))}
           </div>
 
-          {numAmount > 0 && numAmount < MIN_LOCK_AMOUNT && (
+          {numAmount > 0 && numAmount < minimumCreditAmount && (
             <p style={{ fontSize: '0.75rem', color: '#DC2626', marginTop: '0.375rem', fontWeight: 600 }}>
-              Minimum lock: {MIN_LOCK_AMOUNT.toLocaleString()} $WCB
+              Minimum for 1 credit at the current rate: {minimumCreditAmount.toLocaleString()} $WCB
             </p>
           )}
         </div>
 
-        {/* Duration selector */}
-        <div>
-          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#B3B3B3', marginBottom: '0.5rem' }}>
-            Lock Duration
-          </label>
-
-          {/* Preset tiers */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginBottom: '0.75rem' }}>
-            {LOCK_TIERS.map((t) => {
-              const active = !useCustom && days === t.days;
-              return (
-                <button
-                  key={t.days}
-                  onClick={() => { setDays(t.days); setUseCustom(false); }}
-                  style={{
-                    padding: '0.625rem 0.5rem',
-                    borderRadius: 10,
-                    border: `1px solid ${active ? '#F2B544' : '#2A2A2A'}`,
-                    background: active ? 'rgba(242,181,68,0.12)' : '#111111',
-                    cursor: 'pointer',
-                    textAlign: 'center',
-                    transition: 'all 0.15s',
-                    position: 'relative',
-                  }}
-                >
-                  {t.highlight && (
-                    <span style={{
-                      position: 'absolute', top: -8, left: '50%', transform: 'translateX(-50%)',
-                      background: '#F2B544', color: '#070707', fontSize: '9px', fontWeight: 800,
-                      padding: '1px 6px', borderRadius: 9999, whiteSpace: 'nowrap',
-                    }}>
-                      POPULAR
-                    </span>
-                  )}
-                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: active ? '#FFD36B' : '#FFFFFF' }}>
-                    {t.label}
-                  </div>
-                  <div style={{ fontSize: '0.7rem', fontWeight: 600, color: active ? '#FFD36B' : '#6E6E6E', marginTop: '0.125rem' }}>
-                    {t.multiplier}x / {t.badge}
-                  </div>
-                </button>
-              );
-            })}
+        <div
+          style={{
+            borderRadius: 14,
+            border: '1px solid rgba(242,181,68,0.24)',
+            background: '#111111',
+            padding: '1rem',
+          }}
+        >
+          <p style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#F2B544', marginBottom: '0.75rem' }}>
+            Fixed Lock Terms
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
+            {[
+              { label: 'Duration', value: `${FIXED_LOCK_DAYS} days` },
+              { label: 'Current Rate', value: `${creditRate} $WCB / credit` },
+              { label: 'Unlock', value: unlockDate },
+            ].map((item) => (
+              <div key={item.label} style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E' }}>
+                  {item.label}
+                </div>
+                <div style={{ fontSize: '0.88rem', fontWeight: 900, color: '#FFFFFF', marginTop: '0.2rem' }}>
+                  {item.value}
+                </div>
+              </div>
+            ))}
           </div>
-
-          {/* Custom duration */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <button
-              onClick={() => setUseCustom(!useCustom)}
-              style={{
-                padding: '0.5rem 1rem',
-                borderRadius: 8,
-                border: `1px solid ${useCustom ? '#F2B544' : '#2A2A2A'}`,
-                background: useCustom ? 'rgba(242,181,68,0.12)' : '#111111',
-                color: useCustom ? '#FFD36B' : '#B3B3B3',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              Custom days
-            </button>
-            {useCustom && (
-              <input
-                type="number"
-                min={7}
-                max={365}
-                value={customDays}
-                onChange={(e) => setCustomDays(e.target.value)}
-                placeholder="e.g. 45"
-                style={{
-                  flex: 1,
-                  padding: '0.5rem 0.75rem',
-                  borderRadius: 8,
-                  border: '1px solid #2A2A2A',
-                  fontSize: '0.9rem',
-                  fontWeight: 700,
-                  color: '#FFFFFF',
-                  background: '#111111',
-                  outline: 'none',
-                }}
-              />
-            )}
-            {useCustom && customDays && (
-              <span style={{ fontSize: '0.8rem', color: '#B3B3B3', whiteSpace: 'nowrap' }}>
-                {multiplier.toFixed(2)}x multiplier
-              </span>
-            )}
-          </div>
+          <p style={{ fontSize: '0.75rem', color: '#B3B3B3', lineHeight: 1.55, margin: '0.85rem 0 0' }}>
+            Locks before {launchDate} earn the early rate: {EARLY_TOKENS_PER_CREDIT} $WCB = 1 credit. After launch, the rate becomes {POST_LAUNCH_TOKENS_PER_CREDIT} $WCB = 1 credit.
+          </p>
         </div>
 
-        {/* Credit preview */}
         <AnimatePresence mode="wait">
           {isValid ? (
             <motion.div
@@ -248,8 +186,8 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem', marginTop: '1rem' }}>
                 {[
                   { label: 'Locked', value: formatTokenAmount(numAmount) + ' $WCB' },
-                  { label: 'Duration', value: effectiveDays + ' days' },
-                  { label: 'Multiplier', value: multiplier.toFixed(2) + 'x' },
+                  { label: 'Duration', value: `${FIXED_LOCK_DAYS} days` },
+                  { label: 'Rate', value: `${creditRate}:1` },
                 ].map((item) => (
                   <div key={item.label} style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E' }}>
@@ -262,34 +200,11 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
                 ))}
               </div>
 
-              {unlockDate && (
-                <div style={{ marginTop: '0.875rem', padding: '0.625rem 0.875rem', borderRadius: 8, background: '#0B0B0B', border: '1px solid #2A2A2A', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <p style={{ fontSize: '0.8rem', color: '#B3B3B3', margin: 0 }}>
-                    <strong style={{ color: '#FFFFFF' }}>Locked until {unlockDate}</strong> - no early withdrawal
-                  </p>
-                </div>
-              )}
-
-              {tier && (
-                <div style={{ marginTop: '0.625rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span
-                    style={{
-                      padding: '0.2rem 0.625rem',
-                      borderRadius: 9999,
-                      fontSize: '0.7rem',
-                      fontWeight: 800,
-                      background: tier.color + '20',
-                      color: tier.color,
-                      border: `1px solid ${tier.color}40`,
-                    }}
-                  >
-                    {tier.badge} Tier
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: '#B3B3B3' }}>
-                    1 credit = 100 $WCB when redeemed
-                  </span>
-                </div>
-              )}
+              <div style={{ marginTop: '0.875rem', padding: '0.625rem 0.875rem', borderRadius: 8, background: '#0B0B0B', border: '1px solid #2A2A2A' }}>
+                <p style={{ fontSize: '0.8rem', color: '#B3B3B3', margin: 0, lineHeight: 1.5 }}>
+                  <strong style={{ color: '#FFFFFF' }}>Locked until {unlockDate}.</strong> Credits are platform credits. Redeem/withdraw is coming soon and is not active yet.
+                </p>
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -305,16 +220,15 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
               }}
             >
               <p style={{ fontSize: '0.85rem', color: '#B3B3B3' }}>
-                Enter at least {MIN_LOCK_AMOUNT.toLocaleString()} $WCB and select a duration to preview credits.
+                Enter at least {minimumCreditAmount.toLocaleString()} $WCB to preview credits.
               </p>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Lock button */}
         <button
           disabled={!isValid}
-          onClick={() => isValid && onLockIntent?.(numAmount, effectiveDays, credits)}
+          onClick={() => isValid && onLockIntent?.(numAmount, FIXED_LOCK_DAYS, credits)}
           style={{
             width: '100%',
             padding: '0.875rem',
@@ -329,11 +243,11 @@ export function LockCalculator({ onLockIntent }: LockCalculatorProps) {
             boxShadow: isValid ? '0 8px 22px rgba(242,181,68,0.24)' : 'none',
           }}
         >
-          {isValid ? `Lock ${formatTokenAmount(numAmount)} $WCB via Streamflow` : 'Enter amount and duration to continue'}
+          {isValid ? `Lock ${formatTokenAmount(numAmount)} $WCB for ${FIXED_LOCK_DAYS} days` : 'Enter amount to continue'}
         </button>
 
         <p style={{ fontSize: '0.72rem', color: '#6E6E6E', textAlign: 'center', lineHeight: 1.5 }}>
-          Powered by <strong style={{ color: '#B3B3B3' }}>Streamflow Finance</strong>. Tokens locked on-chain. No early withdrawal. Early stage only.
+          Powered by <strong style={{ color: '#B3B3B3' }}>Streamflow Finance</strong>. Tokens lock on-chain for 60 days. No early withdrawal.
         </p>
       </div>
     </div>

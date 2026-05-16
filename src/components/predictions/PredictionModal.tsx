@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TeamFlag } from '@/components/shared/TeamFlag';
 import { usePrediction } from '@/lib/hooks/usePrediction';
+import { EARLY_TOKENS_PER_CREDIT } from '@/lib/lock';
 import type { PredictionChoice } from '@/lib/predictions';
 import type { Match } from '@/types/match';
 
@@ -230,7 +231,7 @@ export function PredictionModal({ match, isOpen, onClose }: PredictionModalProps
               {/* Footer CTA */}
               <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid #2A2A2A', marginTop: '0.75rem' }}>
                 <p style={{ fontSize: '0.75rem', color: '#B3B3B3', textAlign: 'center', marginBottom: '0.75rem', lineHeight: 1.5 }}>
-                  <strong style={{ color: '#FFFFFF' }}>Betting opens June 11, 2026.</strong> Lock $WCB before launch to receive credits for the opening market window.
+                  <strong style={{ color: '#FFFFFF' }}>Betting opens June 11, 2026.</strong> Lock $WCB before launch to earn 1 platform credit per {EARLY_TOKENS_PER_CREDIT} $WCB locked.
                 </p>
                 <a
                   href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}

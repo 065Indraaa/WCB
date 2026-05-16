@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';
 import { SolanaStreamClient, StreamType, getNumberFromBN, type Stream } from '@streamflow/stream';
-import { calculateLockCredits, getLockCreditDurationDays, getLockCreditStartTimestamp, getLockUnlockTimestamp } from '@/lib/lock';
+import { calculateLockCredits, getLockCreditDurationDays, getLockCreditStartTimestamp, getLockUnlockTimestamp, isCreditEligibleLockSchedule } from '@/lib/lock';
 import { WCB_MINT, WCB_STREAMFLOW_LOCK_DASHBOARD_URL, WCB_TOKEN_DECIMALS } from '@/lib/tokenConfig';
 import { buildHeliusRpcUrl } from '@/lib/server/helius';
 
@@ -70,7 +70,6 @@ export async function GET() {
 
       const amount = lockedTokenAmount(stream);
       if (!Number.isFinite(amount) || amount <= 0) continue;
-      totalActiveLocks += 1;
 
       const id = item.publicKey.toBase58();
       const wallet = stream.sender;
@@ -80,6 +79,9 @@ export async function GET() {
         cliff: stream.cliff,
         end: stream.end,
       };
+      if (!isCreditEligibleLockSchedule(schedule)) continue;
+
+      totalActiveLocks += 1;
       const startTs = getLockCreditStartTimestamp(schedule);
       const endTs = getLockUnlockTimestamp(schedule);
       const durationDays = getLockCreditDurationDays(schedule);
@@ -144,7 +146,7 @@ export async function GET() {
       totals,
       mint: WCB_MINT,
       streamflowDashboardUrl: dashboardUrl(),
-      source: 'streamflow-sdk-searchStreams',
+      source: 'streamflow-sdk-60-day-locks',
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -154,7 +156,7 @@ export async function GET() {
         leaderboard: [],
         totals: { totalLocked: 0, totalCredits: 0, totalLockers: 0, totalLocks: 0 },
         mint: WCB_MINT,
-        source: 'streamflow-sdk-searchStreams',
+        source: 'streamflow-sdk-60-day-locks',
         error: message,
       },
       { status: 500 },
