@@ -92,15 +92,14 @@ export function Navbar() {
           </Link>
 
           <ul
+            className="hidden lg:flex"
             style={{
-              display: 'none',
               listStyle: 'none',
               margin: 0,
               padding: 0,
               gap: 2,
               alignItems: 'center',
             }}
-            className="lg:flex"
           >
             {NAV_LINKS.map((link) => {
               const active =
