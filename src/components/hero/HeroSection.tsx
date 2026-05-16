@@ -256,7 +256,7 @@ export function HeroSection() {
             <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.55)', marginBottom: '1.25rem', fontWeight: 600, textAlign: 'center' }}>
               June 11, 2026 | Estadio Azteca, Mexico City
             </p>
-            <CountdownTimer />
+            <CountdownTimer compact />
           </motion.div>
         </div>
       </div>
