@@ -525,9 +525,13 @@
 
 /* Hero */
 .hero-section {
-  min-height: 760px;
+  min-height: 92vh;
   display: flex;
   flex-direction: column;
+}
+.hero-background-image {
+  object-fit: cover;
+  object-position: center center;
 }
 .hero-content {
   padding: 4.5rem 1.5rem 3.5rem;
@@ -559,7 +563,14 @@
 }
 @media (max-width: 540px) {
   .hero-section {
-    min-height: 520px;
+    min-height: auto;
+    background: #070707;
+  }
+  .hero-background-image {
+    height: auto !important;
+    min-height: 0 !important;
+    object-fit: contain;
+    object-position: center top;
   }
   .hero-content {
     padding: 2rem 0.9rem 1.5rem;

@@ -12,8 +12,8 @@ export function HeroSection() {
 
   return (
     <section
-      className="relative overflow-hidden"
-      style={{ minHeight: '92vh', display: 'flex', flexDirection: 'column' }}
+      className="hero-section relative overflow-hidden"
+      style={{ display: 'flex', flexDirection: 'column' }}
       aria-label="Hero"
     >
       {/* Header image background */}
@@ -30,9 +30,8 @@ export function HeroSection() {
           alt=""
           fill
           priority
+          className="hero-background-image"
           style={{
-            objectFit: 'cover',
-            objectPosition: 'center center',
             filter: 'saturate(0.92) contrast(1.05) brightness(0.72)',
           }}
         />
