@@ -521,11 +521,11 @@
 
   .home-billboard-frame {
     position: relative;
-    height: clamp(128px, 18vw, 212px);
     overflow: hidden;
     border-radius: 13px;
     border: 1px solid rgba(255,255,255,0.08);
     background: #111111;
+    line-height: 0;
   }
 
   .home-billboard-frame::after {
@@ -1048,7 +1048,6 @@
   }
 
   .home-billboard-frame {
-    height: clamp(96px, 24vw, 132px);
     border-radius: 9px;
   }
 

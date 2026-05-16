@@ -12,9 +12,7 @@ export function HeaderBanner() {
           sizes="(max-width: 1180px) 92vw, 1120px"
           style={{
             width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center',
+            height: 'auto',
             display: 'block',
           }}
         />
