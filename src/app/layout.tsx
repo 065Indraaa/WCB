@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { TickerBar } from '@/components/layout/TickerBar';
 import { Footer } from '@/components/layout/Footer';
 import { BackgroundSong } from '@/components/layout/BackgroundSong';
+import { WelcomePopup } from '@/components/shared/WelcomePopup';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://worldcupbet.live';
 
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body style={{ background: '#070707', color: '#FFFFFF' }} className="antialiased min-h-screen flex flex-col">
         <Providers>
           <BackgroundSong />
+          <WelcomePopup />
           {/* Navbar is fixed, so the layout needs a spacer below it. */}
           <Navbar />
           {/* Spacer: navbar h-14 (56px) + tickerbar ~h-8 (30px) = 86px */}
