@@ -7,7 +7,7 @@ interface TickerBarProps {
 export function TickerBar({ price }: TickerBarProps) {
   const items = [
     '$WCB',
-    'WORLDCUPBET',
+    'WORLDCUPBETS',
     'WORLD CUP 2026',
     '48 TEAMS / 12 GROUPS',
     'BUILT ON SOLANA',

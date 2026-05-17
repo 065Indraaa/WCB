@@ -4,9 +4,9 @@ import { BrandLogo } from '@/components/shared/BrandLogo';
 import { EARLY_TOKENS_PER_CREDIT, FIXED_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
 
 export const metadata = {
-  title: 'Documentation & Whitepaper | WORLDCUPBET',
+  title: 'Documentation & Whitepaper | WORLDCUPBETS',
   description:
-    'WORLDCUPBET documentation for the World Cup 2026 app, $WCB holder ranking, fixed 60-day Streamflow lock credits, and creator-fee prize pool credit calculation.',
+    'WORLDCUPBETS documentation for the World Cup 2026 app, $WCB holder ranking, fixed 60-day Streamflow lock credits, and creator-fee prize pool credit calculation.',
 };
 
 const GOLD = '#F2B544';
@@ -220,7 +220,7 @@ const WHITEPAPER_SECTIONS = [
   },
   {
     title: '2. The Product',
-    body: 'WORLDCUPBET is a Solana-based World Cup application. Users can review matches, connect a wallet, hold $WCB, lock $WCB for credits, and view leaderboard positions.',
+    body: 'WORLDCUPBETS is a Solana-based World Cup application. Users can review matches, connect a wallet, hold $WCB, lock $WCB for credits, and view leaderboard positions.',
   },
   {
     title: '3. The Participation Model',
@@ -452,10 +452,10 @@ export default function DocsPage() {
               </div>
 
               <h1 className="text-4xl md:text-7xl" style={{ color: TEXT, lineHeight: 1, fontWeight: 900, marginBottom: '1rem', maxWidth: 900 }}>
-                WORLDCUPBET Documentation
+                WORLDCUPBETS Documentation
               </h1>
               <p style={{ color: TEXT_SOFT, fontSize: '1.05rem', lineHeight: 1.75, maxWidth: 780, marginBottom: '1.35rem' }}>
-                WORLDCUPBET is a World Cup 2026 application that uses $WCB for holder ranking, Streamflow lock credits, and eligibility calculations.
+                WORLDCUPBETS is a World Cup 2026 application that uses $WCB for holder ranking, Streamflow lock credits, and eligibility calculations.
               </p>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3" style={{ marginBottom: '1.35rem' }}>
@@ -518,7 +518,7 @@ export default function DocsPage() {
               id="start"
               eyebrow="Overview"
               title="Application overview."
-              intro="WORLDCUPBET is a Solana-based application for World Cup 2026. It connects match pages, wallet balances, token locks, and leaderboard data in one interface."
+              intro="WORLDCUPBETS is a Solana-based application for World Cup 2026. It connects match pages, wallet balances, token locks, and leaderboard data in one interface."
             >
               <div className="card" style={{ padding: '1.35rem', background: CARD }}>
                 <p style={{ color: TEXT_SOFT, fontSize: '1rem', lineHeight: 1.8, marginBottom: '1rem' }}>

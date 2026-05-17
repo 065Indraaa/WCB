@@ -41,7 +41,7 @@ export default function TokenPage() {
           </div>
 
           <p className="text-base max-w-2xl mb-6 leading-relaxed" style={{ color: '#B3B3B3' }}>
-            $WCB is the access token for the WORLDCUPBET platform. Holders unlock leaderboard tiers, lock credits, and priority access to match markets when World Cup 2026 opens on June 11, 2026.
+            $WCB is the access token for the WORLDCUPBETS platform. Holders unlock leaderboard tiers, lock credits, and priority access to match markets when World Cup 2026 opens on June 11, 2026.
           </p>
 
           {/* Data source note */}

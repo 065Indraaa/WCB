@@ -240,7 +240,7 @@ export function WelcomePopup() {
             className="sm:items-center sm:p-4"
             role="dialog"
             aria-modal="true"
-            aria-label="Welcome to WORLDCUPBET"
+            aria-label="Welcome to WORLDCUPBETS"
           >
             <div
               onClick={(e) => e.stopPropagation()}

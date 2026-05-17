@@ -11,26 +11,26 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://worldcupbet.live';
 
 export const metadata: Metadata = {
   title: {
-    default: '$WCB | WORLDCUPBET - World Cup 2026 Betting on Solana',
-    template: '%s | WORLDCUPBET',
+    default: '$WCB | WORLDCUPBETS - World Cup 2026 Betting on Solana',
+    template: '%s | WORLDCUPBETS',
   },
   description:
     'Predict every match of the 2026 World Cup, hold $WCB on Solana, climb the leaderboard, and unlock priority football betting access.',
-  keywords: ['World Cup 2026', 'WCB token', 'Solana betting', 'football predictions', 'crypto sportsbook', 'WORLDCUPBET'],
+  keywords: ['World Cup 2026', 'WCB token', 'Solana betting', 'football predictions', 'crypto sportsbook', 'WORLDCUPBETS'],
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: '/' },
   openGraph: {
-    title: '$WCB | WORLDCUPBET - World Cup 2026 Betting',
+    title: '$WCB | WORLDCUPBETS - World Cup 2026 Betting',
     description: 'The premium Solana football betting and prediction platform for World Cup 2026.',
     url: SITE_URL,
-    siteName: 'WORLDCUPBET',
+    siteName: 'WORLDCUPBETS',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '$WCB | WORLDCUPBET - World Cup 2026',
+    title: '$WCB | WORLDCUPBETS - World Cup 2026',
     description: 'Predict every match. Hold $WCB. Built for World Cup markets on Solana.',
-    creator: '@WCBLIVE',
+    creator: '@WorldCupBet2026',
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
 };

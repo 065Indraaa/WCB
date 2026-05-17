@@ -13,7 +13,7 @@ const sizeMap = {
 };
 
 /**
- * $WCB / WORLDCUPBET brand logo using Logo.jpg from /public.
+ * $WCB / WORLDCUPBETS brand logo using Logo.jpg from /public.
  */
 export function BrandLogo({ size = 'md', showText = true, className = '' }: BrandLogoProps) {
   const s = sizeMap[size];
@@ -32,7 +32,7 @@ export function BrandLogo({ size = 'md', showText = true, className = '' }: Bran
       >
         <Image
           src="/Logo.jpg"
-          alt="WORLDCUPBET logo"
+          alt="WORLDCUPBETS logo"
           width={s.img}
           height={s.img}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -45,7 +45,7 @@ export function BrandLogo({ size = 'md', showText = true, className = '' }: Bran
             $WCB
           </span>
           <span style={{ fontSize: s.subtitleSize, fontWeight: 800, color: '#F2B544', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 2 }}>
-            WorldCupBet
+            WorldCupBets
           </span>
         </div>
       )}

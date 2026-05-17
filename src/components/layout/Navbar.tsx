@@ -86,7 +86,7 @@ export function Navbar() {
           <Link
             href="/"
             style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}
-            aria-label="WORLDCUPBET home"
+            aria-label="WORLDCUPBETS home"
           >
             <BrandLogo size="md" />
           </Link>

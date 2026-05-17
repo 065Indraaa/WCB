@@ -3,10 +3,8 @@
 import Link from 'next/link';
 import { BrandLogo } from '@/components/shared/BrandLogo';
 
-const PUMPFUN  = process.env.NEXT_PUBLIC_PUMPFUN_URL  ?? 'https://pump.fun';
-const TWITTER  = process.env.NEXT_PUBLIC_TWITTER_URL  ?? 'https://twitter.com/WCBLIVE';
-const TELEGRAM = process.env.NEXT_PUBLIC_TELEGRAM_URL ?? 'https://t.me/wcblive';
-const DISCORD  = process.env.NEXT_PUBLIC_DISCORD_URL  ?? 'https://discord.gg/wcblive';
+const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
+const X_URL   = process.env.NEXT_PUBLIC_TWITTER_URL ?? 'https://x.com/WorldCupBet2026';
 
 const linkStyle: React.CSSProperties = {
   color: '#B3B3B3',
@@ -16,6 +14,15 @@ const linkStyle: React.CSSProperties = {
   transition: 'color 0.15s',
   display: 'inline-block',
 };
+
+/* Official X (Twitter) logo SVG */
+function XLogo({ size = 14 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
 
 export function Footer() {
   return (
@@ -48,47 +55,38 @@ export function Footer() {
             <p style={{ fontSize: '0.82rem', marginTop: '14px', lineHeight: 1.7, color: '#B3B3B3', maxWidth: 280 }}>
               A Solana-native football prediction and betting platform for World Cup 2026. Betting opens on June 11, 2026.
             </p>
-            {/* Social icons */}
+            {/* X social icon */}
             <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-              {[
-                { href: TWITTER,  label: 'Twitter/X', code: 'X' },
-                { href: TELEGRAM, label: 'Telegram',  code: 'TG' },
-                { href: DISCORD,  label: 'Discord',   code: 'DC' },
-              ].map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 34,
-                    height: 34,
-                    borderRadius: 8,
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    color: '#B3B3B3',
-                    transition: 'background 0.15s, color 0.15s, border-color 0.15s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(242,181,68,0.12)';
-                    e.currentTarget.style.color = '#F2B544';
-                    e.currentTarget.style.borderColor = 'rgba(242,181,68,0.28)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                    e.currentTarget.style.color = '#B3B3B3';
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-                  }}
-                >
-                  <span style={{ fontSize: '0.68rem', fontWeight: 900, letterSpacing: '0.04em' }}>
-                    {s.code}
-                  </span>
-                </a>
-              ))}
+              <a
+                href={X_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow WorldCupBets on X"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 34,
+                  height: 34,
+                  borderRadius: 8,
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: '#B3B3B3',
+                  transition: 'background 0.15s, color 0.15s, border-color 0.15s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.color = '#B3B3B3';
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                }}
+              >
+                <XLogo size={14} />
+              </a>
             </div>
           </div>
 
@@ -163,24 +161,18 @@ export function Footer() {
               Community
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {[
-                { href: TWITTER,  label: 'Twitter / X' },
-                { href: TELEGRAM, label: 'Telegram' },
-                { href: DISCORD,  label: 'Discord' },
-              ].map((s) => (
-                <li key={s.label}>
-                  <a
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={linkStyle}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = '#F2B544'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = '#B3B3B3'; }}
-                  >
-                    {s.label}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a
+                  href={X_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={linkStyle}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = '#F2B544'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = '#B3B3B3'; }}
+                >
+                  Follow on X
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -212,9 +204,8 @@ export function Footer() {
           }}
           className="sm:flex-row sm:items-center sm:justify-between"
         >
-          {/* Copyright */}
           <p style={{ fontSize: '0.68rem', color: '#374151', margin: 0 }}>
-            © 2026 WORLDCUPBET. All rights reserved.
+            © 2026 WORLDCUPBETS. All rights reserved.
           </p>
         </div>
       </div>

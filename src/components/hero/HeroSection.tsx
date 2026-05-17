@@ -135,7 +135,7 @@ export function HeroSection() {
               <WcbText tone="hero">Hold $WCB.</WcbText>
             </span>
             {' '}
-            <span style={{ color: '#FFD36B' }}>Own the board.</span>
+            <span style={{ color: '#FFD36B' }}>Win $SOL without risking your capital.</span>
           </motion.h1>
 
           {/* Subheadline */}
