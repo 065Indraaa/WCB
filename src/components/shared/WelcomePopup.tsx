@@ -315,41 +315,25 @@ export function WelcomePopup() {
               </div>
 
               {/* ── body ── */}
-              <div style={{ padding: '12px 12px 14px' }}>
+              <div style={{ padding: '10px 10px 12px' }}>
 
                 {/* MARKETS TAB */}
                 {tab === 'markets' && (
                   <>
                     <CountdownStrip />
 
-                    {/* match list */}
                     {FEATURED.map((m) => (
                       <MatchRow key={`${m.home.code}-${m.away.code}`} m={m} />
                     ))}
 
-                    {/* small disclaimer */}
-                    <p style={{ fontSize: '0.62rem', color: '#484F58', lineHeight: 1.5, margin: '8px 0 12px', padding: '6px 8px', borderRadius: 6, background: '#0B0B0B', border: '1px solid #161616' }}>
-                      Cast your prediction before the market opens. Picks are saved to your device — lock $WCB now to convert them into real betting credits on June 11.
+                    <p style={{ fontSize: '0.6rem', color: '#484F58', lineHeight: 1.45, margin: '6px 0 10px' }}>
+                      Pre-launch picks — lock $WCB to convert them into betting credits on June 11.
                     </p>
 
-                    {/* stats row */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, marginBottom: 12 }}>
-                      {[
-                        { v: '104', l: 'Markets' },
-                        { v: '12',  l: 'Groups' },
-                        { v: '48',  l: 'Nations' },
-                      ].map((s) => (
-                        <div key={s.l} style={{ padding: '8px 6px', borderRadius: 7, background: '#111111', border: '1px solid #2A2A2A', textAlign: 'center' }}>
-                          <p style={{ fontSize: '1.05rem', fontWeight: 900, color: '#F2B544', lineHeight: 1 }}>{s.v}</p>
-                          <p style={{ fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E6E6E', marginTop: 3 }}>{s.l}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <Link href="/matches" onClick={close} className="btn-primary" style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: 6, padding: '0.7rem' }}>
+                    <Link href="/matches" onClick={close} className="btn-primary" style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: 5, padding: '0.65rem' }}>
                       Pick All 104 Matches
                     </Link>
-                    <Link href="/lock" onClick={close} className="btn-secondary" style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '0.6rem', fontSize: '0.8rem' }}>
+                    <Link href="/lock" onClick={close} className="btn-secondary" style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '0.55rem', fontSize: '0.78rem' }}>
                       Lock $WCB — Get Early Credits
                     </Link>
                   </>
