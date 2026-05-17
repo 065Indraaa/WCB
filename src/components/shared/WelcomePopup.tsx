@@ -108,8 +108,6 @@ function MatchRow({ m }: { m: typeof FEATURED[number] }) {
     castPrediction(m.id, choice, m.home.rank, m.away.rank);
   }
 
-  const totalVotes = stats.total;
-
   return (
     <div style={{ borderRadius: 8, border: '1px solid #1E1E1E', background: '#0B0B0B', overflow: 'hidden', marginBottom: 5 }}>
       {/* meta strip */}
@@ -343,9 +341,9 @@ export function WelcomePopup() {
                 {tab === 'lock' && (
                   <>
                     {/* rate cards */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 12 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 7, marginBottom: 10 }}>
                       {/* early */}
-                      <div style={{ padding: '12px 10px', borderRadius: 10, background: 'rgba(242,181,68,0.07)', border: '1px solid rgba(242,181,68,0.28)', textAlign: 'center' }}>
+                      <div style={{ padding: '10px 8px', borderRadius: 10, background: 'rgba(242,181,68,0.07)', border: '1px solid rgba(242,181,68,0.28)', textAlign: 'center' }}>
                         <p style={{ fontSize: '0.58rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#F2B544', marginBottom: 6 }}>
                           Now — Jun 10
                         </p>
@@ -361,7 +359,7 @@ export function WelcomePopup() {
                       </div>
 
                       {/* post-launch */}
-                      <div style={{ padding: '12px 10px', borderRadius: 10, background: '#111111', border: '1px solid #2A2A2A', textAlign: 'center', opacity: 0.65 }}>
+                      <div style={{ padding: '10px 8px', borderRadius: 10, background: '#111111', border: '1px solid #2A2A2A', textAlign: 'center', opacity: 0.65 }}>
                         <p style={{ fontSize: '0.58rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6E6E6E', marginBottom: 6 }}>
                           Jun 11+
                         </p>
@@ -376,8 +374,8 @@ export function WelcomePopup() {
                       </div>
                     </div>
 
-                    {/* what you get — plain rows, no emoji overload */}
-                    <div style={{ borderRadius: 10, border: '1px solid #1E1E1E', overflow: 'hidden', marginBottom: 12 }}>
+                    {/* spec table */}
+                    <div style={{ borderRadius: 8, border: '1px solid #1E1E1E', overflow: 'hidden', marginBottom: 10 }}>
                       {[
                         { label: 'Lock term',        value: `${FIXED_LOCK_DAYS} days fixed` },
                         { label: 'Lock provider',    value: 'Streamflow Finance' },
@@ -387,32 +385,25 @@ export function WelcomePopup() {
                       ].map((row, i, arr) => (
                         <div
                           key={row.label}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '8px 12px',
-                            borderBottom: i < arr.length - 1 ? '1px solid #161616' : 'none',
-                            background: i % 2 === 0 ? '#0D0D0D' : '#0B0B0B',
-                          }}
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', borderBottom: i < arr.length - 1 ? '1px solid #161616' : 'none', background: i % 2 === 0 ? '#0D0D0D' : '#0B0B0B' }}
                         >
-                          <span style={{ fontSize: '0.72rem', color: '#6E6E6E', fontWeight: 600 }}>{row.label}</span>
-                          <span style={{ fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 800 }}>{row.value}</span>
+                          <span style={{ fontSize: '0.7rem', color: '#6E6E6E', fontWeight: 600 }}>{row.label}</span>
+                          <span style={{ fontSize: '0.7rem', color: '#FFFFFF', fontWeight: 800 }}>{row.value}</span>
                         </div>
                       ))}
                     </div>
 
                     {/* prize pool note */}
-                    <div style={{ padding: '9px 12px', borderRadius: 8, background: 'rgba(153,69,255,0.07)', border: '1px solid rgba(153,69,255,0.2)', marginBottom: 12 }}>
-                      <p style={{ fontSize: '0.72rem', color: '#DCCBFF', lineHeight: 1.55 }}>
-                        <strong style={{ color: '#BFA7FF' }}>Prize pool:</strong> funded by $WCB creator fees from trading volume. Holders and lockers share rewards when markets go live.
+                    <div style={{ padding: '7px 10px', borderRadius: 7, background: 'rgba(153,69,255,0.07)', border: '1px solid rgba(153,69,255,0.2)', marginBottom: 10 }}>
+                      <p style={{ fontSize: '0.7rem', color: '#DCCBFF', lineHeight: 1.5 }}>
+                        <strong style={{ color: '#BFA7FF' }}>Prize pool:</strong> funded by $WCB creator fees. Holders and lockers share rewards when markets go live.
                       </p>
                     </div>
 
-                    <Link href="/lock" onClick={close} className="btn-primary" style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: 6, padding: '0.7rem' }}>
+                    <Link href="/lock" onClick={close} className="btn-primary" style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: 5, padding: '0.65rem' }}>
                       Lock $WCB — Earn Early Credits
                     </Link>
-                    <a href={PUMPFUN} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '0.6rem', fontSize: '0.8rem' }}>
+                    <a href={PUMPFUN} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '0.55rem', fontSize: '0.78rem' }}>
                       Buy $WCB on Pump.fun
                     </a>
                   </>
