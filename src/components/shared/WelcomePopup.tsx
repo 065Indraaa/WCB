@@ -19,10 +19,8 @@ const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
 
 /* ─── featured matches — matchId must match matches2026 ids ─── */
 const FEATURED = [
-  { id: 1,  home: { name: 'Mexico',    code: 'mx', rank: 16 }, away: { name: 'S. Korea', code: 'kr', rank: 22 }, group: 'Group A', kickoff: 'Jun 11 · 19:00' },
-  { id: 49, home: { name: 'Argentina', code: 'ar', rank: 1  }, away: { name: 'Algeria',  code: 'dz', rank: 52 }, group: 'Group J', kickoff: 'Jun 12 · 16:00' },
-  { id: 9,  home: { name: 'Brazil',    code: 'br', rank: 5  }, away: { name: 'Morocco',  code: 'ma', rank: 14 }, group: 'Group C', kickoff: 'Jun 13 · 19:00' },
-  { id: 45, home: { name: 'France',    code: 'fr', rank: 4  }, away: { name: 'Senegal',  code: 'sn', rank: 20 }, group: 'Group I', kickoff: 'Jun 14 · 22:00' },
+  { id: 1,  home: { name: 'Mexico',    code: 'mx', rank: 16 }, away: { name: 'S. Korea', code: 'kr', rank: 22 }, group: 'Group A', kickoff: 'Jun 11' },
+  { id: 49, home: { name: 'Argentina', code: 'ar', rank: 1  }, away: { name: 'Algeria',  code: 'dz', rank: 52 }, group: 'Group J', kickoff: 'Jun 12' },
 ] as const;
 
 /* ─── vote button ────────────────────────────────────────────── */
@@ -113,36 +111,32 @@ function MatchRow({ m }: { m: typeof FEATURED[number] }) {
   const totalVotes = stats.total;
 
   return (
-    <div style={{ borderRadius: 8, border: '1px solid #1E1E1E', background: '#0B0B0B', overflow: 'hidden', marginBottom: 6 }}>
+    <div style={{ borderRadius: 8, border: '1px solid #1E1E1E', background: '#0B0B0B', overflow: 'hidden', marginBottom: 5 }}>
       {/* meta strip */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '3px 10px', borderBottom: '1px solid #161616' }}>
-        <span style={{ fontSize: '0.58rem', fontWeight: 700, color: '#484F58', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-          {m.group}
-        </span>
-        <span style={{ fontSize: '0.58rem', color: '#484F58' }}>{m.kickoff} UTC</span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '2px 8px', borderBottom: '1px solid #161616' }}>
+        <span style={{ fontSize: '0.56rem', fontWeight: 700, color: '#484F58', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{m.group}</span>
+        <span style={{ fontSize: '0.56rem', color: '#484F58' }}>{m.kickoff}</span>
       </div>
 
-      <div style={{ padding: '8px 10px' }}>
+      <div style={{ padding: '6px 8px' }}>
         {/* teams */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
           <TeamFlag code={m.home.code} name={m.home.name} size="xs" />
-          <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#FFFFFF', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#FFFFFF', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {m.home.name}
           </span>
-          <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#484F58', padding: '1px 6px', borderRadius: 3, background: '#111111', border: '1px solid #1E1E1E', flexShrink: 0 }}>
-            vs
-          </span>
-          <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#FFFFFF', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'right' }}>
+          <span style={{ fontSize: '0.58rem', fontWeight: 700, color: '#484F58', padding: '1px 5px', borderRadius: 3, background: '#111111', border: '1px solid #1E1E1E', flexShrink: 0 }}>vs</span>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#FFFFFF', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'right' }}>
             {m.away.name}
           </span>
           <TeamFlag code={m.away.code} name={m.away.name} size="xs" />
         </div>
 
         {/* vote buttons */}
-        <div style={{ display: 'flex', gap: 5, marginBottom: 7 }}>
-          <VoteBtn choice="home"  label={m.home.name.split(' ')[0]} pct={pct.home} selected={stats.myChoice === 'home'} color="#F2B544" onVote={vote} />
-          <VoteBtn choice="draw"  label="Draw"                       pct={pct.draw} selected={stats.myChoice === 'draw'} color="#B3B3B3" onVote={vote} />
-          <VoteBtn choice="away"  label={m.away.name.split(' ')[0]} pct={pct.away} selected={stats.myChoice === 'away'} color="#9945FF" onVote={vote} />
+        <div style={{ display: 'flex', gap: 4, marginBottom: 5 }}>
+          <VoteBtn choice="home" label={m.home.name.split(' ')[0]} pct={pct.home} selected={stats.myChoice === 'home'} color="#F2B544" onVote={vote} />
+          <VoteBtn choice="draw" label="Draw"                      pct={pct.draw} selected={stats.myChoice === 'draw'} color="#B3B3B3" onVote={vote} />
+          <VoteBtn choice="away" label={m.away.name.split(' ')[0]} pct={pct.away} selected={stats.myChoice === 'away'} color="#9945FF" onVote={vote} />
         </div>
 
         {/* sentiment bar */}
@@ -152,17 +146,9 @@ function MatchRow({ m }: { m: typeof FEATURED[number] }) {
           <motion.div style={{ background: '#9945FF', height: '100%' }} initial={false} animate={{ width: `${pct.away}%` }} transition={{ duration: 0.5, ease: 'easeOut' }} />
         </div>
 
-        {/* vote count + picked label */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
-          <span style={{ fontSize: '0.58rem', color: '#484F58', fontVariantNumeric: 'tabular-nums' }}>
-            {totalVotes.toLocaleString()} community picks
-          </span>
-          {stats.myChoice && (
-            <span style={{ fontSize: '0.58rem', fontWeight: 700, color: '#14F195' }}>
-              ✓ picked
-            </span>
-          )}
-        </div>
+        {stats.myChoice && (
+          <p style={{ fontSize: '0.56rem', fontWeight: 700, color: '#14F195', marginTop: 3, textAlign: 'right' }}>✓ picked</p>
+        )}
       </div>
     </div>
   );
