@@ -135,7 +135,15 @@ export function HeroSection() {
               <WcbText tone="hero">Hold $WCB.</WcbText>
             </span>
             {' '}
-            <span style={{ color: '#FFD36B' }}>Win $SOL without risking your capital.</span>
+            <span style={{ color: '#FFD36B' }}>Win{' '}
+              <span style={{
+                background: 'linear-gradient(135deg, #9945FF 0%, #14F195 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}>$SOL</span>
+              {' '}without risking your capital.
+            </span>
           </motion.h1>
 
           {/* Subheadline */}
