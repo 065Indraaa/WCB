@@ -1,96 +1,119 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/shared/BrandLogo';
 import { TeamFlag } from '@/components/shared/TeamFlag';
 import { EARLY_TOKENS_PER_CREDIT, FIXED_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
+import {
+  getPrediction,
+  castPrediction,
+  subscribe,
+  toPercent,
+  type PredictionChoice,
+} from '@/lib/predictions';
 
 const STORAGE_KEY = 'wcb.welcome.v2';
 const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
 
-/* ─── featured matches data ─────────────────────────────────── */
+/* ─── featured matches — matchId must match matches2026 ids ─── */
 const FEATURED = [
-  {
-    home: { name: 'Mexico',    code: 'mx', rank: 16 },
-    away: { name: 'S. Korea',  code: 'kr', rank: 22 },
-    h: '2.10', d: '3.40', a: '3.20',
-    group: 'Group A', kickoff: 'Jun 11 · 19:00',
-  },
-  {
-    home: { name: 'Argentina', code: 'ar', rank: 1  },
-    away: { name: 'Algeria',   code: 'dz', rank: 52 },
-    h: '1.38', d: '4.80', a: '7.50',
-    group: 'Group J', kickoff: 'Jun 12 · 16:00',
-  },
-  {
-    home: { name: 'Brazil',    code: 'br', rank: 5  },
-    away: { name: 'Morocco',   code: 'ma', rank: 14 },
-    h: '1.72', d: '3.90', a: '4.60',
-    group: 'Group C', kickoff: 'Jun 13 · 19:00',
-  },
-  {
-    home: { name: 'France',    code: 'fr', rank: 4  },
-    away: { name: 'Senegal',   code: 'sn', rank: 20 },
-    h: '1.55', d: '4.20', a: '5.80',
-    group: 'Group I', kickoff: 'Jun 14 · 22:00',
-  },
+  { id: 1,  home: { name: 'Mexico',    code: 'mx', rank: 16 }, away: { name: 'S. Korea', code: 'kr', rank: 22 }, group: 'Group A', kickoff: 'Jun 11 · 19:00' },
+  { id: 49, home: { name: 'Argentina', code: 'ar', rank: 1  }, away: { name: 'Algeria',  code: 'dz', rank: 52 }, group: 'Group J', kickoff: 'Jun 12 · 16:00' },
+  { id: 9,  home: { name: 'Brazil',    code: 'br', rank: 5  }, away: { name: 'Morocco',  code: 'ma', rank: 14 }, group: 'Group C', kickoff: 'Jun 13 · 19:00' },
+  { id: 45, home: { name: 'France',    code: 'fr', rank: 4  }, away: { name: 'Senegal',  code: 'sn', rank: 20 }, group: 'Group I', kickoff: 'Jun 14 · 22:00' },
 ] as const;
 
-/* ─── single odds button ─────────────────────────────────────── */
-function OddsBtn({
-  side,
-  odds,
-  highlight,
+/* ─── vote button ────────────────────────────────────────────── */
+function VoteBtn({
+  choice,
+  label,
+  pct,
+  selected,
+  color,
+  onVote,
 }: {
-  side: '1' | 'X' | '2';
-  odds: string;
-  highlight?: boolean;
+  choice: PredictionChoice;
+  label: string;
+  pct: number;
+  selected: boolean;
+  color: string;
+  onVote: (c: PredictionChoice) => void;
 }) {
-  const [hovered, setHovered] = useState(false);
-  const active = hovered || highlight;
   return (
     <button
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onClick={() => onVote(choice)}
+      aria-pressed={selected}
+      aria-label={`Vote ${label} — ${pct}%`}
       style={{
         flex: 1,
+        position: 'relative',
+        overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: 2,
-        padding: '6px 4px',
-        borderRadius: 6,
-        border: `1px solid ${active ? 'rgba(242,181,68,0.45)' : '#2A2A2A'}`,
-        background: active ? 'rgba(242,181,68,0.1)' : '#111111',
+        padding: '7px 4px',
+        borderRadius: 7,
+        border: `1px solid ${selected ? color : '#2A2A2A'}`,
+        background: '#111111',
         cursor: 'pointer',
-        transition: 'all 0.12s ease',
+        transition: 'border-color 0.15s',
         minWidth: 0,
+        boxShadow: selected ? `0 0 0 2px ${color}22` : 'none',
       }}
     >
-      <span style={{ fontSize: '0.56rem', fontWeight: 700, color: active ? 'rgba(255,211,107,0.7)' : '#6E6E6E', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-        {side}
+      {/* fill bar behind content */}
+      <motion.div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: `${color}18`,
+          transformOrigin: 'left',
+        }}
+        initial={false}
+        animate={{ scaleX: pct / 100 }}
+        transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+      />
+      {/* label */}
+      <span style={{ position: 'relative', fontSize: '0.56rem', fontWeight: 700, color: selected ? color : '#6E6E6E', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        {label}
       </span>
-      <span style={{ fontSize: '0.9rem', fontWeight: 900, color: active ? '#FFD36B' : '#FFFFFF', fontVariantNumeric: 'tabular-nums' }}>
-        {odds}
+      {/* pct */}
+      <span style={{ position: 'relative', fontSize: '0.88rem', fontWeight: 900, color: selected ? color : '#FFFFFF', fontVariantNumeric: 'tabular-nums' }}>
+        {pct}%
       </span>
     </button>
   );
 }
 
-/* ─── match row ──────────────────────────────────────────────── */
+/* ─── match row with live vote state ────────────────────────── */
 function MatchRow({ m }: { m: typeof FEATURED[number] }) {
+  const [stats, setStats] = useState(() =>
+    getPrediction(m.id, m.home.rank, m.away.rank)
+  );
+
+  const refresh = useCallback(() => {
+    setStats(getPrediction(m.id, m.home.rank, m.away.rank));
+  }, [m.id, m.home.rank, m.away.rank]);
+
+  useEffect(() => {
+    refresh();
+    return subscribe(refresh);
+  }, [refresh]);
+
+  const pct = toPercent(stats);
+
+  function vote(choice: PredictionChoice) {
+    castPrediction(m.id, choice, m.home.rank, m.away.rank);
+  }
+
+  const totalVotes = stats.total;
+
   return (
-    <div
-      style={{
-        borderRadius: 8,
-        border: '1px solid #1E1E1E',
-        background: '#0B0B0B',
-        overflow: 'hidden',
-        marginBottom: 6,
-      }}
-    >
+    <div style={{ borderRadius: 8, border: '1px solid #1E1E1E', background: '#0B0B0B', overflow: 'hidden', marginBottom: 6 }}>
       {/* meta strip */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '3px 10px', borderBottom: '1px solid #161616' }}>
         <span style={{ fontSize: '0.58rem', fontWeight: 700, color: '#484F58', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
@@ -100,13 +123,13 @@ function MatchRow({ m }: { m: typeof FEATURED[number] }) {
       </div>
 
       <div style={{ padding: '8px 10px' }}>
-        {/* teams row */}
+        {/* teams */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
           <TeamFlag code={m.home.code} name={m.home.name} size="xs" />
           <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#FFFFFF', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {m.home.name}
           </span>
-          <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#484F58', padding: '1px 6px', borderRadius: 3, background: '#111111', border: '1px solid #1E1E1E', flexShrink: 0 }}>
+          <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#484F58', padding: '1px 6px', borderRadius: 3, background: '#111111', border: '1px solid #1E1E1E', flexShrink: 0 }}>
             vs
           </span>
           <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#FFFFFF', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'right' }}>
@@ -115,11 +138,30 @@ function MatchRow({ m }: { m: typeof FEATURED[number] }) {
           <TeamFlag code={m.away.code} name={m.away.name} size="xs" />
         </div>
 
-        {/* odds row */}
-        <div style={{ display: 'flex', gap: 5 }}>
-          <OddsBtn side="1" odds={m.h} />
-          <OddsBtn side="X" odds={m.d} />
-          <OddsBtn side="2" odds={m.a} />
+        {/* vote buttons */}
+        <div style={{ display: 'flex', gap: 5, marginBottom: 7 }}>
+          <VoteBtn choice="home"  label={m.home.name.split(' ')[0]} pct={pct.home} selected={stats.myChoice === 'home'} color="#F2B544" onVote={vote} />
+          <VoteBtn choice="draw"  label="Draw"                       pct={pct.draw} selected={stats.myChoice === 'draw'} color="#B3B3B3" onVote={vote} />
+          <VoteBtn choice="away"  label={m.away.name.split(' ')[0]} pct={pct.away} selected={stats.myChoice === 'away'} color="#9945FF" onVote={vote} />
+        </div>
+
+        {/* sentiment bar */}
+        <div style={{ height: 3, borderRadius: 999, overflow: 'hidden', background: '#2A2A2A', display: 'flex' }}>
+          <motion.div style={{ background: '#F2B544', height: '100%' }} initial={false} animate={{ width: `${pct.home}%` }} transition={{ duration: 0.5, ease: 'easeOut' }} />
+          <motion.div style={{ background: '#555555', height: '100%' }} initial={false} animate={{ width: `${pct.draw}%` }} transition={{ duration: 0.5, ease: 'easeOut' }} />
+          <motion.div style={{ background: '#9945FF', height: '100%' }} initial={false} animate={{ width: `${pct.away}%` }} transition={{ duration: 0.5, ease: 'easeOut' }} />
+        </div>
+
+        {/* vote count + picked label */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
+          <span style={{ fontSize: '0.58rem', color: '#484F58', fontVariantNumeric: 'tabular-nums' }}>
+            {totalVotes.toLocaleString()} community picks
+          </span>
+          {stats.myChoice && (
+            <span style={{ fontSize: '0.58rem', fontWeight: 700, color: '#14F195' }}>
+              ✓ picked
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -148,7 +190,7 @@ function CountdownStrip() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 8, background: '#111111', border: '1px solid #2A2A2A', marginBottom: 10 }}>
       <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#EF4444', boxShadow: '0 0 6px rgba(239,68,68,0.6)', flexShrink: 0, display: 'inline-block', animation: 'live-pulse 1.4s ease-in-out infinite' }} aria-hidden="true" />
-      <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#6E6E6E' }}>Markets open in</span>
+      <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#6E6E6E' }}>Betting opens in</span>
       <span style={{ fontSize: '0.72rem', fontWeight: 900, color: '#FFD36B', fontVariantNumeric: 'tabular-nums', marginLeft: 'auto' }}>
         {diff.d}d {diff.h}h {diff.m}m
       </span>
@@ -262,7 +304,7 @@ export function WelcomePopup() {
               {/* ── tabs ── */}
               <div style={{ display: 'flex', background: '#0B0B0B', borderBottom: '1px solid #1A1A1A' }}>
                 {([
-                  { id: 'markets', label: 'Featured Markets' },
+                  { id: 'markets', label: 'Community Picks' },
                   { id: 'lock',    label: 'Early Lock Bonus' },
                 ] as const).map((t) => (
                   <button
@@ -301,7 +343,7 @@ export function WelcomePopup() {
 
                     {/* small disclaimer */}
                     <p style={{ fontSize: '0.62rem', color: '#484F58', lineHeight: 1.5, margin: '8px 0 12px', padding: '6px 8px', borderRadius: 6, background: '#0B0B0B', border: '1px solid #161616' }}>
-                      Prices are indicative pre-launch sentiment. Real money markets open June 11, 2026. Lock $WCB now to secure your betting credits at the early rate.
+                      Cast your prediction before the market opens. Picks are saved to your device — lock $WCB now to convert them into real betting credits on June 11.
                     </p>
 
                     {/* stats row */}
@@ -319,7 +361,7 @@ export function WelcomePopup() {
                     </div>
 
                     <Link href="/matches" onClick={close} className="btn-primary" style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: 6, padding: '0.7rem' }}>
-                      Browse All Matches
+                      Pick All 104 Matches
                     </Link>
                     <Link href="/lock" onClick={close} className="btn-secondary" style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '0.6rem', fontSize: '0.8rem' }}>
                       Lock $WCB — Get Early Credits
