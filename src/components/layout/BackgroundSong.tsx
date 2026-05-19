@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function BackgroundSong() {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [muted, setMuted] = useState(false);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -42,8 +43,20 @@ export function BackgroundSong() {
     window.addEventListener('touchend', playSong);
     window.addEventListener('click', playSong);
 
+    // Listen for toggle events from the Navbar mute button
+    const handleToggle = () => {
+      setMuted((prev) => {
+        const next = !prev;
+        if (audio) audio.muted = next;
+        return next;
+      });
+    };
+
+    window.addEventListener('wcb:toggleAudio', handleToggle);
+
     return () => {
       removeFallbackListeners();
+      window.removeEventListener('wcb:toggleAudio', handleToggle);
     };
   }, []);
 
@@ -55,6 +68,7 @@ export function BackgroundSong() {
       loop
       preload="auto"
       playsInline
+      muted={muted}
       aria-hidden="true"
       style={{
         position: 'absolute',

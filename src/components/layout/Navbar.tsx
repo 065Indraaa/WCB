@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BrandLogo } from '@/components/shared/BrandLogo';
@@ -33,6 +33,54 @@ const MOBILE_NAV: NavLink[] = [
   { label: 'Lock',    href: '/lock',        icon: 'lock' },
   { label: 'Board',   href: '/leaderboard', icon: 'leaderboard' },
 ];
+
+function MuteButton() {
+  const [muted, setMuted] = useState(false);
+
+  const toggle = useCallback(() => {
+    setMuted((prev) => !prev);
+    window.dispatchEvent(new CustomEvent('wcb:toggleAudio'));
+  }, []);
+
+  return (
+    <button
+      onClick={toggle}
+      aria-label={muted ? 'Unmute background music' : 'Mute background music'}
+      title={muted ? 'Unmute music' : 'Mute music'}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 32,
+        height: 32,
+        borderRadius: 6,
+        background: muted ? 'rgba(242,181,68,0.1)' : 'transparent',
+        border: '1px solid',
+        borderColor: muted ? 'rgba(242,181,68,0.3)' : 'rgba(255,255,255,0.1)',
+        cursor: 'pointer',
+        transition: 'background 0.15s, border-color 0.15s',
+        flexShrink: 0,
+        color: muted ? '#F2B544' : '#8A8A8A',
+      }}
+    >
+      {muted ? (
+        // Muted icon — speaker with X
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+          <line x1="23" y1="9" x2="17" y2="15" />
+          <line x1="17" y1="9" x2="23" y2="15" />
+        </svg>
+      ) : (
+        // Playing icon — speaker with waves
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+        </svg>
+      )}
+    </button>
+  );
+}
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -164,6 +212,7 @@ export function Navbar() {
           </ul>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+            <MuteButton />
             <a
               href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
               target="_blank"
