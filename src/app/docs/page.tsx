@@ -121,6 +121,14 @@ const CREDIT_RULES = [
     label: 'Redeem status',
     value: 'Credit redeem/withdraw is coming soon and is not active yet.',
   },
+  {
+    label: 'On-chain verification',
+    value: 'Lock data is read directly from Streamflow on-chain records. No mock data or manual balances are used.',
+  },
+  {
+    label: 'Withdraw rate',
+    value: 'The exact credit-to-withdraw conversion rate and eligibility rules will be published before the redeem flow goes live.',
+  },
 ];
 
 const BETTING_FLOW = [

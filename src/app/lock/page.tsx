@@ -103,6 +103,28 @@ export default function LockPage() {
         </button>
       </div>
 
+      {/* Trust note: real on-chain data + coming-soon withdraw rate */}
+      <div
+        style={{
+          borderRadius: 12,
+          border: '1px solid rgba(20,241,149,0.22)',
+          background: 'rgba(20,241,149,0.06)',
+          padding: '1rem 1.25rem',
+          marginBottom: '2.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          flexWrap: 'wrap',
+        }}
+      >
+        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#14F195', flexShrink: 0, boxShadow: '0 0 8px rgba(20,241,149,0.4)' }} />
+        <p style={{ margin: 0, fontSize: '0.85rem', color: '#B3B3B3', lineHeight: 1.6 }}>
+          <strong style={{ color: '#FFFFFF' }}>Real on-chain data.</strong>{' '}
+          Lock records are read directly from Streamflow — no mock balances or manual entries.{' '}
+          Credit withdraw rate and redeem rules will be published before the feature goes live.
+        </p>
+      </div>
+
       {/* Main 3-column layout */}
       <div
         className="lock-main-grid"
