@@ -1,4 +1,4 @@
-export const WCB_MINT = '';
+export const WCB_MINT = '3EMCfcWnWrCSsZUfMSCg815bS7miZAizuEerdWvzpump';
 export const DEFAULT_WCB_MINT = WCB_MINT;
 export const WCB_TOKEN_DECIMALS = 6;
 export const WCB_STREAMFLOW_LOCK_DASHBOARD_URL =

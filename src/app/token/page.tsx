@@ -4,11 +4,11 @@ import { formatPrice, formatMarketCap } from '@/lib/utils/formatters';
 import { useTokenMetrics } from '@/lib/hooks/useTokenMetrics';
 import { PumpFunBadge } from '@/components/shared/PumpFunBadge';
 import { BrandLogo } from '@/components/shared/BrandLogo';
+import { TokenDexscreenerChart } from '@/components/token/TokenDexscreenerChart';
 import { WCB_MINT } from '@/lib/tokenConfig';
 import { FIXED_LOCK_DAYS } from '@/lib/lock';
 
 const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? `https://pump.fun/coin/${WCB_MINT}`;
-const JUPITER = process.env.NEXT_PUBLIC_JUPITER_URL ?? `https://jup.ag/swap/SOL-${WCB_MINT}`;
 
 export default function TokenPage() {
   const { data: metrics, isLoading, error, refetch } = useTokenMetrics();
@@ -78,14 +78,16 @@ export default function TokenPage() {
             <a href={PUMPFUN} target="_blank" rel="noopener noreferrer" className="btn-primary flex-1">
               Buy $WCB on Pump.fun
             </a>
-            <a href={JUPITER} target="_blank" rel="noopener noreferrer" className="btn-secondary flex-1">
-              Swap on Jupiter
-            </a>
             <button onClick={() => void refetch()} className="btn-secondary flex-1">
               Refresh Metrics
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Live Dexscreener Chart */}
+      <div className="mb-8">
+        <TokenDexscreenerChart tokenAddress={WCB_MINT} />
       </div>
 
       {/* Token specs */}

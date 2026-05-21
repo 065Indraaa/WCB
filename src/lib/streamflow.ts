@@ -6,6 +6,7 @@
  */
 
 import { calculateCredits } from '@/lib/lock';
+import { WCB_STREAMFLOW_LOCK_DASHBOARD_URL } from '@/lib/tokenConfig';
 
 export interface StreamflowLock {
   id: string;
@@ -53,6 +54,9 @@ export function aggregateLockStats(locks: StreamflowLock[]) {
 
 /**
  * Build a Streamflow lock URL pre-filled with $WCB parameters.
+ * Uses the WCB token dashboard as the base so the user lands on the
+ * correct token page; extra query params are appended for pre-fill
+ * when Streamflow supports them.
  */
 export function buildStreamflowLockUrl(params: {
   mint: string;
@@ -60,13 +64,11 @@ export function buildStreamflowLockUrl(params: {
   durationDays: number;
   senderWallet: string;
 }): string {
-  const base = 'https://app.streamflow.finance/create/vesting';
   const decimals = 6;
   const amountRaw = Math.floor(params.amount * Math.pow(10, decimals));
   const endTs = Math.floor(Date.now() / 1000) + params.durationDays * 86400;
 
   const q = new URLSearchParams({
-    mint: params.mint,
     amount: amountRaw.toString(),
     end: endTs.toString(),
     cancelableBySender: 'false',
@@ -74,5 +76,5 @@ export function buildStreamflowLockUrl(params: {
     recipient: params.senderWallet,
   });
 
-  return `${base}?${q.toString()}`;
+  return `${WCB_STREAMFLOW_LOCK_DASHBOARD_URL}&${q.toString()}`;
 }
