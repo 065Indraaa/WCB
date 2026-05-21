@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { formatCredits, formatTokenAmount } from '@/lib/lock';
 import { buildStreamflowLockUrl } from '@/lib/streamflow';
-import { WCB_MINT } from '@/lib/tokenConfig';
+import { WCB_MINT, WCB_STREAMFLOW_LOCK_DASHBOARD_URL } from '@/lib/tokenConfig';
 
 interface LockConfirmModalProps {
   isOpen: boolean;
@@ -44,7 +44,7 @@ export function LockConfirmModal({ isOpen, onClose, amount, days, credits }: Loc
         durationDays: days,
         senderWallet: publicKey.toBase58(),
       })
-    : 'https://app.streamflow.finance';
+    : WCB_STREAMFLOW_LOCK_DASHBOARD_URL;
 
   return (
     <AnimatePresence>
