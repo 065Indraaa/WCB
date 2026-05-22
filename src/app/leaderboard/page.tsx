@@ -129,11 +129,15 @@ export default function LeaderboardPage() {
     <section className="max-w-5xl mx-auto px-4 md:px-6 py-12">
       {/* Header — static, safe to SSR */}
       <div className="premium-panel" style={{ padding: '1.45rem', borderRadius: 16, marginBottom: '1.5rem' }}>
-        <p className="section-eyebrow mb-2">Ranking Center</p>
-        <h1 className="text-4xl sm:text-5xl font-black mb-3" style={{ color: '#FFFFFF' }}>
+        <p className="section-eyebrow mb-2" suppressHydrationWarning>Ranking Center</p>
+        <h1
+          className="text-4xl sm:text-5xl font-black mb-3"
+          style={{ color: '#FFFFFF' }}
+          suppressHydrationWarning
+        >
           $WCB Leaderboard
         </h1>
-        <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
+        <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }} suppressHydrationWarning>
           Top 10 holders by balance and top 10 lockers by locked amount. Tier up from Bronze to Platinum and collect badges.
         </p>
       </div>
