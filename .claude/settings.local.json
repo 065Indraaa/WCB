@@ -20,7 +20,10 @@
       "Bash(curl -s -o /tmp/lb-now.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3001/leaderboard)",
       "Bash(curl -s -o /tmp/lb-after.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3001/leaderboard)",
       "Bash(tee /tmp/build.log)",
-      "Bash(curl -s -o /tmp/lb-final.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3001/leaderboard)"
+      "Bash(curl -s -o /tmp/lb-final.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3001/leaderboard)",
+      "Bash(curl -s http://localhost:3001/api/locks/community)",
+      "Bash(curl -s \"http://localhost:3001/api/locks/community?debug=1\")",
+      "Bash(python -m json.tool)"
     ]
   }
 }

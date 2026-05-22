@@ -56,7 +56,8 @@ function isActiveTokenLock(stream: Stream, now: number) {
   );
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const debug = new URL(request.url).searchParams.get('debug') === '1';
   try {
     const rpcUrl = buildHeliusRpcUrl();
     const client = new SolanaStreamClient(rpcUrl);
@@ -64,15 +65,56 @@ export async function GET() {
     const now = Math.floor(Date.now() / 1000);
     const byWallet = new Map<string, WalletLocks>();
     let totalActiveLocks = 0;
+    const skipReasons = {
+      notActiveTokenLock: 0,
+      zeroAmount: 0,
+      notCreditEligible: 0,
+      kept: 0,
+    };
+    const sampleSkipped: Array<{
+      id: string;
+      reason: string;
+      mint: string;
+      type: string;
+      closed: boolean;
+      canceledAt: number;
+      end: number;
+      start: number;
+      createdAt: number;
+      durationDays: number;
+      amountRaw: string;
+    }> = [];
 
     for (const item of streams) {
       const stream = item.account;
-      if (!isActiveTokenLock(stream, now)) continue;
+      const id = item.publicKey.toBase58();
+
+      if (!isActiveTokenLock(stream, now)) {
+        skipReasons.notActiveTokenLock += 1;
+        if (debug && sampleSkipped.length < 5) {
+          sampleSkipped.push({
+            id,
+            reason: 'notActiveTokenLock',
+            mint: stream.mint,
+            type: String(stream.type),
+            closed: stream.closed,
+            canceledAt: stream.canceledAt,
+            end: stream.end,
+            start: stream.start,
+            createdAt: stream.createdAt,
+            durationDays: Math.round((stream.end - stream.start) / 86400),
+            amountRaw: stream.depositedAmount?.toString?.() ?? '',
+          });
+        }
+        continue;
+      }
 
       const amount = lockedTokenAmount(stream);
-      if (!Number.isFinite(amount) || amount <= 0) continue;
+      if (!Number.isFinite(amount) || amount <= 0) {
+        skipReasons.zeroAmount += 1;
+        continue;
+      }
 
-      const id = item.publicKey.toBase58();
       const wallet = stream.sender;
       const schedule = {
         createdAt: stream.createdAt,
@@ -80,8 +122,27 @@ export async function GET() {
         cliff: stream.cliff,
         end: stream.end,
       };
-      if (!isCreditEligibleLockSchedule(schedule)) continue;
+      if (!isCreditEligibleLockSchedule(schedule)) {
+        skipReasons.notCreditEligible += 1;
+        if (debug && sampleSkipped.length < 5) {
+          sampleSkipped.push({
+            id,
+            reason: 'notCreditEligible',
+            mint: stream.mint,
+            type: String(stream.type),
+            closed: stream.closed,
+            canceledAt: stream.canceledAt,
+            end: stream.end,
+            start: stream.start,
+            createdAt: stream.createdAt,
+            durationDays: Math.round((stream.end - stream.start) / 86400),
+            amountRaw: stream.depositedAmount?.toString?.() ?? '',
+          });
+        }
+        continue;
+      }
 
+      skipReasons.kept += 1;
       totalActiveLocks += 1;
       const startTs = getLockCreditStartTimestamp(schedule);
       const endTs = getLockUnlockTimestamp(schedule);
@@ -148,6 +209,15 @@ export async function GET() {
       mint: WCB_MINT,
       streamflowDashboardUrl: dashboardUrl(),
       source: 'streamflow-sdk-credit-eligible-locks',
+      ...(debug
+        ? {
+            debug: {
+              totalStreamsReturned: streams.length,
+              skipReasons,
+              sampleSkipped,
+            },
+          }
+        : {}),
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

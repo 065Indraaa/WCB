@@ -40,7 +40,7 @@ describe('lock credit duration', () => {
   });
 
   it('uses Streamflow start time through unlock time for duration checks', () => {
-    const start = BEFORE_LAUNCH + 10;
+    const start = BEFORE_LAUNCH;
     const schedule = {
       createdAt: BEFORE_LAUNCH,
       start,
@@ -49,10 +49,28 @@ describe('lock credit duration', () => {
     };
 
     expect(getLockCreditStartTimestamp(schedule)).toBe(schedule.createdAt);
-    expect(getLockDurationStartTimestamp(schedule)).toBe(schedule.start);
+    // Duration start uses the earliest available timestamp so unlock-once
+    // locks (start ≈ end - 1) still report their real lifetime.
+    expect(getLockDurationStartTimestamp(schedule)).toBe(schedule.createdAt);
     expect(getLockUnlockTimestamp(schedule)).toBe(schedule.end);
     expect(getLockCreditDurationDays(schedule)).toBe(DEFAULT_LOCK_DAYS);
     expect(isCreditEligibleLockSchedule(schedule)).toBe(true);
+  });
+
+  it('treats Streamflow unlock-once locks (start ≈ end - 1) as eligible from createdAt', () => {
+    // Streamflow stores lock schedules with start = end - 1 for one-shot
+    // unlocks; createdAt is the real lock anchor.
+    const end = BEFORE_LAUNCH + 30 * SECONDS_PER_DAY;
+    const schedule = {
+      createdAt: BEFORE_LAUNCH,
+      start: end - 1,
+      cliff: end,
+      end,
+    };
+
+    expect(isCreditEligibleLockSchedule(schedule)).toBe(true);
+    expect(getLockDurationStartTimestamp(schedule)).toBe(schedule.createdAt);
+    expect(getLockCreditDurationDays(schedule)).toBe(30);
   });
 });
 

@@ -98,13 +98,14 @@ export function getLockCreditStartTimestamp(schedule: LockSchedule): number {
 }
 
 export function getLockDurationStartTimestamp(schedule: LockSchedule): number {
-  return (
-    validUnixTimestamp(schedule.start) ??
-    validUnixTimestamp(schedule.createdAt) ??
-    validUnixTimestamp(schedule.cliff) ??
-    validUnixTimestamp(schedule.end) ??
-    0
-  );
+  // Use the earliest available timestamp so unlock-once locks (start ≈ end - 1)
+  // report their real lifetime (createdAt → end), not the 1-second window.
+  const candidates = [schedule.createdAt, schedule.start, schedule.cliff]
+    .map(validUnixTimestamp)
+    .filter((value): value is number => value !== null);
+  return candidates.length > 0
+    ? Math.min(...candidates)
+    : validUnixTimestamp(schedule.end) ?? 0;
 }
 
 export function getLockUnlockTimestamp(schedule: LockSchedule): number {
@@ -143,9 +144,18 @@ export function isCreditEligibleDuration(days: number): boolean {
  * A lock schedule is credit-eligible if its actual span is at least
  * CREDIT_ELIGIBILITY_MIN_DAYS, with a small tolerance for on-chain timestamp
  * drift.
+ *
+ * Streamflow "unlock-once" locks (Lock type) store `start` ≈ `end - 1` second
+ * because the schedule has no vesting curve: the recipient can withdraw only
+ * at `end`. The real lock lifetime is `createdAt → end`. We therefore measure
+ * the span using the EARLIEST candidate among `createdAt`, `start`, `cliff`
+ * versus `end`, so single-unlock locks aren't mis-classified as 0-duration.
  */
 export function isCreditEligibleLockSchedule(schedule: LockSchedule): boolean {
-  const startTs = getLockDurationStartTimestamp(schedule);
+  const candidates = [schedule.createdAt, schedule.start, schedule.cliff]
+    .map(validUnixTimestamp)
+    .filter((value): value is number => value !== null);
+  const startTs = candidates.length > 0 ? Math.min(...candidates) : 0;
   const endTs = getLockUnlockTimestamp(schedule);
   if (startTs <= 0 || endTs <= startTs) return false;
 
