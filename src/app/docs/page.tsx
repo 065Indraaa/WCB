@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { BrandLogo } from '@/components/shared/BrandLogo';
-import { EARLY_TOKENS_PER_CREDIT, FIXED_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
+import { EARLY_TOKENS_PER_CREDIT, MIN_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
 
 export const metadata = {
   title: 'Documentation & Whitepaper | WORLDCUPBETS',
   description:
-    'WORLDCUPBETS documentation for the World Cup 2026 app, $WCB holder ranking, fixed 60-day Streamflow lock credits, and creator-fee prize pool credit calculation.',
+    'WORLDCUPBETS documentation for the World Cup 2026 app, $WCB holder ranking, min 30-day Streamflow lock credits, and creator-fee prize pool credit calculation.',
 };
 
 const GOLD = '#F2B544';
@@ -47,7 +47,7 @@ const USER_ACTIONS = [
   {
     step: '02',
     title: 'Lock $WCB',
-    body: `A wallet can lock $WCB through Streamflow for the fixed ${FIXED_LOCK_DAYS}-day term. The app reads real Streamflow lock data and calculates credits separately from liquid holdings.`,
+    body: `A wallet can lock $WCB through Streamflow for at least ${MIN_LOCK_DAYS} days. The app reads real Streamflow lock data and calculates credits separately from liquid holdings.`,
     action: 'Open lock page',
     href: '/lock',
   },
@@ -70,7 +70,7 @@ const SYSTEM_ROWS = [
   {
     layer: 'Lock Leaderboard',
     source: 'Active Streamflow locks for the same $WCB mint',
-    means: `Ranks wallets by eligible ${FIXED_LOCK_DAYS}-day locked amount and calculated credits.`,
+    means: `Ranks wallets by eligible ${MIN_LOCK_DAYS}+ day locked amount and calculated credits.`,
     live: 'Read from Streamflow lock accounts, no local mock data',
   },
   {
@@ -88,7 +88,7 @@ const LOCK_MECHANISM = [
   },
   {
     title: 'Choose amount',
-    body: `The app-supported lock term is fixed at ${FIXED_LOCK_DAYS} days. The lock page estimates credits from token amount and the current launch window rate before the transaction is submitted.`,
+    body: `The app-supported lock term is a minimum of ${MIN_LOCK_DAYS} days. The lock page estimates credits from token amount and the current launch window rate before the transaction is submitted.`,
   },
   {
     title: 'Lock through Streamflow',
@@ -107,7 +107,7 @@ const CREDIT_RULES = [
   },
   {
     label: 'Eligible duration',
-    value: `Only fixed ${FIXED_LOCK_DAYS}-day Streamflow locks are credit-eligible in the app.`,
+    value: `Only Streamflow locks of ${MIN_LOCK_DAYS}+ days are credit-eligible in the app.`,
   },
   {
     label: 'Wallet-bound',
@@ -170,7 +170,7 @@ const BENEFITS = [
     accent: PURPLE,
     items: [
       'Convert active $WCB locks into wallet-bound credits.',
-      `Compete on the lock leaderboard using eligible ${FIXED_LOCK_DAYS}-day Streamflow locks.`,
+      `Compete on the lock leaderboard using eligible ${MIN_LOCK_DAYS}+ day Streamflow locks.`,
       'Keep locked balances separate from liquid holdings.',
       'Use Streamflow records as the lock data source.',
     ],
@@ -197,7 +197,7 @@ const LEADERBOARD_CARDS = [
   {
     title: 'Lock Board',
     accent: PURPLE,
-    body: `Ranks wallets by eligible ${FIXED_LOCK_DAYS}-day locked amount and calculated credits.`,
+    body: `Ranks wallets by eligible ${MIN_LOCK_DAYS}+ day locked amount and calculated credits.`,
     bullets: ['Uses real Streamflow locks', 'Shows locked $WCB and credits', 'Keeps lock rank separate from holdings'],
   },
 ];
@@ -264,7 +264,7 @@ const ROADMAP = [
     title: 'Lock Credit Layer',
     window: 'Before kickoff',
     status: 'Implementation',
-    items: [`Fixed ${FIXED_LOCK_DAYS}-day Streamflow lock tracking`, 'Credit leaderboard', 'Wallet lock dashboard', 'Credit redeem rules marked coming soon'],
+    items: [`Min ${MIN_LOCK_DAYS}-day Streamflow lock tracking`, 'Credit leaderboard', 'Wallet lock dashboard', 'Credit redeem rules marked coming soon'],
   },
   {
     phase: 'Phase 4',
@@ -469,7 +469,7 @@ export default function DocsPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3" style={{ marginBottom: '1.35rem' }}>
                 <StatusCard label="Chain" value="Solana" />
                 <StatusCard label="Token" value="$WCB" />
-                <StatusCard label="Lock term" value={`${FIXED_LOCK_DAYS} days`} accent={PURPLE} />
+                <StatusCard label="Lock term" value={`${MIN_LOCK_DAYS}+ days`} accent={PURPLE} />
                 <StatusCard label="Kickoff" value="June 11, 2026" accent={GREEN} />
               </div>
 
@@ -504,7 +504,7 @@ export default function DocsPage() {
               <div style={{ display: 'grid', gap: '0.8rem' }}>
                 {[
                   ['Hold', 'Holder ranking is based on wallet balance.'],
-                  ['Lock', `Lock credits are calculated from eligible ${FIXED_LOCK_DAYS}-day Streamflow locks.`],
+                  ['Lock', `Lock credits are calculated from eligible ${MIN_LOCK_DAYS}+ day Streamflow locks.`],
                   ['Betting', 'Betting functionality is marked as coming soon.'],
                   ['Rewards', 'Creator fee is the only prize pool credit source.'],
                 ].map(([label, value]) => (
@@ -852,7 +852,7 @@ export default function DocsPage() {
               <SpecRow label="Network" value="Solana" />
               <SpecRow label="Holder data" value="Token accounts" />
               <SpecRow label="Lock data" value="Streamflow" />
-              <SpecRow label="Lock term" value={`${FIXED_LOCK_DAYS} days`} />
+              <SpecRow label="Lock term" value={`${MIN_LOCK_DAYS}+ days`} />
               <SpecRow label="Prize data" value="Creator fee only" />
             </div>
 

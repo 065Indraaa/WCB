@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
       locks,
       total: locks.length,
       mint: WCB_MINT,
-      source: 'streamflow-sdk-60-day-locks',
+      source: 'streamflow-sdk-credit-eligible-locks',
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Failed to fetch locks';

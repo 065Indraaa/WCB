@@ -7,7 +7,7 @@ import { LockConfirmModal } from '@/components/lock/LockConfirmModal';
 import { CreditRedemptionInfo } from '@/components/lock/CreditRedemptionInfo';
 import { WalletDashboardDynamic, WalletButtonDynamic } from '@/components/wallet/WalletButtonDynamic';
 import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
-import { EARLY_TOKENS_PER_CREDIT, FIXED_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT, formatCredits, formatTokenAmount } from '@/lib/lock';
+import { EARLY_TOKENS_PER_CREDIT, MIN_LOCK_DAYS, DEFAULT_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT, formatCredits, formatTokenAmount } from '@/lib/lock';
 import { useCommunityLocks } from '@/lib/hooks/useCommunityLocks';
 
 export default function LockPage() {
@@ -48,7 +48,7 @@ export default function LockPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
           <span className="data-pill">Streamflow live</span>
           <span className="data-pill">Wallet credits auto-detect</span>
-          <span className="data-pill">{FIXED_LOCK_DAYS}-day fixed lock</span>
+          <span className="data-pill">{MIN_LOCK_DAYS}+ day lock</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
@@ -59,7 +59,7 @@ export default function LockPage() {
               Lock early. Enter launch with more credit.
             </h1>
             <p className="text-lg max-w-2xl" style={{ color: '#B3B3B3' }}>
-              Lock $WCB through Streamflow Finance for {FIXED_LOCK_DAYS} days. The app reads active locks from Streamflow, calculates credits from the lock timestamp, then displays the position when the wallet connects.
+              Lock $WCB through Streamflow Finance for at least {MIN_LOCK_DAYS} days. The app reads active locks from Streamflow, calculates credits from the lock timestamp, then displays the position when the wallet connects.
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -79,7 +79,7 @@ export default function LockPage() {
         {[
           { label: 'Total Locked', value: totalsLoading ? 'Syncing' : formatTokenAmount(totals.totalLocked) + ' $WCB', sub: meta.source ?? 'Streamflow locks' },
           { label: 'Credits Issued', value: totalsLoading ? 'Syncing' : formatCredits(totals.totalCredits), sub: 'platform credits' },
-          { label: 'Eligible 60d Locks', value: totalsLoading ? 'Syncing' : (totals.totalLocks ?? totals.totalLockers).toString(), sub: 'active fixed-term locks' },
+          { label: 'Eligible Locks', value: totalsLoading ? 'Syncing' : (totals.totalLocks ?? totals.totalLockers).toString(), sub: 'active min 30d locks' },
         ].map((s) => (
           <div
             key={s.label}
@@ -164,7 +164,7 @@ export default function LockPage() {
             },
             {
               title: 'Non-custodial lock',
-              desc: `Locking is non-custodial via Streamflow. WCB uses a fixed ${FIXED_LOCK_DAYS}-day lock and reads the real lock on-chain.`,
+              desc: `Locking is non-custodial via Streamflow. WCB requires a minimum ${MIN_LOCK_DAYS}-day lock and reads the real lock on-chain.`,
               img: 'Streamflow Security Lock',
             },
           ].map((r) => (

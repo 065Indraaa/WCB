@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/shared/BrandLogo';
 import { TeamFlag } from '@/components/shared/TeamFlag';
-import { EARLY_TOKENS_PER_CREDIT, FIXED_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
+import { EARLY_TOKENS_PER_CREDIT, MIN_LOCK_DAYS, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
 import {
   getPrediction,
   castPrediction,
@@ -89,9 +89,8 @@ function VoteBtn({
 
 /* ─── match row with live vote state ────────────────────────── */
 function MatchRow({ m }: { m: typeof FEATURED[number] }) {
-  const [stats, setStats] = useState(() =>
-    getPrediction(m.id, m.home.rank, m.away.rank)
-  );
+  // Hydration-safe: start null, load from localStorage only after mount.
+  const [stats, setStats] = useState<ReturnType<typeof getPrediction> | null>(null);
 
   const refresh = useCallback(() => {
     setStats(getPrediction(m.id, m.home.rank, m.away.rank));
@@ -102,7 +101,8 @@ function MatchRow({ m }: { m: typeof FEATURED[number] }) {
     return subscribe(refresh);
   }, [refresh]);
 
-  const pct = toPercent(stats);
+  const pct = stats ? toPercent(stats) : { home: 0, draw: 0, away: 0 };
+  const isPicked = stats ? stats.myChoice : null;
 
   function vote(choice: PredictionChoice) {
     castPrediction(m.id, choice, m.home.rank, m.away.rank);
@@ -132,9 +132,9 @@ function MatchRow({ m }: { m: typeof FEATURED[number] }) {
 
         {/* vote buttons */}
         <div style={{ display: 'flex', gap: 4, marginBottom: 5 }}>
-          <VoteBtn choice="home" label={m.home.name.split(' ')[0]} pct={pct.home} selected={stats.myChoice === 'home'} color="#F2B544" onVote={vote} />
-          <VoteBtn choice="draw" label="Draw"                      pct={pct.draw} selected={stats.myChoice === 'draw'} color="#B3B3B3" onVote={vote} />
-          <VoteBtn choice="away" label={m.away.name.split(' ')[0]} pct={pct.away} selected={stats.myChoice === 'away'} color="#9945FF" onVote={vote} />
+          <VoteBtn choice="home" label={m.home.name.split(' ')[0]} pct={pct.home} selected={isPicked === 'home'} color="#F2B544" onVote={vote} />
+          <VoteBtn choice="draw" label="Draw"                      pct={pct.draw} selected={isPicked === 'draw'} color="#B3B3B3" onVote={vote} />
+          <VoteBtn choice="away" label={m.away.name.split(' ')[0]} pct={pct.away} selected={isPicked === 'away'} color="#9945FF" onVote={vote} />
         </div>
 
         {/* sentiment bar */}
@@ -144,7 +144,7 @@ function MatchRow({ m }: { m: typeof FEATURED[number] }) {
           <motion.div style={{ background: '#9945FF', height: '100%' }} initial={false} animate={{ width: `${pct.away}%` }} transition={{ duration: 0.5, ease: 'easeOut' }} />
         </div>
 
-        {stats.myChoice && (
+        {isPicked && (
           <p style={{ fontSize: '0.56rem', fontWeight: 700, color: '#14F195', marginTop: 3, textAlign: 'right' }}>✓ picked</p>
         )}
       </div>
@@ -175,7 +175,7 @@ function CountdownStrip() {
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 8, background: '#111111', border: '1px solid #2A2A2A', marginBottom: 10 }}>
       <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#EF4444', boxShadow: '0 0 6px rgba(239,68,68,0.6)', flexShrink: 0, display: 'inline-block', animation: 'live-pulse 1.4s ease-in-out infinite' }} aria-hidden="true" />
       <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#6E6E6E' }}>Betting opens in</span>
-      <span style={{ fontSize: '0.72rem', fontWeight: 900, color: '#FFD36B', fontVariantNumeric: 'tabular-nums', marginLeft: 'auto' }}>
+      <span suppressHydrationWarning style={{ fontSize: '0.72rem', fontWeight: 900, color: '#FFD36B', fontVariantNumeric: 'tabular-nums', marginLeft: 'auto' }}>
         {diff.d}d {diff.h}h {diff.m}m
       </span>
     </div>
@@ -186,9 +186,11 @@ function CountdownStrip() {
 export function WelcomePopup() {
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<'markets' | 'lock'>('markets');
+  const [mounted, setMounted] = useState(false);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window === 'undefined') return;
     if (sessionStorage.getItem(STORAGE_KEY)) return;
     const t = setTimeout(() => setOpen(true), 800);
@@ -212,6 +214,9 @@ export function WelcomePopup() {
     sessionStorage.setItem(STORAGE_KEY, '1');
     setOpen(false);
   }
+
+  // Prevent SSR/hydration mismatch — popup content is client-only.
+  if (!mounted) return null;
 
   return (
     <AnimatePresence>
@@ -377,7 +382,7 @@ export function WelcomePopup() {
                     {/* spec table */}
                     <div style={{ borderRadius: 8, border: '1px solid #1E1E1E', overflow: 'hidden', marginBottom: 10 }}>
                       {[
-                        { label: 'Lock term',        value: `${FIXED_LOCK_DAYS} days fixed` },
+                        { label: 'Lock term',        value: `${MIN_LOCK_DAYS}+ days` },
                         { label: 'Lock provider',    value: 'Streamflow Finance' },
                         { label: 'Early multiplier', value: `${POST_LAUNCH_TOKENS_PER_CREDIT / EARLY_TOKENS_PER_CREDIT}× vs post-launch` },
                         { label: 'Credit use',       value: 'Betting balance from Jun 11' },

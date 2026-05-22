@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
@@ -8,12 +9,20 @@ import { WcbText } from '@/components/shared/WcbText';
 
 export function HeroSection() {
   const rm = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
   const pumpfun = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun';
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const motionInitial = mounted && rm ? false : { opacity: 0, y: -12 };
 
   return (
     <section
+      suppressHydrationWarning
       className="hero-section relative overflow-hidden"
-      style={{ display: 'flex', flexDirection: 'column' }}
+      style={{ display: 'flex', flexDirection: 'column', minHeight: 'clamp(480px, 76svh, 735px)' }}
       aria-label="Hero"
     >
       {/* Header image background */}
@@ -23,6 +32,7 @@ export function HeroSection() {
           position: 'absolute',
           inset: 0,
           zIndex: 0,
+          background: '#070707',
         }}
       >
         <Image
@@ -30,6 +40,7 @@ export function HeroSection() {
           alt=""
           fill
           priority
+          sizes="100vw"
           className="hero-background-image"
           style={{
             filter: 'saturate(0.92) contrast(1.05) brightness(0.72)',
@@ -78,7 +89,7 @@ export function HeroSection() {
           {/* Eyebrow badges */}
           <motion.div
             className="hero-badges"
-            initial={rm ? false : { opacity: 0, y: -12 }}
+            initial={motionInitial}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
             style={{ marginBottom: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}
@@ -111,7 +122,7 @@ export function HeroSection() {
           {/* Headline */}
           <motion.h1
             className="hero-title"
-            initial={rm ? false : { opacity: 0, y: 20 }}
+            initial={mounted && rm ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.1 }}
             style={{
@@ -150,7 +161,7 @@ export function HeroSection() {
           {/* Subheadline */}
           <motion.p
             className="hero-subcopy"
-            initial={rm ? false : { opacity: 0, y: 20 }}
+            initial={mounted && rm ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.2 }}
             style={{
@@ -169,7 +180,7 @@ export function HeroSection() {
           {/* CTAs */}
           <motion.div
             className="hero-actions"
-            initial={rm ? false : { opacity: 0, y: 20 }}
+            initial={mounted && rm ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.3 }}
             style={{ display: 'flex', gap: '0.875rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '3rem' }}
@@ -228,7 +239,7 @@ export function HeroSection() {
 
           <motion.div
             className="hero-trust-bar"
-            initial={rm ? false : { opacity: 0, y: 14 }}
+            initial={mounted && rm ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.36 }}
             style={{ display: 'flex', justifyContent: 'center', gap: '0.55rem', flexWrap: 'wrap', margin: '-1.65rem 0 1.5rem' }}
@@ -243,7 +254,7 @@ export function HeroSection() {
           {/* Countdown card */}
           <motion.div
             className="hero-countdown"
-            initial={rm ? false : { opacity: 0, scale: 0.95 }}
+            initial={mounted && rm ? false : { opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.55, delay: 0.4 }}
             style={{

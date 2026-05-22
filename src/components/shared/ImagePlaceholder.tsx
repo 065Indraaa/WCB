@@ -27,7 +27,7 @@ const VISUAL_COPY: Record<VisualKind, VisualCopy> = {
   leaderboard: {
     eyebrow: 'RANKING BOARD',
     title: 'Live lock standings',
-    sub: 'Eligible 60-day locks only',
+    sub: 'Eligible 30+ day locks',
     accent: '#F2B544',
   },
   ad: {
@@ -50,7 +50,7 @@ const VISUAL_COPY: Record<VisualKind, VisualCopy> = {
   },
   security: {
     eyebrow: 'STREAMFLOW LOCK',
-    title: 'Fixed 60-day lock',
+    title: 'Min 30-day lock',
     sub: 'Read from real on-chain records',
     accent: '#14F195',
   },
@@ -170,7 +170,7 @@ function FieldLines({ compact = false }: { compact?: boolean }) {
 function OddsBoard({ kind }: { kind: VisualKind }) {
   const rows = kind === 'leaderboard'
     ? [
-        ['#01', 'LOCK', '60D'],
+        ['#01', 'LOCK', '30D+'],
         ['#02', 'VOTE', 'LIVE'],
         ['#03', 'FEE', 'POOL'],
       ]
@@ -273,7 +273,7 @@ function MarketPassVisual({ accent }: { accent: string }) {
     <div style={{ width: 130, display: 'grid', gap: 6 }}>
       {[
         ['VOTE', 'OPEN'],
-        ['LOCK', '60D'],
+        ['LOCK', '30D+'],
         ['BET', 'JUN 11'],
       ].map(([label, value]) => (
         <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 8px', borderRadius: 8, background: 'rgba(7,7,7,0.58)', border: '1px solid rgba(255,255,255,0.08)' }}>

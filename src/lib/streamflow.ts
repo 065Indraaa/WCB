@@ -31,15 +31,16 @@ export async function fetchWalletLocks(
 ): Promise<StreamflowLock[]> {
   if (!walletAddress) return [];
 
-  try {
-    const res = await fetch(`/api/locks?wallet=${encodeURIComponent(walletAddress)}`);
-    if (!res.ok) return [];
-    const data = await res.json() as { locks: StreamflowLock[] };
-    return data.locks ?? [];
-  } catch (err) {
-    console.error('[Streamflow] Failed to fetch locks:', err);
-    return [];
+  const res = await fetch(`/api/locks?wallet=${encodeURIComponent(walletAddress)}`);
+  const data = await res.json() as { locks: StreamflowLock[]; error?: string };
+
+  if (!res.ok) {
+    throw new Error(data.error ?? `Server error ${res.status}`);
   }
+  if (data.error) {
+    throw new Error(data.error);
+  }
+  return data.locks ?? [];
 }
 
 export function aggregateLockStats(locks: StreamflowLock[]) {

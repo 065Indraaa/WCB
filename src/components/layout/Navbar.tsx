@@ -85,8 +85,10 @@ function MuteButton() {
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
+  useEffect(() => { setMounted(true); }, []);
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
   useEffect(() => {
@@ -100,6 +102,9 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Use scrolled only after mount to avoid SSR/client mismatch
+  const isScrolled = mounted && scrolled;
+
   return (
     <>
       <header
@@ -109,13 +114,13 @@ export function Navbar() {
           left: 0,
           right: 0,
           zIndex: 40,
-          background: scrolled ? 'rgba(7,7,7,0.97)' : 'rgba(7,7,7,0.92)',
+          background: isScrolled ? 'rgba(7,7,7,0.97)' : 'rgba(7,7,7,0.92)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: scrolled ? '1px solid rgba(242,181,68,0.2)' : '1px solid rgba(242,181,68,0.12)',
+          borderBottom: isScrolled ? '1px solid rgba(242,181,68,0.2)' : '1px solid rgba(242,181,68,0.12)',
           height: 56,
           transition: 'background 0.2s, border-color 0.2s, box-shadow 0.2s',
-          boxShadow: scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none',
+          boxShadow: isScrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none',
         }}
       >
         <nav

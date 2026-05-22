@@ -3,7 +3,7 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWalletLocks } from '@/lib/hooks/useWalletLocks';
-import { FIXED_LOCK_DAYS, formatCredits, formatTokenAmount, getTierForDays } from '@/lib/lock';
+import { MIN_LOCK_DAYS, formatCredits, formatTokenAmount, getTierForDays } from '@/lib/lock';
 import { truncateAddress } from '@/lib/wallet';
 import { WalletMultiButtonDynamic } from './WalletButtonDynamic';
 
@@ -189,7 +189,7 @@ export function WalletDashboard() {
         <StatCard label="Total Locked" value={formatTokenAmount(stats.totalLocked)} sub="$WCB tokens" color="#FFFFFF" />
         <StatCard label="Total Credits" value={formatCredits(stats.totalCredits)} sub="platform credits" color="#F2B544" />
         <StatCard label="Active Locks" value={stats.activeLocks.toString()} sub="on Streamflow" />
-        <StatCard label="Lock Term" value={stats.longestDays > 0 ? `${FIXED_LOCK_DAYS}d` : '-'} sub="eligible duration" />
+        <StatCard label="Lock Term" value={stats.longestDays > 0 ? `${MIN_LOCK_DAYS}d+` : '-'} sub="eligible duration" />
       </div>
 
       {/* Locks list */}
@@ -220,10 +220,10 @@ export function WalletDashboard() {
               style={{ padding: '2rem', textAlign: 'center', borderRadius: 12, border: '1px dashed #3A3A3A' }}
             >
               <p style={{ fontSize: '0.9rem', color: '#B3B3B3', marginBottom: '0.5rem' }}>
-                No eligible 60-day $WCB locks found for this wallet.
+                No eligible ${MIN_LOCK_DAYS}+ day $WCB locks found for this wallet.
               </p>
               <p style={{ fontSize: '0.8rem', color: '#6E6E6E' }}>
-                Use the calculator to create a fixed 60-day Streamflow lock and earn credits.
+                Use the calculator to create a ${MIN_LOCK_DAYS}+ day Streamflow lock and earn credits.
               </p>
             </motion.div>
           )}

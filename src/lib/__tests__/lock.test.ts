@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   EARLY_TOKENS_PER_CREDIT,
-  FIXED_LOCK_DAYS,
+  MIN_LOCK_DAYS,
+  CREDIT_ELIGIBILITY_MIN_DAYS,
+  DEFAULT_LOCK_DAYS,
   LOCK_LAUNCH_TIMESTAMP,
   POST_LAUNCH_TOKENS_PER_CREDIT,
   SECONDS_PER_DAY,
@@ -22,18 +24,19 @@ const AFTER_LAUNCH = LOCK_LAUNCH_TIMESTAMP;
 describe('lock credit duration', () => {
   it('reports real rounded Streamflow durations without legacy caps', () => {
     expect(getCreditDurationDays(1_000, 1_000 + 30 * SECONDS_PER_DAY)).toBe(30);
-    expect(getCreditDurationDays(1_000, 1_000 + FIXED_LOCK_DAYS * SECONDS_PER_DAY)).toBe(FIXED_LOCK_DAYS);
+    expect(getCreditDurationDays(1_000, 1_000 + DEFAULT_LOCK_DAYS * SECONDS_PER_DAY)).toBe(DEFAULT_LOCK_DAYS);
     expect(getCreditDurationDays(1_000, 1_000 + 500 * SECONDS_PER_DAY)).toBe(500);
   });
 
-  it('rounds timestamp drift up so eligible 60-day locks are not under-counted', () => {
-    expect(getCreditDurationDays(1_000, 1_000 + FIXED_LOCK_DAYS * SECONDS_PER_DAY - 1)).toBe(FIXED_LOCK_DAYS);
+  it('rounds timestamp drift up so eligible locks are not under-counted', () => {
+    expect(getCreditDurationDays(1_000, 1_000 + MIN_LOCK_DAYS * SECONDS_PER_DAY - 1)).toBe(MIN_LOCK_DAYS);
   });
 
-  it('marks only fixed 60-day displayed durations as credit-eligible', () => {
-    expect(isCreditEligibleDuration(FIXED_LOCK_DAYS - 1)).toBe(false);
-    expect(isCreditEligibleDuration(FIXED_LOCK_DAYS)).toBe(true);
-    expect(isCreditEligibleDuration(FIXED_LOCK_DAYS + 1)).toBe(false);
+  it('marks durations >= CREDIT_ELIGIBILITY_MIN_DAYS as credit-eligible', () => {
+    expect(isCreditEligibleDuration(CREDIT_ELIGIBILITY_MIN_DAYS - 1)).toBe(false);
+    expect(isCreditEligibleDuration(CREDIT_ELIGIBILITY_MIN_DAYS)).toBe(true);
+    expect(isCreditEligibleDuration(MIN_LOCK_DAYS)).toBe(true);
+    expect(isCreditEligibleDuration(DEFAULT_LOCK_DAYS)).toBe(true);
   });
 
   it('uses Streamflow start time through unlock time for duration checks', () => {
@@ -41,14 +44,14 @@ describe('lock credit duration', () => {
     const schedule = {
       createdAt: BEFORE_LAUNCH,
       start,
-      cliff: start + FIXED_LOCK_DAYS * SECONDS_PER_DAY,
-      end: start + FIXED_LOCK_DAYS * SECONDS_PER_DAY,
+      cliff: start + DEFAULT_LOCK_DAYS * SECONDS_PER_DAY,
+      end: start + DEFAULT_LOCK_DAYS * SECONDS_PER_DAY,
     };
 
     expect(getLockCreditStartTimestamp(schedule)).toBe(schedule.createdAt);
     expect(getLockDurationStartTimestamp(schedule)).toBe(schedule.start);
     expect(getLockUnlockTimestamp(schedule)).toBe(schedule.end);
-    expect(getLockCreditDurationDays(schedule)).toBe(FIXED_LOCK_DAYS);
+    expect(getLockCreditDurationDays(schedule)).toBe(DEFAULT_LOCK_DAYS);
     expect(isCreditEligibleLockSchedule(schedule)).toBe(true);
   });
 });
@@ -69,23 +72,28 @@ describe('lock credit calculation', () => {
     const beforeLaunchSchedule = {
       createdAt: BEFORE_LAUNCH,
       start: BEFORE_LAUNCH,
-      end: BEFORE_LAUNCH + FIXED_LOCK_DAYS * SECONDS_PER_DAY,
+      end: BEFORE_LAUNCH + DEFAULT_LOCK_DAYS * SECONDS_PER_DAY,
     };
     const afterLaunchSchedule = {
       createdAt: AFTER_LAUNCH,
       start: AFTER_LAUNCH,
-      end: AFTER_LAUNCH + FIXED_LOCK_DAYS * SECONDS_PER_DAY,
+      end: AFTER_LAUNCH + DEFAULT_LOCK_DAYS * SECONDS_PER_DAY,
     };
 
     expect(calculateLockCredits(1_000, beforeLaunchSchedule)).toBe(10);
     expect(calculateLockCredits(1_000, afterLaunchSchedule)).toBe(5);
   });
 
-  it('does not grant credits to non-60-day Streamflow locks', () => {
-    const shortSchedule = {
+  it('grants credits to locks >= CREDIT_ELIGIBILITY_MIN_DAYS and rejects shorter locks', () => {
+    const tooShortSchedule = {
       createdAt: BEFORE_LAUNCH,
       start: BEFORE_LAUNCH,
-      end: BEFORE_LAUNCH + 30 * SECONDS_PER_DAY,
+      end: BEFORE_LAUNCH + (CREDIT_ELIGIBILITY_MIN_DAYS - 1) * SECONDS_PER_DAY,
+    };
+    const eligibleSchedule = {
+      createdAt: BEFORE_LAUNCH,
+      start: BEFORE_LAUNCH,
+      end: BEFORE_LAUNCH + CREDIT_ELIGIBILITY_MIN_DAYS * SECONDS_PER_DAY,
     };
     const longSchedule = {
       createdAt: BEFORE_LAUNCH,
@@ -93,7 +101,8 @@ describe('lock credit calculation', () => {
       end: BEFORE_LAUNCH + 90 * SECONDS_PER_DAY,
     };
 
-    expect(calculateLockCredits(100_000, shortSchedule)).toBe(0);
-    expect(calculateLockCredits(100_000, longSchedule)).toBe(0);
+    expect(calculateLockCredits(100_000, tooShortSchedule)).toBe(0);
+    expect(calculateLockCredits(100_000, eligibleSchedule)).toBe(1_000);
+    expect(calculateLockCredits(100_000, longSchedule)).toBe(1_000);
   });
 });

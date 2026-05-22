@@ -1,24 +1,30 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { formatPrice, formatMarketCap } from '@/lib/utils/formatters';
 import { useTokenMetrics } from '@/lib/hooks/useTokenMetrics';
 import { PumpFunBadge } from '@/components/shared/PumpFunBadge';
 import { BrandLogo } from '@/components/shared/BrandLogo';
 import { TokenDexscreenerChart } from '@/components/token/TokenDexscreenerChart';
 import { WCB_MINT } from '@/lib/tokenConfig';
-import { FIXED_LOCK_DAYS } from '@/lib/lock';
+import { MIN_LOCK_DAYS } from '@/lib/lock';
 
 const PUMPFUN = process.env.NEXT_PUBLIC_PUMPFUN_URL ?? `https://pump.fun/coin/${WCB_MINT}`;
 
 export default function TokenPage() {
   const { data: metrics, isLoading, error, refetch } = useTokenMetrics();
   const errorMessage = error instanceof Error ? error.message : error ? String(error) : null;
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  // Use loading state until mounted to prevent SSR/hydration mismatch
+  const loading = !mounted || isLoading;
 
   const stats = [
-    { label: 'Price',     value: isLoading ? 'Syncing' : formatPrice(metrics?.price ?? 0),                change: metrics?.priceChange24h },
-    { label: 'Market Cap',value: isLoading ? 'Syncing' : formatMarketCap(metrics?.marketCap ?? 0) },
-    { label: 'Holders',   value: isLoading ? 'Syncing' : (metrics?.holders ?? 0).toLocaleString('en-US') },
-    { label: '24h Volume',value: isLoading ? 'Syncing' : formatMarketCap(metrics?.volume24hUsd ?? 0) },
+    { label: 'Price',     value: loading ? 'Syncing' : formatPrice(metrics?.price ?? 0),                change: mounted ? metrics?.priceChange24h : undefined },
+    { label: 'Market Cap',value: loading ? 'Syncing' : formatMarketCap(metrics?.marketCap ?? 0) },
+    { label: 'Holders',   value: loading ? 'Syncing' : (metrics?.holders ?? 0).toLocaleString('en-US') },
+    { label: '24h Volume',value: loading ? 'Syncing' : formatMarketCap(metrics?.volume24hUsd ?? 0) },
   ];
 
   return (
@@ -49,7 +55,7 @@ export default function TokenPage() {
             <div className="mb-4 text-xs font-semibold" style={{ color: '#6E6E6E' }}>
               {errorMessage
                 ? <span style={{ color: '#EF4444' }}>Data unavailable: {errorMessage}</span>
-                : <>Source: {metrics?.source ?? 'live'}{metrics?.lastUpdated ? ` · Updated ${new Date(metrics.lastUpdated).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}` : ''}</>
+                : <span suppressHydrationWarning>Source: {metrics?.source ?? 'live'}{metrics?.lastUpdated && mounted ? ` · Updated ${new Date(metrics.lastUpdated).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}` : ''}</span>
               }
             </div>
           )}
@@ -94,7 +100,7 @@ export default function TokenPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         {[
           { label: 'Network',   value: 'Solana',          color: '#14F195', note: 'Mainnet' },
-          { label: 'Lock Term', value: `${FIXED_LOCK_DAYS} Days`, color: '#9945FF', note: 'Via Streamflow' },
+          { label: 'Lock Term', value: `${MIN_LOCK_DAYS}+ Days`, color: '#9945FF', note: 'Via Streamflow' },
           { label: 'Launched',  value: 'Pump.fun',        color: '#F2B544', note: 'Community token' },
         ].map((item) => (
           <div key={item.label} className="card" style={{ padding: '1.25rem', background: '#111111' }}>
@@ -115,7 +121,7 @@ export default function TokenPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
             { title: 'Holder Leaderboard',   desc: 'Wallet balance determines holder tier: Bronze, Silver, Gold, Platinum.' },
-            { title: 'Lock Credits',          desc: `Lock $WCB for ${FIXED_LOCK_DAYS} days via Streamflow to earn platform credits used for betting.` },
+            { title: 'Lock Credits',          desc: `Lock $WCB for ${MIN_LOCK_DAYS}+ days via Streamflow to earn platform credits used for betting.` },
             { title: 'Betting Access',        desc: 'Credits become usable betting balance when match markets open on June 11, 2026.' },
             { title: 'Prize Pool Share',      desc: 'Creator fee from $WCB volume funds the prize pool distributed to holders and lockers.' },
             { title: 'Early Mover Advantage', desc: 'Lock before launch to receive a higher credit multiplier while the pre-market window is open.' },

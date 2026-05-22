@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(npx vitest *)",
+      "Bash(npx next *)",
+      "Bash(node -e \"require\\('fs'\\).rmSync\\('.next',{recursive:true,force:true}\\)\")",
+      "Bash(echo \"started pid=$!\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /tmp/leaderboard.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3001/leaderboard)",
+      "Bash(node *)",
+      "Bash(curl -s -o /tmp/leaderboard1.html http://localhost:3001/leaderboard)",
+      "Bash(curl -s -o /tmp/leaderboard2.html http://localhost:3001/leaderboard)",
+      "Bash(awk 'NR==2,NR==10' /tmp/diff.txt)",
+      "Bash(sed 's|v=[0-9]*|v=X|g' /tmp/leaderboard1.html)",
+      "Bash(sed 's|v=[0-9]*|v=X|g' /tmp/leaderboard2.html)",
+      "Bash(curl -s http://localhost:3001/leaderboard)",
+      "Bash(curl -s -o /tmp/lb-new.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3001/leaderboard)",
+      "Bash(kill %1)",
+      "Bash(curl -s -o /tmp/lb-now.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3001/leaderboard)",
+      "Bash(curl -s -o /tmp/lb-after.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3001/leaderboard)",
+      "Bash(tee /tmp/build.log)",
+      "Bash(curl -s -o /tmp/lb-final.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3001/leaderboard)"
+    ]
+  }
+}

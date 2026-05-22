@@ -39,8 +39,9 @@ export function useWalletLocks(): WalletLocksState {
       const result = await fetchWalletLocks(publicKey.toBase58(), WCB_MINT);
       setLocks(result);
     } catch (err) {
-      setError('Failed to load locks. Please try again.');
-      console.error(err);
+      const message = err instanceof Error ? err.message : 'Failed to load locks';
+      setError(message);
+      console.error('[useWalletLocks]', err);
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 import {
   EARLY_TOKENS_PER_CREDIT,
-  FIXED_LOCK_DAYS,
+  MIN_LOCK_DAYS,
   LOCK_LAUNCH_TIMESTAMP,
   POST_LAUNCH_TOKENS_PER_CREDIT,
 } from '@/lib/lock';
@@ -17,7 +17,7 @@ export function CreditRedemptionInfo() {
     {
       code: '01',
       title: 'Lock $WCB',
-      desc: `Lock for a fixed ${FIXED_LOCK_DAYS} days through Streamflow. The lock is read from real on-chain Streamflow data.`,
+      desc: `Lock for at least ${MIN_LOCK_DAYS} days through Streamflow. The lock is read from real on-chain Streamflow data.`,
     },
     {
       code: '02',
@@ -139,7 +139,7 @@ export function CreditRedemptionInfo() {
         </h4>
         <ul style={{ margin: 0, padding: '0 0 0 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {[
-            `All new lock flows use a fixed ${FIXED_LOCK_DAYS}-day duration.`,
+            `All new lock flows require a minimum ${MIN_LOCK_DAYS}-day duration.`,
             'Lock data is sourced from Streamflow records, not local mock data.',
             'Credits remain wallet-bound until redeem/withdraw rules are enabled.',
             'Credit redeem/withdraw is coming soon and not active yet.',

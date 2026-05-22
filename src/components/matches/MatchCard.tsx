@@ -207,7 +207,7 @@ export function MatchCard({ match }: MatchCardProps) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
             <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#F2B544', fontVariantNumeric: 'tabular-nums' }}>{pct.home}%</span>
-            <span style={{ fontSize: '0.6rem', fontWeight: 600, color: '#6E6E6E', fontVariantNumeric: 'tabular-nums' }}>
+            <span suppressHydrationWarning style={{ fontSize: '0.6rem', fontWeight: 600, color: '#6E6E6E', fontVariantNumeric: 'tabular-nums' }}>
               {loaded ? `${total.toLocaleString()} votes` : '...'} / {myChoice ? 'saved locally' : 'pre-launch sentiment'}
             </span>
             <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#9945FF', fontVariantNumeric: 'tabular-nums' }}>{pct.away}%</span>

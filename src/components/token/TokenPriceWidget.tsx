@@ -1,29 +1,36 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { formatPrice, formatMarketCap } from '@/lib/utils/formatters';
 import { useTokenMetrics } from '@/lib/hooks/useTokenMetrics';
 
 export function TokenPriceWidget() {
   const { data: metrics, isLoading } = useTokenMetrics();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  // Use loading state until mounted to prevent SSR/hydration mismatch
+  const loading = !mounted || isLoading;
 
   const rows = [
-    { label: 'Price', value: isLoading ? '…' : formatPrice(metrics?.price ?? 0) },
+    { label: 'Price', value: loading ? '…' : formatPrice(metrics?.price ?? 0) },
     {
       label: '24h',
-      value: isLoading
+      value: loading
         ? '…'
         : metrics?.priceChange24h != null
           ? `${metrics.priceChange24h >= 0 ? '+' : ''}${metrics.priceChange24h.toFixed(2)}%`
           : '—',
       color:
-        isLoading || metrics?.priceChange24h == null
+        loading || metrics?.priceChange24h == null
           ? undefined
           : metrics.priceChange24h >= 0
             ? '#14F195'
             : '#DC2626',
     },
-    { label: 'Holders', value: isLoading ? '…' : (metrics?.holders ?? 0).toLocaleString('en-US') },
-    { label: 'Mkt Cap', value: isLoading ? '…' : formatMarketCap(metrics?.marketCap ?? 0) },
+    { label: 'Holders', value: loading ? '…' : (metrics?.holders ?? 0).toLocaleString('en-US') },
+    { label: 'Mkt Cap', value: loading ? '…' : formatMarketCap(metrics?.marketCap ?? 0) },
   ];
 
   return (

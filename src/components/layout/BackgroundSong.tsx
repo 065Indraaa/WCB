@@ -45,11 +45,8 @@ export function BackgroundSong() {
 
     // Listen for toggle events from the Navbar mute button
     const handleToggle = () => {
-      setMuted((prev) => {
-        const next = !prev;
-        if (audio) audio.muted = next;
-        return next;
-      });
+      if (audio) audio.muted = !audio.muted;
+      setMuted((prev) => !prev);
     };
 
     window.addEventListener('wcb:toggleAudio', handleToggle);
@@ -68,7 +65,7 @@ export function BackgroundSong() {
       loop
       preload="auto"
       playsInline
-      muted={muted}
+      suppressHydrationWarning
       aria-hidden="true"
       style={{
         position: 'absolute',

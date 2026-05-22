@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { SOLANA_RPC } from '@/lib/wallet';
@@ -13,9 +13,19 @@ export function WalletContextProvider({ children }: { children: React.ReactNode 
   // via the Wallet Standard (Phantom, Solflare, Backpack, etc. auto-register)
   const wallets = useMemo(() => [], []);
 
+  // The wallet adapter calls `localStorage.getItem` inside a `useState`
+  // initializer. On the server that returns nothing; on the client it may
+  // return a previously stored wallet name, which causes a hydration mismatch
+  // when autoConnect runs against a different initial value. Only enable
+  // autoConnect after mount, so SSR and the first client render agree.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <ConnectionProvider endpoint={SOLANA_RPC}>
-      <WalletProvider wallets={wallets} autoConnect>
+      <WalletProvider wallets={wallets} autoConnect={mounted}>
         <WalletModalProvider>
           {children}
         </WalletModalProvider>

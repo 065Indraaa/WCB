@@ -58,7 +58,8 @@ function isActiveTokenLock(stream: Stream, now: number) {
 
 export async function GET() {
   try {
-    const client = new SolanaStreamClient(buildHeliusRpcUrl());
+    const rpcUrl = buildHeliusRpcUrl();
+    const client = new SolanaStreamClient(rpcUrl);
     const streams = await client.searchStreams({ mint: WCB_MINT, closed: false });
     const now = Math.floor(Date.now() / 1000);
     const byWallet = new Map<string, WalletLocks>();
@@ -146,17 +147,17 @@ export async function GET() {
       totals,
       mint: WCB_MINT,
       streamflowDashboardUrl: dashboardUrl(),
-      source: 'streamflow-sdk-60-day-locks',
+      source: 'streamflow-sdk-credit-eligible-locks',
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error('[/api/locks/community]', message);
+    console.error('[/api/locks/community] Streamflow lookup failed:', message);
     return NextResponse.json(
       {
         leaderboard: [],
         totals: { totalLocked: 0, totalCredits: 0, totalLockers: 0, totalLocks: 0 },
         mint: WCB_MINT,
-        source: 'streamflow-sdk-60-day-locks',
+        source: 'streamflow-sdk-credit-eligible-locks',
         error: message,
       },
       { status: 500 },

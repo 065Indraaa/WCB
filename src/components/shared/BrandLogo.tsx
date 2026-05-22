@@ -18,8 +18,9 @@ const sizeMap = {
 export function BrandLogo({ size = 'md', showText = true, className = '' }: BrandLogoProps) {
   const s = sizeMap[size];
   return (
-    <div className={`inline-flex items-center gap-2 ${className}`} style={{ gap: '0.5rem' }}>
+    <div suppressHydrationWarning className={`inline-flex items-center gap-2 ${className}`} style={{ gap: '0.5rem' }}>
       <div
+        suppressHydrationWarning
         style={{
           width: s.img,
           height: s.img,

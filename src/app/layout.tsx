@@ -1,11 +1,16 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import './globals.css';
 import { Providers } from './providers';
 import { Navbar } from '@/components/layout/Navbar';
 import { TickerBar } from '@/components/layout/TickerBar';
 import { Footer } from '@/components/layout/Footer';
 import { BackgroundSong } from '@/components/layout/BackgroundSong';
-import { WelcomePopup } from '@/components/shared/WelcomePopup';
+
+const WelcomePopup = dynamic(
+  () => import('@/components/shared/WelcomePopup').then((m) => m.WelcomePopup),
+  { ssr: false },
+);
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://worldcupbet.live';
 
@@ -37,8 +42,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body style={{ background: '#070707', color: '#FFFFFF' }} className="antialiased min-h-screen flex flex-col">
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning style={{ background: '#070707', color: '#FFFFFF' }} className="antialiased min-h-screen flex flex-col">
         <Providers>
           <BackgroundSong />
           <WelcomePopup />
