@@ -105,16 +105,13 @@ function derivePumpCreatorVault(creatorWallet: string) {
 }
 
 type LifetimeFeesCacheEntry = { vault: string; sol: number; expiresAt: number };
-const LIFETIME_FEES_CACHE_MS = 5 * 60 * 1000;
-const LIFETIME_FEES_DEADLINE_MS = 20_000;
-const LIFETIME_FEES_MAX_PAGES = 100;
+const LIFETIME_FEES_CACHE_MS = 60_000;
+const LIFETIME_FEES_DEADLINE_MS = 22_000;
+const LIFETIME_FEES_MAX_PAGES = 200;
 let lifetimeFeesCache: LifetimeFeesCacheEntry | null = null;
+let lifetimeFeesInflight: Promise<number | null> | null = null;
 
-async function fetchLifetimeCreatorFeesSol(creatorVault: string): Promise<number | null> {
-  if (lifetimeFeesCache && lifetimeFeesCache.vault === creatorVault && lifetimeFeesCache.expiresAt > Date.now()) {
-    return lifetimeFeesCache.sol;
-  }
-
+async function computeLifetimeCreatorFeesSol(creatorVault: string): Promise<number | null> {
   const apiKey = getHeliusApiKey();
   if (!apiKey) return null;
 
@@ -139,16 +136,26 @@ async function fetchLifetimeCreatorFeesSol(creatorVault: string): Promise<number
 
     const txs = await res.json() as Array<{
       signature?: string;
+      accountData?: Array<{ account?: string; nativeBalanceChange?: number }>;
       nativeTransfers?: Array<{ toUserAccount?: string; amount?: number }>;
     }>;
     if (!Array.isArray(txs) || txs.length === 0) break;
 
     for (const tx of txs) {
-      for (const transfer of tx.nativeTransfers ?? []) {
-        if (transfer?.toUserAccount === creatorVault && typeof transfer.amount === 'number' && transfer.amount > 0) {
-          totalLamports += transfer.amount;
+      let added = 0;
+      for (const acct of tx.accountData ?? []) {
+        if (acct?.account === creatorVault && typeof acct.nativeBalanceChange === 'number' && acct.nativeBalanceChange > 0) {
+          added += acct.nativeBalanceChange;
         }
       }
+      if (added === 0) {
+        for (const transfer of tx.nativeTransfers ?? []) {
+          if (transfer?.toUserAccount === creatorVault && typeof transfer.amount === 'number' && transfer.amount > 0) {
+            added += transfer.amount;
+          }
+        }
+      }
+      totalLamports += added;
     }
 
     if (txs.length < 100) break;
@@ -157,9 +164,29 @@ async function fetchLifetimeCreatorFeesSol(creatorVault: string): Promise<number
     before = lastSig;
   }
 
-  const sol = totalLamports / LAMPORTS_PER_SOL;
-  lifetimeFeesCache = { vault: creatorVault, sol, expiresAt: Date.now() + LIFETIME_FEES_CACHE_MS };
-  return sol;
+  return totalLamports / LAMPORTS_PER_SOL;
+}
+
+async function fetchLifetimeCreatorFeesSol(creatorVault: string): Promise<number | null> {
+  if (lifetimeFeesCache && lifetimeFeesCache.vault === creatorVault && lifetimeFeesCache.expiresAt > Date.now()) {
+    return lifetimeFeesCache.sol;
+  }
+
+  if (lifetimeFeesInflight) return lifetimeFeesInflight;
+
+  lifetimeFeesInflight = (async () => {
+    try {
+      const sol = await computeLifetimeCreatorFeesSol(creatorVault);
+      if (sol !== null) {
+        lifetimeFeesCache = { vault: creatorVault, sol, expiresAt: Date.now() + LIFETIME_FEES_CACHE_MS };
+      }
+      return sol;
+    } finally {
+      lifetimeFeesInflight = null;
+    }
+  })();
+
+  return lifetimeFeesInflight;
 }
 
 async function fetchPumpCreatorVaultBalance(solUsd: number | null) {

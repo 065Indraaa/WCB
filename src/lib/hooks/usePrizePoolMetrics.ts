@@ -8,6 +8,8 @@ export function usePrizePoolMetrics() {
   return useQuery({
     queryKey: queryKeys.prizePool.metrics(),
     queryFn: getPrizePoolMetrics,
-    refetchInterval: 60_000,
+    refetchInterval: 30_000,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 }

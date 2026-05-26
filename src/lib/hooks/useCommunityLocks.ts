@@ -109,8 +109,13 @@ export function useCommunityLocks() {
 
   useEffect(() => {
     fetchData();
-    const id = setInterval(fetchData, 5 * 60_000);
-    return () => clearInterval(id);
+    const id = setInterval(fetchData, 30_000);
+    const onFocus = () => fetchData();
+    window.addEventListener('focus', onFocus);
+    return () => {
+      clearInterval(id);
+      window.removeEventListener('focus', onFocus);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

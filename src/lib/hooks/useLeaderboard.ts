@@ -7,6 +7,8 @@ export function useLeaderboard(page = 1, limit = 100) {
   return useQuery({
     queryKey: queryKeys.leaderboard.page(page, limit),
     queryFn: () => getTokenHolders(page, limit),
-    refetchInterval: 300_000,
+    refetchInterval: 30_000,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 }
