@@ -21,6 +21,7 @@ export interface PrizePoolMetrics {
   creatorFee24hUsd: number;
   creatorFeeTotalSol?: number | null;
   creatorFeeTotalUsd?: number | null;
+  lifetimeScanComplete?: boolean;
   allocationRate: number;
   prizePoolCredit24hUsd: number;
   prizePoolCreditTotalUsd?: number | null;

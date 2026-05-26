@@ -104,103 +104,171 @@ function derivePumpCreatorVault(creatorWallet: string) {
   return vault.toBase58();
 }
 
-type LifetimeFeesCacheEntry = { vault: string; sol: number; expiresAt: number };
-const LIFETIME_FEES_CACHE_MS = 60_000;
-const LIFETIME_FEES_DEADLINE_MS = 22_000;
-const LIFETIME_FEES_MAX_PAGES = 200;
-let lifetimeFeesCache: LifetimeFeesCacheEntry | null = null;
-let lifetimeFeesInflight: Promise<number | null> | null = null;
+type HeliusEnhancedTx = {
+  signature?: string;
+  accountData?: Array<{ account?: string; nativeBalanceChange?: number }>;
+  nativeTransfers?: Array<{ toUserAccount?: string; amount?: number }>;
+};
 
-async function computeLifetimeCreatorFeesSol(creatorVault: string): Promise<number | null> {
-  const apiKey = getHeliusApiKey();
-  if (!apiKey) return null;
+type LifetimeScanState = {
+  vault: string;
+  totalLamports: number;
+  oldestSeenSig?: string;
+  newestSeenSig?: string;
+  initialScanDone: boolean;
+  lastChunkAt: number;
+};
 
-  const startedAt = Date.now();
-  let totalLamports = 0;
-  let before: string | undefined;
+const CHUNK_DEADLINE_MS = 50_000;
+const CHUNK_PER_CALL_TIMEOUT_MS = 12_000;
+const CHUNK_MAX_PAGES = 300;
+const REFRESH_INTERVAL_MS = 30_000;
 
-  for (let page = 0; page < LIFETIME_FEES_MAX_PAGES; page++) {
-    if (Date.now() - startedAt > LIFETIME_FEES_DEADLINE_MS) return null;
+let scanState: LifetimeScanState | null = null;
+let chunkInflight: Promise<void> | null = null;
 
-    const params = new URLSearchParams({ 'api-key': apiKey, limit: '100' });
-    if (before) params.set('before', before);
-    const url = `https://api.helius.xyz/v0/addresses/${creatorVault}/transactions?${params.toString()}`;
-
-    let res: Response;
-    try {
-      res = await fetch(url, { signal: AbortSignal.timeout(10_000) });
-    } catch {
-      return null;
+function sumPositiveDeltasForVault(tx: HeliusEnhancedTx, vault: string): number {
+  let added = 0;
+  for (const acct of tx.accountData ?? []) {
+    if (
+      acct?.account === vault &&
+      typeof acct.nativeBalanceChange === 'number' &&
+      acct.nativeBalanceChange > 0
+    ) {
+      added += acct.nativeBalanceChange;
     }
+  }
+  if (added === 0) {
+    for (const transfer of tx.nativeTransfers ?? []) {
+      if (
+        transfer?.toUserAccount === vault &&
+        typeof transfer.amount === 'number' &&
+        transfer.amount > 0
+      ) {
+        added += transfer.amount;
+      }
+    }
+  }
+  return added;
+}
+
+async function fetchHeliusEnhancedPage(
+  creatorVault: string,
+  apiKey: string,
+  opts: { before?: string; until?: string },
+): Promise<HeliusEnhancedTx[] | null> {
+  const params = new URLSearchParams({ 'api-key': apiKey, limit: '100' });
+  if (opts.before) params.set('before', opts.before);
+  if (opts.until) params.set('until', opts.until);
+  const url = `https://api.helius.xyz/v0/addresses/${creatorVault}/transactions?${params.toString()}`;
+
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(CHUNK_PER_CALL_TIMEOUT_MS) });
     if (!res.ok) return null;
+    const data = (await res.json()) as HeliusEnhancedTx[];
+    return Array.isArray(data) ? data : null;
+  } catch {
+    return null;
+  }
+}
 
-    const txs = await res.json() as Array<{
-      signature?: string;
-      accountData?: Array<{ account?: string; nativeBalanceChange?: number }>;
-      nativeTransfers?: Array<{ toUserAccount?: string; amount?: number }>;
-    }>;
-    if (!Array.isArray(txs) || txs.length === 0) break;
+async function processChunk(creatorVault: string, apiKey: string): Promise<void> {
+  if (!scanState || scanState.vault !== creatorVault) {
+    scanState = {
+      vault: creatorVault,
+      totalLamports: 0,
+      initialScanDone: false,
+      lastChunkAt: 0,
+    };
+  }
+  const state = scanState;
+  const startedAt = Date.now();
 
-    for (const tx of txs) {
-      let added = 0;
-      for (const acct of tx.accountData ?? []) {
-        if (acct?.account === creatorVault && typeof acct.nativeBalanceChange === 'number' && acct.nativeBalanceChange > 0) {
-          added += acct.nativeBalanceChange;
-        }
+  if (!state.initialScanDone) {
+    for (let page = 0; page < CHUNK_MAX_PAGES; page++) {
+      if (Date.now() - startedAt > CHUNK_DEADLINE_MS) break;
+
+      const txs = await fetchHeliusEnhancedPage(creatorVault, apiKey, {
+        before: state.oldestSeenSig,
+      });
+      if (txs === null) break;
+      if (txs.length === 0) {
+        state.initialScanDone = true;
+        break;
       }
-      if (added === 0) {
-        for (const transfer of tx.nativeTransfers ?? []) {
-          if (transfer?.toUserAccount === creatorVault && typeof transfer.amount === 'number' && transfer.amount > 0) {
-            added += transfer.amount;
-          }
-        }
+
+      if (!state.newestSeenSig && txs[0]?.signature) {
+        state.newestSeenSig = txs[0].signature;
       }
-      totalLamports += added;
+
+      for (const tx of txs) {
+        state.totalLamports += sumPositiveDeltasForVault(tx, creatorVault);
+      }
+
+      const lastSig = txs[txs.length - 1]?.signature;
+      if (lastSig) state.oldestSeenSig = lastSig;
+
+      if (txs.length < 100) {
+        state.initialScanDone = true;
+        break;
+      }
     }
+  } else {
+    let cursor = state.newestSeenSig;
+    let updatedNewest = cursor;
+    for (let page = 0; page < 10; page++) {
+      if (Date.now() - startedAt > CHUNK_DEADLINE_MS) break;
 
-    if (txs.length < 100) break;
-    const lastSig = txs[txs.length - 1]?.signature;
-    if (!lastSig) break;
-    before = lastSig;
+      const txs = await fetchHeliusEnhancedPage(creatorVault, apiKey, { until: cursor });
+      if (txs === null || txs.length === 0) break;
+
+      if (txs[0]?.signature) {
+        if (updatedNewest === cursor) updatedNewest = txs[0].signature;
+      }
+
+      for (const tx of txs) {
+        state.totalLamports += sumPositiveDeltasForVault(tx, creatorVault);
+      }
+
+      if (txs.length < 100) break;
+      const lastSig = txs[txs.length - 1]?.signature;
+      if (!lastSig) break;
+      cursor = lastSig;
+    }
+    state.newestSeenSig = updatedNewest;
   }
 
-  return totalLamports / LAMPORTS_PER_SOL;
+  state.lastChunkAt = Date.now();
 }
 
 async function fetchLifetimeCreatorFeesSol(creatorVault: string): Promise<number | null> {
-  const now = Date.now();
-  const cached =
-    lifetimeFeesCache && lifetimeFeesCache.vault === creatorVault ? lifetimeFeesCache : null;
-  const isFresh = cached !== null && cached.expiresAt > now;
+  const apiKey = getHeliusApiKey();
+  if (!apiKey) return null;
 
-  if (!isFresh && !lifetimeFeesInflight) {
-    lifetimeFeesInflight = (async () => {
+  const now = Date.now();
+  const hasState = scanState !== null && scanState.vault === creatorVault;
+  const needsChunk =
+    !hasState ||
+    !scanState!.initialScanDone ||
+    now - scanState!.lastChunkAt > REFRESH_INTERVAL_MS;
+
+  if (needsChunk && !chunkInflight) {
+    chunkInflight = (async () => {
       try {
-        const sol = await computeLifetimeCreatorFeesSol(creatorVault);
-        if (sol !== null) {
-          lifetimeFeesCache = {
-            vault: creatorVault,
-            sol,
-            expiresAt: Date.now() + LIFETIME_FEES_CACHE_MS,
-          };
-          return sol;
-        }
-        if (lifetimeFeesCache && lifetimeFeesCache.vault === creatorVault) {
-          lifetimeFeesCache = {
-            ...lifetimeFeesCache,
-            expiresAt: Date.now() + 30_000,
-          };
-          return lifetimeFeesCache.sol;
-        }
-        return null;
+        await processChunk(creatorVault, apiKey);
       } finally {
-        lifetimeFeesInflight = null;
+        chunkInflight = null;
       }
     })();
   }
 
-  if (cached) return cached.sol;
-  if (lifetimeFeesInflight) return lifetimeFeesInflight;
+  if (!hasState && chunkInflight) {
+    await chunkInflight;
+  }
+
+  if (scanState && scanState.vault === creatorVault) {
+    return scanState.totalLamports / LAMPORTS_PER_SOL;
+  }
   return null;
 }
 
@@ -286,6 +354,10 @@ export async function GET() {
       lifetimeCreatorFeeSol !== null && solUsd && solUsd > 0 ? lifetimeCreatorFeeSol * solUsd : null;
     const prizePoolCreditTotalUsd =
       creatorFeeTotalUsd !== null ? creatorFeeTotalUsd * allocationRate : null;
+    const lifetimeScanComplete =
+      pumpCreatorVault && scanState && scanState.vault === pumpCreatorVault.creatorVault
+        ? scanState.initialScanDone
+        : false;
 
     return NextResponse.json({
       available: volume24hUsd > 0 || (creatorFeeTotalUsd ?? 0) > 0,
@@ -302,6 +374,7 @@ export async function GET() {
       creatorFee24hUsd,
       creatorFeeTotalSol,
       creatorFeeTotalUsd,
+      lifetimeScanComplete,
       pumpCreatorVault,
       allocationRate,
       prizePoolCredit24hUsd: creatorFee24hUsd * allocationRate,
@@ -319,6 +392,7 @@ export async function GET() {
       creatorFee24hUsd: 0,
       creatorFeeTotalSol: null,
       creatorFeeTotalUsd: null,
+      lifetimeScanComplete: false,
       prizePoolCredit24hUsd: 0,
       prizePoolCreditTotalUsd: null,
       allocationRate: 0,

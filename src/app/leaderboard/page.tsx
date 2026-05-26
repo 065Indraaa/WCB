@@ -218,9 +218,11 @@ function LeaderboardBody({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }
             ? formatMarketCap(prizePool.prizePoolCreditTotalUsd)
             : '…',
         sub:
-          prizePool?.prizePoolCreditTotalUsd != null
-            ? 'creator fee · lifetime'
-            : 'syncing…',
+          prizePool?.prizePoolCreditTotalUsd == null
+            ? 'syncing…'
+            : prizePool?.lifetimeScanComplete
+              ? 'creator fee · lifetime'
+              : 'creator fee · scanning…',
       },
     ],
     [isLoading, totalHolders, totalLockers, prizePool],
