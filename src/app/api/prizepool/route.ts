@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PublicKey } from '@solana/web3.js';
 import { WCB_MINT } from '@/lib/tokenConfig';
-import { buildHeliusRpcUrl, hasHeliusCredentials } from '@/lib/server/helius';
+import { buildHeliusRpcUrl, getHeliusApiKey, hasHeliusCredentials } from '@/lib/server/helius';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -104,6 +104,64 @@ function derivePumpCreatorVault(creatorWallet: string) {
   return vault.toBase58();
 }
 
+type LifetimeFeesCacheEntry = { vault: string; sol: number; expiresAt: number };
+const LIFETIME_FEES_CACHE_MS = 5 * 60 * 1000;
+const LIFETIME_FEES_DEADLINE_MS = 20_000;
+const LIFETIME_FEES_MAX_PAGES = 100;
+let lifetimeFeesCache: LifetimeFeesCacheEntry | null = null;
+
+async function fetchLifetimeCreatorFeesSol(creatorVault: string): Promise<number | null> {
+  if (lifetimeFeesCache && lifetimeFeesCache.vault === creatorVault && lifetimeFeesCache.expiresAt > Date.now()) {
+    return lifetimeFeesCache.sol;
+  }
+
+  const apiKey = getHeliusApiKey();
+  if (!apiKey) return null;
+
+  const startedAt = Date.now();
+  let totalLamports = 0;
+  let before: string | undefined;
+
+  for (let page = 0; page < LIFETIME_FEES_MAX_PAGES; page++) {
+    if (Date.now() - startedAt > LIFETIME_FEES_DEADLINE_MS) return null;
+
+    const params = new URLSearchParams({ 'api-key': apiKey, limit: '100' });
+    if (before) params.set('before', before);
+    const url = `https://api.helius.xyz/v0/addresses/${creatorVault}/transactions?${params.toString()}`;
+
+    let res: Response;
+    try {
+      res = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+    } catch {
+      return null;
+    }
+    if (!res.ok) return null;
+
+    const txs = await res.json() as Array<{
+      signature?: string;
+      nativeTransfers?: Array<{ toUserAccount?: string; amount?: number }>;
+    }>;
+    if (!Array.isArray(txs) || txs.length === 0) break;
+
+    for (const tx of txs) {
+      for (const transfer of tx.nativeTransfers ?? []) {
+        if (transfer?.toUserAccount === creatorVault && typeof transfer.amount === 'number' && transfer.amount > 0) {
+          totalLamports += transfer.amount;
+        }
+      }
+    }
+
+    if (txs.length < 100) break;
+    const lastSig = txs[txs.length - 1]?.signature;
+    if (!lastSig) break;
+    before = lastSig;
+  }
+
+  const sol = totalLamports / LAMPORTS_PER_SOL;
+  lifetimeFeesCache = { vault: creatorVault, sol, expiresAt: Date.now() + LIFETIME_FEES_CACHE_MS };
+  return sol;
+}
+
 async function fetchPumpCreatorVaultBalance(solUsd: number | null) {
   const creatorWallet = await detectPumpCreatorWallet();
   if (!creatorWallet) return null;
@@ -178,8 +236,17 @@ export async function GET() {
     const allocationRate = Math.max(0, Math.min(10_000, Number.isFinite(allocationBps) ? allocationBps : 10_000)) / 10_000;
     const pumpCreatorVault = await fetchPumpCreatorVaultBalance(solUsd).catch(() => null);
 
+    const lifetimeCreatorFeeSol = pumpCreatorVault
+      ? await fetchLifetimeCreatorFeesSol(pumpCreatorVault.creatorVault).catch(() => null)
+      : null;
+    const creatorFeeTotalSol = lifetimeCreatorFeeSol;
+    const creatorFeeTotalUsd =
+      lifetimeCreatorFeeSol !== null && solUsd && solUsd > 0 ? lifetimeCreatorFeeSol * solUsd : null;
+    const prizePoolCreditTotalUsd =
+      creatorFeeTotalUsd !== null ? creatorFeeTotalUsd * allocationRate : null;
+
     return NextResponse.json({
-      available: volume24hUsd > 0,
+      available: volume24hUsd > 0 || (creatorFeeTotalUsd ?? 0) > 0,
       source: pumpCreatorVault ? 'pump-creator-vault+jupiter-token-api' : 'jupiter-token-api-estimate',
       token: {
         mint: tokenAddress,
@@ -191,9 +258,12 @@ export async function GET() {
       creatorFeeBps,
       creatorFeeRate,
       creatorFee24hUsd,
+      creatorFeeTotalSol,
+      creatorFeeTotalUsd,
       pumpCreatorVault,
       allocationRate,
       prizePoolCredit24hUsd: creatorFee24hUsd * allocationRate,
+      prizePoolCreditTotalUsd,
       lastUpdated: token?.updatedAt ?? new Date().toISOString(),
     });
   } catch (err) {
@@ -205,7 +275,10 @@ export async function GET() {
       volume24hUsd: 0,
       creatorFeeRate: 0,
       creatorFee24hUsd: 0,
+      creatorFeeTotalSol: null,
+      creatorFeeTotalUsd: null,
       prizePoolCredit24hUsd: 0,
+      prizePoolCreditTotalUsd: null,
       allocationRate: 0,
       lastUpdated: new Date().toISOString(),
     }, { status: 502 });

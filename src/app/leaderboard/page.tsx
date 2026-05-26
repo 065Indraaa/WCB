@@ -165,7 +165,7 @@ function LeaderboardSkeleton() {
   return (
     <>
       <div className="stats-grid-3" style={{ marginBottom: '1.5rem' }}>
-        {['Holders', 'Lockers', 'Prize Pool (24h)'].map((label) => (
+        {['Holders', 'Lockers', 'Prize Pool (Total)'].map((label) => (
           <div key={label} className="card" style={{ padding: '1.25rem', textAlign: 'center', minHeight: 108 }}>
             <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#F2B544' }}>…</div>
             <div
@@ -212,9 +212,15 @@ function LeaderboardBody({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }
         sub: 'active lockers',
       },
       {
-        label: 'Prize Pool (24h)',
-        value: !prizePool?.available ? '…' : formatMarketCap(prizePool.prizePoolCredit24hUsd),
-        sub: !prizePool?.available ? 'syncing…' : 'creator fee',
+        label: 'Prize Pool (Total)',
+        value: !prizePool?.available
+          ? '…'
+          : formatMarketCap(prizePool.prizePoolCreditTotalUsd ?? prizePool.prizePoolCredit24hUsd),
+        sub: !prizePool?.available
+          ? 'syncing…'
+          : prizePool.prizePoolCreditTotalUsd != null
+            ? 'creator fee · lifetime'
+            : 'creator fee',
       },
     ],
     [isLoading, totalHolders, totalLockers, prizePool],

@@ -19,8 +19,11 @@ export interface PrizePoolMetrics {
   creatorFeeBps?: number;
   creatorFeeRate: number;
   creatorFee24hUsd: number;
+  creatorFeeTotalSol?: number | null;
+  creatorFeeTotalUsd?: number | null;
   allocationRate: number;
   prizePoolCredit24hUsd: number;
+  prizePoolCreditTotalUsd?: number | null;
   lastUpdated: string;
 }
 

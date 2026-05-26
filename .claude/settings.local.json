@@ -24,7 +24,8 @@
       "Bash(curl -s http://localhost:3001/api/locks/community)",
       "Bash(curl -s \"http://localhost:3001/api/locks/community?debug=1\")",
       "Bash(python -m json.tool)",
-      "Bash(curl -s \"http://localhost:3001/api/locks?wallet=BeyQkhQwsZzVBQWsTyty7ncL4SpeFZeEr8b6ncZjEMWr\")"
+      "Bash(curl -s \"http://localhost:3001/api/locks?wallet=BeyQkhQwsZzVBQWsTyty7ncL4SpeFZeEr8b6ncZjEMWr\")",
+      "Bash(echo \"EXIT=$?\")"
     ]
   }
 }
