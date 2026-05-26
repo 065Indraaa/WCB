@@ -168,25 +168,40 @@ async function computeLifetimeCreatorFeesSol(creatorVault: string): Promise<numb
 }
 
 async function fetchLifetimeCreatorFeesSol(creatorVault: string): Promise<number | null> {
-  if (lifetimeFeesCache && lifetimeFeesCache.vault === creatorVault && lifetimeFeesCache.expiresAt > Date.now()) {
-    return lifetimeFeesCache.sol;
+  const now = Date.now();
+  const cached =
+    lifetimeFeesCache && lifetimeFeesCache.vault === creatorVault ? lifetimeFeesCache : null;
+  const isFresh = cached !== null && cached.expiresAt > now;
+
+  if (!isFresh && !lifetimeFeesInflight) {
+    lifetimeFeesInflight = (async () => {
+      try {
+        const sol = await computeLifetimeCreatorFeesSol(creatorVault);
+        if (sol !== null) {
+          lifetimeFeesCache = {
+            vault: creatorVault,
+            sol,
+            expiresAt: Date.now() + LIFETIME_FEES_CACHE_MS,
+          };
+          return sol;
+        }
+        if (lifetimeFeesCache && lifetimeFeesCache.vault === creatorVault) {
+          lifetimeFeesCache = {
+            ...lifetimeFeesCache,
+            expiresAt: Date.now() + 30_000,
+          };
+          return lifetimeFeesCache.sol;
+        }
+        return null;
+      } finally {
+        lifetimeFeesInflight = null;
+      }
+    })();
   }
 
+  if (cached) return cached.sol;
   if (lifetimeFeesInflight) return lifetimeFeesInflight;
-
-  lifetimeFeesInflight = (async () => {
-    try {
-      const sol = await computeLifetimeCreatorFeesSol(creatorVault);
-      if (sol !== null) {
-        lifetimeFeesCache = { vault: creatorVault, sol, expiresAt: Date.now() + LIFETIME_FEES_CACHE_MS };
-      }
-      return sol;
-    } finally {
-      lifetimeFeesInflight = null;
-    }
-  })();
-
-  return lifetimeFeesInflight;
+  return null;
 }
 
 async function fetchPumpCreatorVaultBalance(solUsd: number | null) {

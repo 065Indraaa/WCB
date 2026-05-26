@@ -213,14 +213,14 @@ function LeaderboardBody({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }
       },
       {
         label: 'Prize Pool (Total)',
-        value: !prizePool?.available
-          ? '…'
-          : formatMarketCap(prizePool.prizePoolCreditTotalUsd ?? prizePool.prizePoolCredit24hUsd),
-        sub: !prizePool?.available
-          ? 'syncing…'
-          : prizePool.prizePoolCreditTotalUsd != null
+        value:
+          prizePool?.prizePoolCreditTotalUsd != null
+            ? formatMarketCap(prizePool.prizePoolCreditTotalUsd)
+            : '…',
+        sub:
+          prizePool?.prizePoolCreditTotalUsd != null
             ? 'creator fee · lifetime'
-            : 'creator fee',
+            : 'syncing…',
       },
     ],
     [isLoading, totalHolders, totalLockers, prizePool],
