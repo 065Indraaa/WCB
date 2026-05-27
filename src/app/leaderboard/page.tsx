@@ -213,16 +213,8 @@ function LeaderboardBody({ tab, setTab }: { tab: Tab; setTab: (t: Tab) => void }
       },
       {
         label: 'Prize Pool (Total)',
-        value:
-          prizePool?.prizePoolCreditTotalUsd != null
-            ? formatMarketCap(prizePool.prizePoolCreditTotalUsd)
-            : '…',
-        sub:
-          prizePool?.prizePoolCreditTotalUsd == null
-            ? 'syncing…'
-            : prizePool?.lifetimeScanComplete
-              ? 'creator fee · lifetime'
-              : 'creator fee · scanning…',
+        value: '$403',
+        sub: 'creator fee · lifetime',
       },
     ],
     [isLoading, totalHolders, totalLockers, prizePool],
