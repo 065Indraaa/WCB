@@ -68,7 +68,7 @@ function SportsbookHeader() {
             <NotificationsBell bets={bets} />
           </>
         )}
-        {mounted && <WalletButton />}
+        <WalletButton />
       </div>
     </header>
   );

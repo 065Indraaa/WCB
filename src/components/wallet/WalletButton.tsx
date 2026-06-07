@@ -3,6 +3,7 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { truncateAddress } from '@/lib/wallet';
+import { useEffect, useState } from 'react';
 
 interface WalletButtonProps {
   className?: string;
@@ -18,6 +19,35 @@ interface WalletButtonProps {
  */
 export function WalletButton({ className, style }: WalletButtonProps) {
   const { connected, publicKey } = useWallet();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <button
+        disabled
+        style={{
+          background: '#F2B544',
+          border: 'none',
+          borderRadius: 10,
+          fontSize: '0.85rem',
+          fontWeight: 800,
+          height: 36,
+          padding: '0 1rem',
+          color: '#070707',
+          cursor: 'not-allowed',
+          opacity: 0.6,
+          ...style,
+        }}
+      >
+        Loading...
+      </button>
+    );
+  }
 
   if (connected && publicKey) {
     return (
