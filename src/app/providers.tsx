@@ -18,7 +18,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
           queries: {
             staleTime: 30_000,
             gcTime: 5 * 60_000,
-            retry: 0,
+            retry: 3,
+            retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30_000),
             refetchOnWindowFocus: false,
           },
         },
@@ -27,7 +28,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WalletContextProvider>{children}</WalletContextProvider>
+      <WalletContextProvider>
+        {children}
+      </WalletContextProvider>
     </QueryClientProvider>
   );
 }

@@ -5,8 +5,8 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useRouter, usePathname } from 'next/navigation';
 
 /**
- * Redirects to /lock when wallet connects for the first time in a session.
- * Only redirects from the home page — not from other pages.
+ * Redirects to /live-bets when wallet connects for the first time in a session.
+ * Only redirects from the home page or pages where a CTA prompts connection.
  */
 export function useWalletRedirect() {
   const { connected, publicKey } = useWallet();
@@ -14,21 +14,25 @@ export function useWalletRedirect() {
   const pathname = usePathname();
   const hasRedirected = useRef(false);
   const prevConnected = useRef(false);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    // Only redirect when transitioning from disconnected → connected
+    // On first render, initialise prevConnected without triggering a redirect
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      prevConnected.current = connected;
+      return;
+    }
+
     const justConnected = connected && !prevConnected.current;
     prevConnected.current = connected;
 
-    if (justConnected && !hasRedirected.current && pathname === '/') {
+    const isBettingArea = pathname?.startsWith('/live-bets');
+    if (justConnected && !hasRedirected.current && !isBettingArea) {
       hasRedirected.current = true;
-      // Small delay so wallet modal closes first
-      setTimeout(() => {
-        router.push('/lock?welcome=1');
-      }, 600);
+      router.push('/live-bets');
     }
 
-    // Reset if disconnected
     if (!connected) {
       hasRedirected.current = false;
     }

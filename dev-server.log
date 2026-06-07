@@ -1,0 +1,164 @@
+
+> wcblive-website@0.1.0 dev
+> cross-env __NEXT_TEST_MODE=1 next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 11.4s
+ ○ Compiling /lock ...
+ ✓ Compiled / in 94.3s (2012 modules)
+ GET / 200 in 96197ms
+ GET / 200 in 28375ms
+ ○ Compiling /live-bets ...
+ ✓ Compiled /groups in 85.7s (2128 modules)
+ GET /live-bets 200 in 88390ms
+ GET /api/token 200 in 79846ms
+ ○ Compiling /token ...
+ ✓ Compiled /token in 7.3s (2131 modules)
+ GET /api/token 200 in 883ms
+ ○ Compiling /docs ...
+ ✓ Compiled /docs in 17.7s (2086 modules)
+ ○ Compiling /matches ...
+ ✓ Compiled /matches in 4.4s (1162 modules)
+ ○ Compiling /lock ...
+ ✓ Compiled /lock in 13.2s (1170 modules)
+ ○ Compiling /api/locks/community ...
+ ✓ Compiled /api/locks in 42.1s (1502 modules)
+ ✓ Compiled (1504 modules)
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+ GET /api/locks?wallet=BhFwDsQcDAsjx3vqYMwNVhanC8NZ5ca8maFG1z3Bgz6k 200 in 54878ms
+ GET /api/locks?wallet=BhFwDsQcDAsjx3vqYMwNVhanC8NZ5ca8maFG1z3Bgz6k 200 in 31459ms
+ GET /api/locks/community 200 in 31558ms
+ GET /api/locks/community 200 in 20934ms
+ GET /api/locks/community 200 in 802ms
+ GET /api/locks/community 200 in 57035ms
+ GET /api/locks/community 200 in 1235ms
+ GET /matches 200 in 3403ms
+ ○ Compiling /live-bets ...
+ ✓ Compiled /live-bets in 7.6s (1137 modules)
+ ⨯ TypeError: Cannot read properties of undefined (reading 'entryCSSFiles')
+    at rD (E:\WCBLIVE\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:3748)
+    at rJ (E:\WCBLIVE\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:12942)
+    at r3 (E:\WCBLIVE\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:16180)
+    at ne (E:\WCBLIVE\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:23887)
+    at E:\WCBLIVE\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:43:726
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at Object.wrap (E:\WCBLIVE\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:36:17827)
+    at E:\WCBLIVE\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:43:616
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at Object.wrap (E:\WCBLIVE\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:36:16929)
+    at nt (E:\WCBLIVE\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:43:543)
+    at nb.render (E:\WCBLIVE\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:43:4699)
+    at doRender (E:\WCBLIVE\node_modules\next\dist\server\base-server.js:1427:44)
+    at cacheEntry.responseCache.get.routeKind (E:\WCBLIVE\node_modules\next\dist\server\base-server.js:1588:34)
+    at ResponseCache.get (E:\WCBLIVE\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (E:\WCBLIVE\node_modules\next\dist\server\base-server.js:1496:53) {
+  page: '/live-bets'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 46.9s (2307 modules)
+Could not find files for /_error in .next/build-manifest.json
+Could not find files for /_error in .next/build-manifest.json
+ ✓ Compiled in 26.9s (2273 modules)
+ ✓ Compiled in 59.3s (2263 modules)
+ ✓ Compiled in 20.3s (1129 modules)
+ ✓ Compiled in 3.7s (1129 modules)
+ ✓ Compiled in 7.9s (1129 modules)
+ ✓ Compiled in 1919ms (1129 modules)
+ ✓ Compiled in 5.1s (1129 modules)
+ ✓ Compiled in 1767ms (1129 modules)
+ ✓ Compiled in 6.4s (1128 modules)
+ ✓ Compiled in 19.6s (1134 modules)
+ ✓ Compiled in 15.4s (1134 modules)
+ ✓ Compiled in 10.5s (1134 modules)
+ ✓ Compiled in 6.9s (1134 modules)
+ ✓ Compiled in 34.1s (2280 modules)
+ ✓ Compiled in 7.3s (1134 modules)
+ ✓ Compiled in 7.6s (1134 modules)
+ ✓ Compiled in 15s (1122 modules)
+ ✓ Compiled in 23.9s (1134 modules)
+ ✓ Compiled in 70.2s (1111 modules)
+ ✓ Compiled in 5.5s (1063 modules)
+ ✓ Compiled in 13.6s (1063 modules)
+ ✓ Compiled in 3.5s (1063 modules)
+ ✓ Compiled in 34.4s (1063 modules)
+ ✓ Compiled in 16.8s (1063 modules)
+ ✓ Compiled in 4.4s (1063 modules)
+ ✓ Compiled in 7.8s (1063 modules)
+ ✓ Compiled in 11.5s (1063 modules)
+ ✓ Compiled in 3.3s (1063 modules)
+ ✓ Compiled in 770ms (1063 modules)
+ ✓ Compiled in 6.3s (1063 modules)
+ ✓ Compiled in 10.8s (1063 modules)
+ ✓ Compiled in 11.1s (1063 modules)
+ ✓ Compiled in 37.8s (1063 modules)
+ ✓ Compiled in 18.8s (1063 modules)
+ ✓ Compiled in 41s (1063 modules)
+ ✓ Compiled in 27s (1063 modules)
+ ✓ Compiled in 15s (1063 modules)
+ ✓ Compiled in 8.5s (1063 modules)
+ ✓ Compiled in 9.3s (1063 modules)
+ ✓ Compiled in 4.9s (1063 modules)
+ ✓ Compiled in 4.1s (1063 modules)
+ ✓ Compiled in 42.7s (1063 modules)
+ ✓ Compiled in 30.4s (1063 modules)
+ ✓ Compiled in 16.3s (1063 modules)
+ ○ Compiling /live-bets ...
+ ✓ Compiled /live-bets in 26.8s (2079 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 18.4s (2070 modules)
+ GET /live-bets 404 in 47746ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 10.5s (2072 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 646ms
+ GET /_next/static/chunks/handle-smooth-scroll.js.map 404 in 702ms
+ GET /_next/static/chunks/main-app.js?v=1780822079283 404 in 11092ms
+ GET /_next/static/chunks/app/index.mjs.map 404 in 729ms
+ GET /live-bets 200 in 1042ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1140ms
+ GET /_next/static/css/app/layout.css?v=1780822094978 404 in 1085ms
+ GET /_next/static/chunks/main-app.js?v=1780822094978 404 in 178ms
+ GET /_next/static/chunks/handle-smooth-scroll.js.map 404 in 50ms
+ GET /_next/static/chunks/app/index.mjs.map 404 in 51ms
+ GET /_next/static/chunks/app/live-bets/useQuery.js.map 404 in 51ms
+ GET /_next/static/chunks/app/live-bets/useQuery.js.map 404 in 49ms
+ ○ Compiling /live-bets/leaderboard ...
+ ✓ Compiled /live-bets/leaderboard in 8.5s (2064 modules)
+ GET /live-bets/leaderboard 200 in 9617ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 10.6s (2067 modules)
+ GET /_next/static/css/app/layout.css?v=1780822180201 404 in 14602ms
+ GET /_next/static/chunks/main-app.js?v=1780822180201 404 in 12708ms
+ ✓ Compiled in 10.3s (1079 modules)
+ ✓ Compiled in 4.9s (1079 modules)
+ ✓ Compiled in 6.3s (1079 modules)
+ ✓ Compiled in 2.2s (1077 modules)
+ ✓ Compiled in 2.3s (1077 modules)
+ ✓ Compiled in 1649ms (1077 modules)
+ ○ Compiling /live-bets ...
+ ✓ Compiled /live-bets in 2.6s (1007 modules)
+ GET /live-bets 200 in 4857ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 9.8s (2087 modules)
+ GET /_next/static/css/app/layout.css?v=1780822306257 404 in 11067ms
+ GET /_next/static/chunks/main-app.js?v=1780822306257 404 in 7988ms
+ ✓ Compiled in 6.1s (2087 modules)
+ GET /live-bets 200 in 5008ms
+ GET /_next/static/chunks/main-app.js?v=1780822371773 404 in 1878ms
+ ○ Compiling /live-bets/leaderboard ...
+ ✓ Compiled /live-bets/leaderboard in 25.1s (2094 modules)
+ ○ Compiling /live-bets/my-bets ...
+ ✓ Compiled /live-bets/my-bets in 13s (2090 modules)
+ GET /live-bets/my-bets 200 in 18267ms
+ GET /_next/static/chunks/main-app.js?v=1780822429691 404 in 407ms
+ GET /live-bets 200 in 1012ms
+ GET /_next/static/chunks/main-app.js?v=1780822463467 404 in 1221ms
+ ✓ Compiled in 13.8s (2095 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 7447ms
+ GET /_next/static/chunks/handle-smooth-scroll.js.map 404 in 7274ms
+ GET /_next/static/chunks/app/live-bets/useQuery.js.map 404 in 7288ms
+ GET /_next/static/chunks/app/index.mjs.map 404 in 7322ms
+ GET /_next/static/chunks/app/live-bets/useQuery.js.map 404 in 187ms

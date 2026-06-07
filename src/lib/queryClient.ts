@@ -38,4 +38,13 @@ export const queryKeys = {
     all: ['leaderboard'] as const,
     page: (page: number, limit: number) => ['leaderboard', 'page', page, limit] as const,
   },
+  credits: {
+    all: ['credits'] as const,
+    balance: (wallet: string) => ['credits', 'balance', wallet] as const,
+  },
+  bets: {
+    all: ['bets'] as const,
+    list: (wallet: string) => ['bets', 'list', wallet] as const,
+    leaderboard: () => ['bets', 'leaderboard'] as const,
+  },
 } as const;

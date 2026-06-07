@@ -8,7 +8,8 @@ export type MenuIconName =
   | 'token'
   | 'lock'
   | 'docs'
-  | 'leaderboard';
+  | 'leaderboard'
+  | 'live';
 
 type MenuIconProps = SVGProps<SVGSVGElement> & {
   name: MenuIconName;
@@ -81,6 +82,15 @@ export function MenuIcon({ name, ...props }: MenuIconProps) {
           <path d="M12 19V6" />
           <path d="M18 19v-9" />
           <path d="M4.5 19h15" />
+        </>
+      )}
+      {name === 'live' && (
+        <>
+          <circle cx="12" cy="12" r="3" />
+          <path d="M6.3 6.3a8 8 0 0 0 0 11.4" />
+          <path d="M17.7 6.3a8 8 0 0 1 0 11.4" />
+          <path d="M3.5 3.5a13 13 0 0 0 0 17" />
+          <path d="M20.5 3.5a13 13 0 0 1 0 17" />
         </>
       )}
     </svg>

@@ -17,21 +17,21 @@ type NavLink = {
 
 const NAV_LINKS: NavLink[] = [
   { label: 'Home',        href: '/',            icon: 'home' },
+  { label: 'Live Bets',   href: '/live-bets',   icon: 'live' },
   { label: 'Matches',     href: '/matches',     icon: 'matches' },
   { label: 'Groups',      href: '/groups',      icon: 'groups' },
   { label: 'Bracket',     href: '/bracket',     icon: 'bracket' },
   { label: 'Token',       href: '/token',       icon: 'token' },
   { label: 'Lock & Earn', href: '/lock',        icon: 'lock', dot: true },
-  { label: 'Docs',        href: '/docs',        icon: 'docs' },
   { label: 'Leaderboard', href: '/leaderboard', icon: 'leaderboard' },
-] ;
+];
 
 const MOBILE_NAV: NavLink[] = [
-  { label: 'Home',    href: '/',            icon: 'home' },
-  { label: 'Matches', href: '/matches',     icon: 'matches' },
-  { label: 'Groups',  href: '/groups',      icon: 'groups' },
-  { label: 'Lock',    href: '/lock',        icon: 'lock' },
-  { label: 'Board',   href: '/leaderboard', icon: 'leaderboard' },
+  { label: 'Home',      href: '/',            icon: 'home' },
+  { label: 'Live Bets', href: '/live-bets',   icon: 'live' },
+  { label: 'Matches',   href: '/matches',     icon: 'matches' },
+  { label: 'Groups',    href: '/groups',      icon: 'groups' },
+  { label: 'Board',     href: '/leaderboard', icon: 'leaderboard' },
 ];
 
 function MuteButton() {
@@ -218,6 +218,29 @@ export function Navbar() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
             <MuteButton />
+            <Link
+              href="/docs"
+              className="hidden lg:inline-flex"
+              style={{
+                alignItems: 'center',
+                gap: 5,
+                padding: '5px 10px',
+                borderRadius: 6,
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                color: '#8A8A8A',
+                whiteSpace: 'nowrap',
+                transition: 'color 0.15s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#F2B544'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#8A8A8A'; }}
+            >
+              <span aria-hidden="true" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                <MenuIcon name="docs" width={12} height={12} />
+              </span>
+              Docs
+            </Link>
             <a
               href={process.env.NEXT_PUBLIC_PUMPFUN_URL ?? 'https://pump.fun'}
               target="_blank"

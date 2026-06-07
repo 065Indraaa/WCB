@@ -25,7 +25,18 @@
       "Bash(curl -s \"http://localhost:3001/api/locks/community?debug=1\")",
       "Bash(python -m json.tool)",
       "Bash(curl -s \"http://localhost:3001/api/locks?wallet=BeyQkhQwsZzVBQWsTyty7ncL4SpeFZeEr8b6ncZjEMWr\")",
-      "Bash(echo \"EXIT=$?\")"
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(npm run *)",
+      "Bash(tasklist)",
+      "Bash(netstat -ano)",
+      "Bash(wmic process *)",
+      "Bash(taskkill //PID 7928 //F)",
+      "Bash(taskkill //PID 30344 //F)",
+      "Bash(echo \"dev server starting, PID $!\")",
+      "Bash(curl -s -o /dev/null -w \"Status / : %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"Status /live-bets : %{http_code}\\\\n\" http://localhost:3000/live-bets)",
+      "Bash(find \"\\(betting\\)\" -type f)",
+      "Bash(find . -type d -name \"live-bets\")"
     ]
   }
 }

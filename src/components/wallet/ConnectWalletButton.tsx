@@ -14,7 +14,6 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
   const [showWalletList, setShowWalletList] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -62,21 +61,21 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
           style={{
             padding,
             fontSize,
-          fontWeight: 700,
-          borderRadius: 10,
-          border: '1px solid #2A2A2A',
-          background: '#111111',
-          color: '#FFFFFF',
-          cursor: 'pointer',
+            fontWeight: 700,
+            borderRadius: 10,
+            border: '1px solid #2A2A2A',
+            background: '#111111',
+            color: '#FFFFFF',
+            cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
           }}
           className={className}
         >
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#14F195', flexShrink: 0 }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#14F195', flexShrink: 0, boxShadow: '0 0 6px rgba(20,241,149,0.5)' }} />
           {shortAddress}
-          <span style={{ fontSize: '0.65rem', opacity: 0.7 }}>V</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6E6E6E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
         </button>
 
         {showDropdown && (
@@ -98,8 +97,8 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
               <p style={{ fontSize: '0.7rem', fontWeight: 700, color: '#6E6E6E', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>
                 Connected
               </p>
-              <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#14F195', fontFamily: 'monospace', marginTop: '0.25rem' }}>
-                {shortAddress}
+              <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#14F195', fontFamily: 'monospace', marginTop: '0.25rem', wordBreak: 'break-all' }}>
+                {publicKey.toBase58()}
               </p>
             </div>
             <button
@@ -112,7 +111,7 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
                 textAlign: 'left',
                 fontSize: '0.85rem',
                 fontWeight: 600,
-                color: '#DC2626',
+                color: '#EF4444',
                 cursor: 'pointer',
               }}
             >
@@ -124,7 +123,6 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
     );
   }
 
-  // Not connected: show wallet selector.
   return (
     <div style={{ position: 'relative' }} ref={dropdownRef}>
       <button
@@ -139,8 +137,17 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
           color: '#070707',
           cursor: 'pointer',
           boxShadow: '0 6px 18px rgba(242,181,68,0.26)',
+          transition: 'transform 0.15s, box-shadow 0.15s',
         }}
         className={className}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-1px)';
+          e.currentTarget.style.boxShadow = '0 8px 22px rgba(242,181,68,0.32)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 6px 18px rgba(242,181,68,0.26)';
+        }}
       >
         Connect Wallet
       </button>
@@ -200,9 +207,14 @@ export function ConnectWalletButton({ size = 'md', className = '' }: ConnectWall
                   gap: '0.75rem',
                   borderBottom: '1px solid #2A2A2A',
                 }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(242,181,68,0.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                }}
               >
                 {wallet.adapter.icon && (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={wallet.adapter.icon} alt={wallet.adapter.name} width={24} height={24} style={{ borderRadius: 6 }} />
                 )}
                 {wallet.adapter.name}

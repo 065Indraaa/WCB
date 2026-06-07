@@ -26,7 +26,7 @@ export function PumpFunBadge({ className = '', size = 'md' }: PumpFunBadgeProps)
         backdropFilter: 'blur(8px)',
       }}
     >
-      Buy $WCB
+      🚀 Launched on Pump.fun
     </a>
   );
 }

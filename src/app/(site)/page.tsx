@@ -7,7 +7,6 @@ import { GroupCard } from '@/components/groups/GroupCard';
 import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 import { WC_2026_GROUP_MATCHES } from '@/lib/constants/matches2026';
 import { buildAllGroups } from '@/lib/groupHelpers';
-import { WalletRedirectHandler } from '@/components/shared/WalletRedirectHandler';
 import { TokenPriceWidget } from '@/components/token/TokenPriceWidget';
 import { EARLY_TOKENS_PER_CREDIT, POST_LAUNCH_TOKENS_PER_CREDIT } from '@/lib/lock';
 
@@ -127,7 +126,6 @@ export default function Home() {
 
   return (
     <>
-      <WalletRedirectHandler />
       <PromoBanner />
       <HeroSection />
       <HomeBillboard />

@@ -7,7 +7,8 @@ export const TIER_THRESHOLDS = {
   Platinum: 10_000_000,
 } as const;
 
-const LAUNCH_DAY = '2026-01-01'; // Placeholder — actual launch day TBD
+/** Token launch day — used for the Early Bird badge. */
+const LAUNCH_DAY = process.env.NEXT_PUBLIC_TOKEN_LAUNCH_DATE ?? '2025-06-01';
 
 /**
  * Assign a tier based on token holdings.
