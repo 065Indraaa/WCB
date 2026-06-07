@@ -162,3 +162,14 @@ Could not find files for /_error in .next/build-manifest.json
  GET /_next/static/chunks/app/live-bets/useQuery.js.map 404 in 7288ms
  GET /_next/static/chunks/app/index.mjs.map 404 in 7322ms
  GET /_next/static/chunks/app/live-bets/useQuery.js.map 404 in 187ms
+ ✓ Compiled in 6.9s (2095 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 43.8s (2241 modules)
+ GET / 200 in 22963ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 9.3s (2256 modules)
+ GET /_next/static/chunks/main-app.js?v=1780822610307 404 in 9654ms
+ ✓ Compiled in 1553ms (1110 modules)
+ ✓ Compiled in 1717ms (1110 modules)
+ ✓ Compiled in 12.7s (1108 modules)
+ ✓ Compiled in 2.8s (1108 modules)
